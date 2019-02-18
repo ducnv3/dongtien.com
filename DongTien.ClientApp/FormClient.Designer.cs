@@ -34,10 +34,10 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.gridviewPath = new System.Windows.Forms.DataGridView();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.rbtn_sync = new System.Windows.Forms.RadioButton();
             this.rbtn_notsync = new System.Windows.Forms.RadioButton();
+            this.rbtn_sync = new System.Windows.Forms.RadioButton();
             this.btn_saveConfig = new System.Windows.Forms.Button();
             this.btn_start = new System.Windows.Forms.Button();
             this.btn_stop = new System.Windows.Forms.Button();
@@ -45,7 +45,7 @@
             this.col_destination = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridviewPath)).BeginInit();
             this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -96,7 +96,7 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.dataGridView1);
+            this.groupBox2.Controls.Add(this.gridviewPath);
             this.groupBox2.Location = new System.Drawing.Point(13, 125);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(751, 269);
@@ -104,17 +104,17 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Cấu hình đường dẫn";
             // 
-            // dataGridView1
+            // gridviewPath
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.gridviewPath.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridviewPath.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.col_source,
             this.col_destination});
-            this.dataGridView1.Location = new System.Drawing.Point(10, 21);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.RowTemplate.Height = 24;
-            this.dataGridView1.Size = new System.Drawing.Size(735, 233);
-            this.dataGridView1.TabIndex = 0;
+            this.gridviewPath.Location = new System.Drawing.Point(10, 21);
+            this.gridviewPath.Name = "gridviewPath";
+            this.gridviewPath.RowTemplate.Height = 24;
+            this.gridviewPath.Size = new System.Drawing.Size(735, 233);
+            this.gridviewPath.TabIndex = 0;
             // 
             // groupBox3
             // 
@@ -127,17 +127,6 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Cấu hình đồng bộ";
             // 
-            // rbtn_sync
-            // 
-            this.rbtn_sync.AutoSize = true;
-            this.rbtn_sync.Location = new System.Drawing.Point(21, 31);
-            this.rbtn_sync.Name = "rbtn_sync";
-            this.rbtn_sync.Size = new System.Drawing.Size(102, 21);
-            this.rbtn_sync.TabIndex = 0;
-            this.rbtn_sync.TabStop = true;
-            this.rbtn_sync.Text = "Có đồng bộ";
-            this.rbtn_sync.UseVisualStyleBackColor = true;
-            // 
             // rbtn_notsync
             // 
             this.rbtn_notsync.AutoSize = true;
@@ -149,6 +138,17 @@
             this.rbtn_notsync.Text = "Không đồng bộ";
             this.rbtn_notsync.UseVisualStyleBackColor = true;
             // 
+            // rbtn_sync
+            // 
+            this.rbtn_sync.AutoSize = true;
+            this.rbtn_sync.Location = new System.Drawing.Point(21, 31);
+            this.rbtn_sync.Name = "rbtn_sync";
+            this.rbtn_sync.Size = new System.Drawing.Size(102, 21);
+            this.rbtn_sync.TabIndex = 0;
+            this.rbtn_sync.TabStop = true;
+            this.rbtn_sync.Text = "Có đồng bộ";
+            this.rbtn_sync.UseVisualStyleBackColor = true;
+            // 
             // btn_saveConfig
             // 
             this.btn_saveConfig.Location = new System.Drawing.Point(244, 491);
@@ -157,6 +157,7 @@
             this.btn_saveConfig.TabIndex = 3;
             this.btn_saveConfig.Text = "Lưu cấu hình";
             this.btn_saveConfig.UseVisualStyleBackColor = true;
+            this.btn_saveConfig.Click += new System.EventHandler(this.btn_saveConfig_Click);
             // 
             // btn_start
             // 
@@ -204,7 +205,7 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.gridviewPath)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
@@ -219,7 +220,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView gridviewPath;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.RadioButton rbtn_notsync;
         private System.Windows.Forms.RadioButton rbtn_sync;
