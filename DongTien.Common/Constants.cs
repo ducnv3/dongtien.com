@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace DongTien.Common
 {
-    class Constants
+    public static class Constants
     {
+        public static string StringKey = "dongtien.com";
     }
 }
