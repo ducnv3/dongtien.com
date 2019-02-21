@@ -32,9 +32,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DongTien.Common">
-      <HintPath>..\DongTien.Common\bin\Debug\DongTien.Common.dll</HintPath>
-    </Reference>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\DongTien.Common\References\log4net.dll</HintPath>
@@ -53,7 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BusinessService.cs" />
-    <Compile Include="Constants.cs" />
+    <Compile Include="Controller\FileController.cs" />
     <Compile Include="FormClient.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -90,6 +87,12 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DongTien.Common\DongTien.Common.csproj">
+      <Project>{ee88d55e-10dd-4907-b873-752cab6b2099}</Project>
+      <Name>DongTien.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

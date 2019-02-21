@@ -35,14 +35,14 @@
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.gridviewPath = new System.Windows.Forms.DataGridView();
+            this.col_source = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.col_destination = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.rbtn_notsync = new System.Windows.Forms.RadioButton();
             this.rbtn_sync = new System.Windows.Forms.RadioButton();
             this.btn_saveConfig = new System.Windows.Forms.Button();
             this.btn_start = new System.Windows.Forms.Button();
             this.btn_stop = new System.Windows.Forms.Button();
-            this.col_source = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.col_destination = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridviewPath)).BeginInit();
@@ -66,6 +66,7 @@
             // 
             this.Txt_Password.Location = new System.Drawing.Point(142, 64);
             this.Txt_Password.Name = "Txt_Password";
+            this.Txt_Password.PasswordChar = '*';
             this.Txt_Password.Size = new System.Drawing.Size(565, 22);
             this.Txt_Password.TabIndex = 3;
             // 
@@ -115,6 +116,18 @@
             this.gridviewPath.RowTemplate.Height = 24;
             this.gridviewPath.Size = new System.Drawing.Size(735, 233);
             this.gridviewPath.TabIndex = 0;
+            // 
+            // col_source
+            // 
+            this.col_source.HeaderText = "Nguồn";
+            this.col_source.Name = "col_source";
+            this.col_source.Width = 350;
+            // 
+            // col_destination
+            // 
+            this.col_destination.HeaderText = "Đích";
+            this.col_destination.Name = "col_destination";
+            this.col_destination.Width = 350;
             // 
             // groupBox3
             // 
@@ -167,6 +180,7 @@
             this.btn_start.TabIndex = 4;
             this.btn_start.Text = "Bắt đầu";
             this.btn_start.UseVisualStyleBackColor = true;
+            this.btn_start.Click += new System.EventHandler(this.btn_start_Click);
             // 
             // btn_stop
             // 
@@ -176,18 +190,6 @@
             this.btn_stop.TabIndex = 5;
             this.btn_stop.Text = "Kết thúc";
             this.btn_stop.UseVisualStyleBackColor = true;
-            // 
-            // col_source
-            // 
-            this.col_source.HeaderText = "Nguồn";
-            this.col_source.Name = "col_source";
-            this.col_source.Width = 350;
-            // 
-            // col_destination
-            // 
-            this.col_destination.HeaderText = "Đích";
-            this.col_destination.Name = "col_destination";
-            this.col_destination.Width = 350;
             // 
             // FormClient
             // 
@@ -215,7 +217,6 @@
         #endregion
 
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.TextBox Txt_Password;
         private System.Windows.Forms.TextBox Txt_Username;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
@@ -229,6 +230,7 @@
         private System.Windows.Forms.Button btn_stop;
         private System.Windows.Forms.DataGridViewTextBoxColumn col_source;
         private System.Windows.Forms.DataGridViewTextBoxColumn col_destination;
+        private System.Windows.Forms.TextBox Txt_Password;
     }
 }
 

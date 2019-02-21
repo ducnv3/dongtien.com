@@ -9,5 +9,9 @@ namespace DongTien.Common
     public static class Constants
     {
         public static string StringKey = "dongtien.com";
+
+        public static string Username = "Username";
+        public static string Password = "Password";
+        public static string Sync = "Sync";
     }
 }

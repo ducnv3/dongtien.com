@@ -12,6 +12,7 @@ using System.Collections.Specialized;
 using System.Xml;
 using System.IO;
 using DongTien.ClientApp.Models;
+using DongTien.Common;
 
 namespace DongTien.ClientApp
 {
@@ -33,19 +34,57 @@ namespace DongTien.ClientApp
 
         private void LoadConfigApp()
         {
-            string username = ConfigurationManager.AppSettings["Username"];
-            string password = ConfigurationManager.AppSettings["Password"];
-            string isSync = ConfigurationManager.AppSettings["Sync"];
+            string username = ConfigurationManager.AppSettings[Constants.Username];
+            string password = ConfigurationManager.AppSettings[Constants.Password];
+            string isSync = ConfigurationManager.AppSettings[Constants.Sync];
+
+            Txt_Username.Text = username;
+            Txt_Password.Text = password;
+
+            if (isSync.ToLower() == "true")
+            {
+                rbtn_sync.Checked = true;
+                rbtn_notsync.Checked = false;
+            }
+            else
+            {
+                rbtn_sync.Checked = false;
+                rbtn_notsync.Checked = true;
+            }
 
             LoadConfigFromXML();
         }
 
         private void btn_saveConfig_Click(object sender, EventArgs e)
         {
-            SaveConfigToXML();
+            SaveConfigApp();
         }
 
-        private void SaveConfigToXML()
+        private void SaveConfigApp()
+        {
+            string username = Txt_Username.Text.Trim();
+            string password = Txt_Password.Text.Trim();
+            bool isSync = rbtn_sync.Checked;
+
+            string _isSync = isSync == true ? "true" : "false";
+
+
+            Configuration config = ConfigurationManager.OpenExeConfiguration(Application.ExecutablePath);
+
+            config.AppSettings.Settings.Remove(Constants.Username);
+            config.AppSettings.Settings.Add(Constants.Username,username);
+
+            config.AppSettings.Settings.Remove(Constants.Password);
+            config.AppSettings.Settings.Add(Constants.Password,password);
+
+            config.AppSettings.Settings.Remove(Constants.Sync);
+            config.AppSettings.Settings.Add(Constants.Sync,_isSync);
+            config.Save(ConfigurationSaveMode.Minimal);
+
+            SaveMapPathToXML();
+        }
+
+        private void SaveMapPathToXML()
         {
             try
             {
@@ -106,6 +145,16 @@ namespace DongTien.ClientApp
             {
 
             }
+        }
+
+        private void btn_start_Click(object sender, EventArgs e)
+        {
+            SendFile();
+        }
+
+        private void SendFile()
+        {
+            
         }
     }
 }
