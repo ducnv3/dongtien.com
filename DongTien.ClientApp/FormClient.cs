@@ -22,15 +22,50 @@ namespace DongTien.ClientApp
         public FormClient()
         {
             InitializeComponent();
-            ConfigForm();
+            ConfigClientForm();
             LoadConfigApp();
+            SetEvents();
         }
 
-        private void ConfigForm()
+        private void SetEvents()
         {
+            this.Resize += Form_Resize;
+            FileWatcher();
+        }
+
+        private void ConfigClientForm()
+        {
+            // Fixed Size
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
 
+            // config notification 
+            notifyIcon.BalloonTipText = "Ứng dụng đã được thu nhỏ !";
+            notifyIcon.BalloonTipTitle = "Thông báo";
         }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            const string message = "Bạn có chắc chắn muốn thoát ứng dụng?";
+            const string caption = "Xác nhận";
+
+            var result = MessageBox.Show(message, caption,
+                             MessageBoxButtons.YesNo,
+                             MessageBoxIcon.Question);
+
+            e.Cancel = (result == DialogResult.No);
+        }
+
+        private void Form_Resize(object sender, EventArgs e)
+        {
+            if (FormWindowState.Minimized == this.WindowState)
+            {
+                Hide();
+                notifyIcon.Visible = true;
+                notifyIcon.ShowBalloonTip(1000);
+            }
+        }
+
+
 
         private void LoadConfigApp()
         {
@@ -72,13 +107,13 @@ namespace DongTien.ClientApp
             Configuration config = ConfigurationManager.OpenExeConfiguration(Application.ExecutablePath);
 
             config.AppSettings.Settings.Remove(Constants.Username);
-            config.AppSettings.Settings.Add(Constants.Username,username);
+            config.AppSettings.Settings.Add(Constants.Username, username);
 
             config.AppSettings.Settings.Remove(Constants.Password);
-            config.AppSettings.Settings.Add(Constants.Password,password);
+            config.AppSettings.Settings.Add(Constants.Password, password);
 
             config.AppSettings.Settings.Remove(Constants.Sync);
-            config.AppSettings.Settings.Add(Constants.Sync,_isSync);
+            config.AppSettings.Settings.Add(Constants.Sync, _isSync);
             config.Save(ConfigurationSaveMode.Minimal);
 
             SaveMapPathToXML();
@@ -149,12 +184,44 @@ namespace DongTien.ClientApp
 
         private void btn_start_Click(object sender, EventArgs e)
         {
-            SendFile();
+
         }
 
-        private void SendFile()
+        public void FileWatcher()
         {
-            
+            FileSystemWatcher watcher = new FileSystemWatcher();
+            watcher.IncludeSubdirectories = true;
+            watcher.Path = @"\\192.168.1.9\Shared\";
+            watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
+                         | NotifyFilters.FileName | NotifyFilters.DirectoryName; ;
+            watcher.Filter = "*.*";
+            watcher.Changed += new FileSystemEventHandler(OnChanged);
+            watcher.Deleted += watcher_Deleted;
+            watcher.Renamed += watcher_Renamed;
+            watcher.EnableRaisingEvents = true;
+        }
+
+        public void watcher_Renamed(object sender, RenamedEventArgs e)
+        {
+            Console.WriteLine("Rename: " + e.Name);
+            Console.WriteLine("Rename: " + e.FullPath);
+        }
+
+        public void watcher_Deleted(object sender, FileSystemEventArgs e)
+        {
+            Console.WriteLine("Delete: " + e.FullPath);
+        }
+        public void OnChanged(object source, FileSystemEventArgs e)
+        {
+            Console.WriteLine("Changed: " + e.Name);
+            Console.WriteLine("Changed: " + e.FullPath);
+        }
+
+        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            Show();
+            this.WindowState = FormWindowState.Normal;
+            notifyIcon.Visible = false;
         }
     }
 }

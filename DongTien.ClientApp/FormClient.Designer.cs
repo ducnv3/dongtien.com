@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormClient));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.Txt_Password = new System.Windows.Forms.TextBox();
             this.Txt_Username = new System.Windows.Forms.TextBox();
@@ -43,6 +45,7 @@
             this.btn_saveConfig = new System.Windows.Forms.Button();
             this.btn_start = new System.Windows.Forms.Button();
             this.btn_stop = new System.Windows.Forms.Button();
+            this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridviewPath)).BeginInit();
@@ -191,6 +194,13 @@
             this.btn_stop.Text = "Kết thúc";
             this.btn_stop.UseVisualStyleBackColor = true;
             // 
+            // notifyIcon
+            // 
+            this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
+            this.notifyIcon.Text = "notifyIcon1";
+            this.notifyIcon.Visible = true;
+            this.notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
+            // 
             // FormClient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -231,6 +241,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn col_source;
         private System.Windows.Forms.DataGridViewTextBoxColumn col_destination;
         private System.Windows.Forms.TextBox Txt_Password;
+        private System.Windows.Forms.NotifyIcon notifyIcon;
     }
 }
 
