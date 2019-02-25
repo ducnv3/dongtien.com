@@ -94,5 +94,15 @@ namespace DongTien.Common
             tdes.Clear();
             return UTF8Encoding.UTF8.GetString(resultArray);
         }
+
+        public static String GetFilenameFromPath(string path)
+        {
+            return path.Substring(path.LastIndexOf("\\") + 1);
+        }
+
+        public static String GetDirFromPath(string path)
+        {
+            return path.Substring(0,path.LastIndexOf("\\"));
+        }
     }
 }

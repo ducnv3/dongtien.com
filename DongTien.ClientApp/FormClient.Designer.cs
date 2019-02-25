@@ -114,7 +114,7 @@
             this.gridviewPath.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.col_source,
             this.col_destination});
-            this.gridviewPath.Location = new System.Drawing.Point(10, 21);
+            this.gridviewPath.Location = new System.Drawing.Point(6, 21);
             this.gridviewPath.Name = "gridviewPath";
             this.gridviewPath.RowTemplate.Height = 24;
             this.gridviewPath.Size = new System.Drawing.Size(735, 233);
@@ -199,7 +199,7 @@
             this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
             this.notifyIcon.Text = "notifyIcon1";
             this.notifyIcon.Visible = true;
-            this.notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
+            this.notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon_MouseDoubleClick);
             // 
             // FormClient
             // 

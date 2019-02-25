@@ -10,6 +10,8 @@ namespace DongTien.Common
     {
         public static string StringKey = "dongtien.com";
 
+        public static string IP_SERVER = "192.168.1.9";
+
         public static string Username = "Username";
         public static string Password = "Password";
         public static string Sync = "Sync";

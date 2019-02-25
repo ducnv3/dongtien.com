@@ -13,11 +13,17 @@ using System.Xml;
 using System.IO;
 using DongTien.ClientApp.Models;
 using DongTien.Common;
+using DongTien.ClientApp.Controller;
+using System.Net;
+using System.Diagnostics;
 
 namespace DongTien.ClientApp
 {
     public partial class FormClient : Form
     {
+        private string username = "";
+        private string password = "";
+
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public FormClient()
         {
@@ -30,6 +36,12 @@ namespace DongTien.ClientApp
         private void SetEvents()
         {
             this.Resize += Form_Resize;
+
+            // set cert
+            ExecuteCommand("/c net use * /delete /y");
+            ExecuteCommand(@"/c net use \\192.168.1.9 /user:" + username + " " + password);
+            ExecuteCommand("/c net use * /delete /y");
+
             FileWatcher();
         }
 
@@ -65,12 +77,10 @@ namespace DongTien.ClientApp
             }
         }
 
-
-
         private void LoadConfigApp()
         {
-            string username = ConfigurationManager.AppSettings[Constants.Username];
-            string password = ConfigurationManager.AppSettings[Constants.Password];
+            username = ConfigurationManager.AppSettings[Constants.Username];
+            password = ConfigurationManager.AppSettings[Constants.Password];
             string isSync = ConfigurationManager.AppSettings[Constants.Sync];
 
             Txt_Username.Text = username;
@@ -87,7 +97,7 @@ namespace DongTien.ClientApp
                 rbtn_notsync.Checked = true;
             }
 
-            LoadConfigFromXML();
+            LoadMapPathFromXML();
         }
 
         private void btn_saveConfig_Click(object sender, EventArgs e)
@@ -150,36 +160,46 @@ namespace DongTien.ClientApp
             }
         }
 
-        private void LoadConfigFromXML()
+        private void LoadMapPathFromXML()
         {
             try
             {
                 var xmldoc = new XmlDataDocument();
                 XmlNodeList xmlnode;
-                int i = 0;
-                string str = null;
                 FileStream fs = new FileStream("AppConfig.xml", FileMode.Open, FileAccess.Read);
                 xmldoc.Load(fs);
                 xmlnode = xmldoc.GetElementsByTagName("ItemPath");
 
-                List<ItemPath> lstPathItem = new List<ItemPath>();
-
-                for (i = 0; i < xmlnode.Count; i++)
+                for (int i = 0; i < xmlnode.Count; i++)
                 {
-                    ItemPath path = new ItemPath();
-                    path.Source = xmlnode[i].ChildNodes.Item(0).InnerText.Trim();
-                    path.Destination = xmlnode[i].ChildNodes.Item(1).InnerText.Trim();
-                    lstPathItem.Add(path);
-
-                    this.gridviewPath.Rows.Add(path.Source, path.Destination);
+                    string source = xmlnode[i].ChildNodes.Item(0).InnerText.Trim();
+                    string destination = xmlnode[i].ChildNodes.Item(1).InnerText.Trim();
+                    this.gridviewPath.Rows.Add(source, destination);
                 }
 
                 fs.Close();
             }
             catch (IOException e)
             {
-
+                log.Error(e.Message);
             }
+        }
+
+        private List<ItemPath> GetListMapPath()
+        {
+            List<ItemPath> itemPaths = new List<ItemPath>();
+            for (int rows = 0; rows < gridviewPath.Rows.Count - 1; rows++)
+            {
+                string source = gridviewPath.Rows[rows].Cells[0].Value.ToString();
+                string destination = gridviewPath.Rows[rows].Cells[1].Value.ToString();
+
+                ItemPath itemPath = new ItemPath();
+                itemPath.Source = source;
+                itemPath.Destination = destination;
+
+                itemPaths.Add(itemPath);
+            }
+            return itemPaths;
         }
 
         private void btn_start_Click(object sender, EventArgs e)
@@ -189,39 +209,91 @@ namespace DongTien.ClientApp
 
         public void FileWatcher()
         {
-            FileSystemWatcher watcher = new FileSystemWatcher();
-            watcher.IncludeSubdirectories = true;
-            watcher.Path = @"\\192.168.1.9\Shared\";
-            watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
-                         | NotifyFilters.FileName | NotifyFilters.DirectoryName; ;
-            watcher.Filter = "*.*";
-            watcher.Changed += new FileSystemEventHandler(OnChanged);
-            watcher.Deleted += watcher_Deleted;
-            watcher.Renamed += watcher_Renamed;
-            watcher.EnableRaisingEvents = true;
+            List<ItemPath> paths = GetListMapPath();
+
+            foreach (ItemPath item in paths)
+            {
+                FileSystemWatcher watcher = new FileSystemWatcher();
+                watcher.IncludeSubdirectories = true;
+                watcher.Path = item.Source;
+                watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
+                             | NotifyFilters.FileName | NotifyFilters.DirectoryName; ;
+                watcher.Filter = "*.*";
+                watcher.Changed += new FileSystemEventHandler(OnChanged);
+                watcher.Deleted += new FileSystemEventHandler(watcher_Deleted);
+                watcher.Renamed += new RenamedEventHandler(watcher_Renamed);
+                watcher.EnableRaisingEvents = true;
+            }
+
         }
 
         public void watcher_Renamed(object sender, RenamedEventArgs e)
         {
-            Console.WriteLine("Rename: " + e.Name);
-            Console.WriteLine("Rename: " + e.FullPath);
+            List<ItemPath> paths = GetListMapPath();
+            string dir = Utility.GetDirFromPath(e.FullPath);
+            string fileName = Utility.GetFilenameFromPath(e.FullPath);
+
+            ItemPath item = paths.Find(i => i.Source == dir);
+            if (item != null)
+            {
+                string oldName = Utility.GetFilenameFromPath(e.OldFullPath);
+                string newName = Utility.GetFilenameFromPath(e.FullPath);
+
+                string oldPath = item.Destination + "\\" + oldName;
+                string newPath = item.Destination + "\\" + newName;
+
+
+                FileController.Rename(oldPath, newPath);
+            }
         }
 
         public void watcher_Deleted(object sender, FileSystemEventArgs e)
         {
-            Console.WriteLine("Delete: " + e.FullPath);
-        }
-        public void OnChanged(object source, FileSystemEventArgs e)
-        {
-            Console.WriteLine("Changed: " + e.Name);
-            Console.WriteLine("Changed: " + e.FullPath);
+            List<ItemPath> paths = GetListMapPath();
+            string dir = Utility.GetDirFromPath(e.FullPath);
+            string fileName = Utility.GetFilenameFromPath(e.FullPath);
+
+            ItemPath item = paths.Find(i => i.Source == dir);
+            if (item != null)
+            {
+                string filePath = item.Destination + "\\" + fileName;
+                FileController.Delete(filePath);
+            }
         }
 
-        private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+        public void OnChanged(object source, FileSystemEventArgs e)
+        {
+            List<ItemPath> paths = GetListMapPath();
+            string dir = e.FullPath.Substring(0, e.FullPath.LastIndexOf("\\"));
+            ItemPath item = paths.Find(i => i.Source == dir);
+            if (item != null)
+                FileController.CopyFile(item.Source, item.Destination);
+        }
+
+        private void notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             Show();
             this.WindowState = FormWindowState.Normal;
             notifyIcon.Visible = false;
+        }
+
+        public void ExecuteCommand(String command)
+        {
+            Process p = new Process();
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+            startInfo.FileName = "cmd.exe";
+            startInfo.Arguments = command;
+            startInfo.CreateNoWindow = true;
+            startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            p.StartInfo = startInfo;
+            p.Start();
+            p.WaitForExit();
+            p.Exited += p_Exited;
+        }
+
+        private void p_Exited(object sender, EventArgs e)
+        {
+            log.Error(e);
         }
     }
 }
