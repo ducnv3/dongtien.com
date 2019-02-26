@@ -1,9 +1,12 @@
-﻿using System;
+﻿using DongTien.Common.Models;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace DongTien.Common
 {
@@ -102,7 +105,22 @@ namespace DongTien.Common
 
         public static String GetDirFromPath(string path)
         {
-            return path.Substring(0,path.LastIndexOf("\\"));
+            return path.Substring(0, path.LastIndexOf("\\"));
         }
+
+        public static void ExecuteCommand(String command, EventHandler e)
+        {
+            Process p = new Process();
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+            startInfo.FileName = "cmd.exe";
+            startInfo.Arguments = command;
+            startInfo.CreateNoWindow = true;
+            startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            p.StartInfo = startInfo;
+            p.Start();
+            p.WaitForExit();
+            p.Exited += e;
+        }
+
     }
 }

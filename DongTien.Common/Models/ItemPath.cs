@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DongTien.ClientApp.Models
+namespace DongTien.Common.Models
 {
     public class ItemPath
     {

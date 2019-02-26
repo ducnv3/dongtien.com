@@ -29,12 +29,12 @@ namespace DongTien.ClientApp.Controller
                 string[] fileList = Directory.GetFiles(sourceDir);
                 foreach (string f in fileList)
                 {
-                    string fName =  f.Substring(sourceDir.Length + 1);
+                    string fName = f.Substring(sourceDir.Length + 1);
 
                     string sourceFile = sourceDir + "\\" + fName;
                     string desFile = desDir + "\\" + fName;
 
-                    File.Copy(sourceFile,desFile,true);
+                    File.Copy(sourceFile, desFile, true);
                     File.SetAttributes(desDir, FileAttributes.Normal);
                 }
             }
@@ -56,7 +56,8 @@ namespace DongTien.ClientApp.Controller
 
         public static void Rename(String oldPath, string newPath)
         {
-            File.Move(oldPath, newPath);
+            if (File.Exists(oldPath))
+                File.Move(oldPath, newPath);
         }
     }
 }

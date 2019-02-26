@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.421
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DongTien.ClientApp", "DongTien.ClientApp\DongTien.ClientApp.csproj", "{EF904E08-B278-4629-985F-49E4026CD491}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DongTien.ServerApp", "DongTien.ServerApp\DongTien.ServerApp.csproj", "{4DA435FE-ACA3-4A44-BE05-A8597613B72C}"
@@ -28,5 +30,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {43743E43-A206-43EA-A94E-BBA4856D0AB3}
 	EndGlobalSection
 EndGlobal

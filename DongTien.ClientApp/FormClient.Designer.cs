@@ -114,6 +114,8 @@
             this.gridviewPath.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.col_source,
             this.col_destination});
+            this.gridviewPath.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnF2;
+            this.gridviewPath.Enabled = false;
             this.gridviewPath.Location = new System.Drawing.Point(6, 21);
             this.gridviewPath.Name = "gridviewPath";
             this.gridviewPath.RowTemplate.Height = 24;
@@ -193,6 +195,7 @@
             this.btn_stop.TabIndex = 5;
             this.btn_stop.Text = "Kết thúc";
             this.btn_stop.UseVisualStyleBackColor = true;
+            this.btn_stop.Click += new System.EventHandler(this.btn_stop_Click);
             // 
             // notifyIcon
             // 

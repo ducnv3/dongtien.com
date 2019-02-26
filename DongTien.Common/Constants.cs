@@ -15,5 +15,13 @@ namespace DongTien.Common
         public static string Username = "Username";
         public static string Password = "Password";
         public static string Sync = "Sync";
+
+        //config notification
+        public static string BalloonText = "Ứng dụng đã được thu nhỏ !";
+        public static string BalloonTitle = "Thông báo";
+
+        // mapping filename
+        public static string MAPPING_FILENAME = "Mapping.xml";
+
     }
 }
