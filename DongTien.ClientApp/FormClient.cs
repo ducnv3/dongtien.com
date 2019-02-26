@@ -62,8 +62,9 @@ namespace DongTien.ClientApp
             //MessageBox.Show("You are in the Form.Shown event.");
             string username = Txt_Username.Text.Trim();
             string password = Txt_Password.Text.Trim();
+            string ipServer = ConfigurationManager.AppSettings[Constants.IpServer];
 
-            service.SaveCertificate(username, password, Process_Exited);
+            service.SaveCertificate(ipServer, username, password, Process_Exited);
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)

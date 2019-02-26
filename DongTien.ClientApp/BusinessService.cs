@@ -37,7 +37,6 @@ namespace DongTien.ClientApp
                 string oldPath = item.Destination + "\\" + oldName;
                 string newPath = item.Destination + "\\" + newName;
 
-
                 FileController.Rename(oldPath, newPath);
             }
         }
@@ -56,11 +55,9 @@ namespace DongTien.ClientApp
             }
         }
 
-        public void SaveCertificate(string username, string password, EventHandler e)
+        public void SaveCertificate(string ipServer, string username, string password, EventHandler e)
         {
-            Utility.ExecuteCommand("/c net use * /delete /y", e);
-            Utility.ExecuteCommand(@"/c net use \\192.168.1.9 /user:" + username + " " + password, e);
-            Utility.ExecuteCommand("/c net use * /delete /y", e);
+            Utility.ExecuteCommand(@"/c net use \\"+ ipServer + " /user:" + username + " " + password, e);
         }
 
         public void SubscribeWatcher(List<FileSystemWatcher> watchers, FileSystemEventHandler changedE, FileSystemEventHandler DeleteE, RenamedEventHandler RenameE)
