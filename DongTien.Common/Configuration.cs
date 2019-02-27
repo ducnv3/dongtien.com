@@ -78,6 +78,11 @@ namespace DongTien.Common
             }
         }
 
+        public static void SaveConfigApp(bool isSync)
+        {
+            throw new NotImplementedException();
+        }
+
         public static List<ItemPath> GetListMapPath()
         {
             try
@@ -109,6 +114,51 @@ namespace DongTien.Common
             {
                 //log.Error(e.Message);
                 return new List<ItemPath>();
+            }
+        }
+    }
+
+    public static class ServerConfiguaration
+    {
+        public static void SaveConfigApp(bool isSync)
+        {
+            Configuration config = ConfigurationManager.OpenExeConfiguration(Application.ExecutablePath);
+
+            string _isSync = isSync == true ? "true" : "false";
+
+            config.AppSettings.Settings.Remove(Constants.Sync);
+            config.AppSettings.Settings.Add(Constants.Sync, _isSync);
+            config.Save(ConfigurationSaveMode.Minimal);
+        }
+
+        public static void SaveMapPathToXML(DataGridView gridviewPath)
+        {
+            try
+            {
+                DataTable dt = new DataTable("ItemPath");
+                for (int i = 0; i < gridviewPath.ColumnCount; i++)
+                {
+                    dt.Columns.Add(gridviewPath.Columns[i].Name, typeof(System.String));
+                }
+
+                int numOfCol = gridviewPath.Columns.Count;
+                foreach (DataGridViewRow drow in gridviewPath.Rows)
+                {
+                    DataRow myrow = dt.NewRow();
+                    for (int i = 0; i < numOfCol; i++)
+                    {
+                        myrow[i] = drow.Cells[i].Value;
+                    }
+                    dt.Rows.Add(myrow);
+                }
+                dt.Rows.RemoveAt(dt.Rows.Count - 1);
+                dt.WriteXml(Constants.MAPPING_FILENAME);
+
+                MessageDialogs.SaveSucess();
+            }
+            catch (Exception e)
+            {
+                MessageDialogs.Error();
             }
         }
     }

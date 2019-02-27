@@ -39,6 +39,7 @@
       <HintPath>..\DongTien.Common\References\log4net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -51,12 +52,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BusinessService.cs" />
-    <Compile Include="Constants.cs" />
-    <Compile Include="frmServer.cs">
+    <Compile Include="ServerForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmServer.Designer.cs">
-      <DependentUpon>frmServer.cs</DependentUpon>
+    <Compile Include="ServerForm.Designer.cs">
+      <DependentUpon>ServerForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -69,6 +69,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="ServerForm.resx">
+      <DependentUpon>ServerForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
