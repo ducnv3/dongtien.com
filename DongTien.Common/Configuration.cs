@@ -52,7 +52,7 @@ namespace DongTien.Common
                     dt.Rows.Add(myrow);
                 }
                 dt.Rows.RemoveAt(dt.Rows.Count - 1);
-                dt.WriteXml(Constants.MAPPING_FILENAME);
+                dt.WriteXml(Constants.MAPPING_CLIENT_FILENAME);
 
                 MessageDialogs.SaveSucess();
             }
@@ -66,7 +66,7 @@ namespace DongTien.Common
         {
             try
             {
-                List<ItemPath> paths = GetListMapPath();
+                List<ItemPath> paths = Utility.GetListMapPath(Constants.MAPPING_CLIENT_FILENAME);
                 foreach(ItemPath path in paths)
                 {
                     dataGridView.Rows.Add(path.Source, path.Destination);
@@ -83,43 +83,28 @@ namespace DongTien.Common
             throw new NotImplementedException();
         }
 
-        public static List<ItemPath> GetListMapPath()
-        {
-            try
-            {
-                var xmldoc = new XmlDataDocument();
-                XmlNodeList xmlnode;
-                FileStream fs = new FileStream(Constants.MAPPING_FILENAME, FileMode.Open, FileAccess.Read);
-                xmldoc.Load(fs);
-                xmlnode = xmldoc.GetElementsByTagName("ItemPath");
-
-                List<ItemPath> paths = new List<ItemPath>();
-
-                for (int i = 0; i < xmlnode.Count; i++)
-                {
-                    ItemPath item = new ItemPath();
-                    string source = xmlnode[i].ChildNodes.Item(0).InnerText.Trim();
-                    string destination = xmlnode[i].ChildNodes.Item(1).InnerText.Trim();
-                    //dataGridView.Rows.Add(source, destination);
-                    item.Source = source;
-                    item.Destination = destination;
-                    paths.Add(item);
-                }
-
-                fs.Close();
-
-                return paths;
-            }
-            catch (IOException e)
-            {
-                //log.Error(e.Message);
-                return new List<ItemPath>();
-            }
-        }
+        
     }
 
     public static class ServerConfiguaration
     {
+
+        public static void LoadMapPathFromXML(DataGridView gridViewPath)
+        {
+            try
+            {
+                List<ItemPath> paths = Utility.GetListMapPath(Constants.MAPPING_SERVER_FILENAME);
+                foreach (ItemPath path in paths)
+                {
+                    gridViewPath.Rows.Add(path.Source, path.Destination);
+                }
+            }
+            catch (IOException e)
+            {
+                //log.Error(e.Message);
+            }
+        }
+
         public static void SaveConfigApp(bool isSync)
         {
             Configuration config = ConfigurationManager.OpenExeConfiguration(Application.ExecutablePath);
@@ -152,7 +137,7 @@ namespace DongTien.Common
                     dt.Rows.Add(myrow);
                 }
                 dt.Rows.RemoveAt(dt.Rows.Count - 1);
-                dt.WriteXml(Constants.MAPPING_FILENAME);
+                dt.WriteXml(Constants.MAPPING_CLIENT_FILENAME);
 
                 MessageDialogs.SaveSucess();
             }

@@ -30,8 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             this.gridViewPath = new System.Windows.Forms.DataGridView();
-            this.Nguồn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Đích = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btn_save_config = new System.Windows.Forms.Button();
             this.btn_start = new System.Windows.Forms.Button();
             this.btn_stop = new System.Windows.Forms.Button();
@@ -40,6 +38,8 @@
             this.rbtn_not_sync = new System.Windows.Forms.RadioButton();
             this.rbtn_sync = new System.Windows.Forms.RadioButton();
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.col_source = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.col_destination = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.gridViewPath)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -49,25 +49,13 @@
             // 
             this.gridViewPath.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gridViewPath.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Nguồn,
-            this.Đích});
+            this.col_source,
+            this.col_destination});
             this.gridViewPath.Location = new System.Drawing.Point(6, 21);
             this.gridViewPath.Name = "gridViewPath";
             this.gridViewPath.RowTemplate.Height = 24;
             this.gridViewPath.Size = new System.Drawing.Size(772, 313);
             this.gridViewPath.TabIndex = 0;
-            // 
-            // Nguồn
-            // 
-            this.Nguồn.HeaderText = "Nguồn";
-            this.Nguồn.Name = "Nguồn";
-            this.Nguồn.Width = 300;
-            // 
-            // Đích
-            // 
-            this.Đích.HeaderText = "Đích";
-            this.Đích.Name = "Đích";
-            this.Đích.Width = 300;
             // 
             // btn_save_config
             // 
@@ -77,6 +65,7 @@
             this.btn_save_config.TabIndex = 1;
             this.btn_save_config.Text = "Lưu cấu hình";
             this.btn_save_config.UseVisualStyleBackColor = true;
+            this.btn_save_config.Click += new System.EventHandler(this.btn_save_config_Click);
             // 
             // btn_start
             // 
@@ -86,6 +75,7 @@
             this.btn_start.TabIndex = 2;
             this.btn_start.Text = "Bắt đầu";
             this.btn_start.UseVisualStyleBackColor = true;
+            this.btn_start.Click += new System.EventHandler(this.btn_start_Click);
             // 
             // btn_stop
             // 
@@ -95,6 +85,7 @@
             this.btn_stop.TabIndex = 3;
             this.btn_stop.Text = "Kết thúc";
             this.btn_stop.UseVisualStyleBackColor = true;
+            this.btn_stop.Click += new System.EventHandler(this.btn_stop_Click);
             // 
             // groupBox1
             // 
@@ -144,6 +135,18 @@
             this.notifyIcon.Text = "notifyIcon1";
             this.notifyIcon.Visible = true;
             // 
+            // col_source
+            // 
+            this.col_source.HeaderText = "Nguồn";
+            this.col_source.Name = "col_source";
+            this.col_source.Width = 300;
+            // 
+            // col_destination
+            // 
+            this.col_destination.HeaderText = "Đích";
+            this.col_destination.Name = "col_destination";
+            this.col_destination.Width = 300;
+            // 
             // ServerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -167,8 +170,6 @@
         #endregion
 
         private System.Windows.Forms.DataGridView gridViewPath;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Nguồn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Đích;
         private System.Windows.Forms.Button btn_save_config;
         private System.Windows.Forms.Button btn_start;
         private System.Windows.Forms.Button btn_stop;
@@ -177,6 +178,8 @@
         private System.Windows.Forms.RadioButton rbtn_not_sync;
         private System.Windows.Forms.RadioButton rbtn_sync;
         private System.Windows.Forms.NotifyIcon notifyIcon;
+        private System.Windows.Forms.DataGridViewTextBoxColumn col_source;
+        private System.Windows.Forms.DataGridViewTextBoxColumn col_destination;
     }
 }
 

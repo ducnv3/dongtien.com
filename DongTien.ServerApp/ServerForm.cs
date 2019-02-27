@@ -1,14 +1,8 @@
 ﻿using DongTien.Common;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Configuration;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace DongTien.ServerApp
@@ -45,7 +39,6 @@ namespace DongTien.ServerApp
         }
 
 
-
         private void SetEvents()
         {
             this.Resize += Form_Resize;
@@ -54,7 +47,7 @@ namespace DongTien.ServerApp
 
         private void Form1_Load(object sender, System.EventArgs e)
         {
-            
+
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
@@ -87,15 +80,7 @@ namespace DongTien.ServerApp
                 rbtn_not_sync.Checked = true;
             }
 
-            ClientConfiguration.LoadMapPathFromXML(gridViewPath);
-        }
-
-        private void btn_saveConfig_Click(object sender, EventArgs e)
-        {
-            bool isSync = rbtn_sync.Checked;
-
-            ServerConfiguaration.SaveConfigApp(isSync);
-            ServerConfiguaration.SaveMapPathToXML(gridViewPath);
+            ServerConfiguaration.LoadMapPathFromXML(gridViewPath);
         }
 
         private void btn_start_Click(object sender, EventArgs e)
@@ -108,7 +93,7 @@ namespace DongTien.ServerApp
         {
             btn_start.Visible = !isRunning;
             btn_stop.Visible = isRunning;
-            gridviewPath.Enabled = !isRunning;
+            gridViewPath.Enabled = !isRunning;
         }
 
         public void watcher_Renamed(object sender, RenamedEventArgs e)
@@ -126,15 +111,12 @@ namespace DongTien.ServerApp
             service.CopyFile(e);
         }
 
-
-
         private void notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             Show();
             this.WindowState = FormWindowState.Normal;
             notifyIcon.Visible = false;
         }
-
 
         private void Process_Exited(object sender, EventArgs e)
         {
@@ -145,6 +127,14 @@ namespace DongTien.ServerApp
         {
             onChangeStatusRunning(false);
             service.UnSubscribeWatcher(watchers, watcher_Changed, watcher_Deleted, watcher_Renamed);
+        }
+
+        private void btn_save_config_Click(object sender, EventArgs e)
+        {
+            bool isSync = rbtn_sync.Checked;
+
+            ServerConfiguaration.SaveConfigApp(isSync);
+            ServerConfiguaration.SaveMapPathToXML(gridViewPath);
         }
 
     }

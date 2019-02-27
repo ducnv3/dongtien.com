@@ -15,7 +15,7 @@ namespace DongTien.ClientApp
     {
         public void CopyFile(FileSystemEventArgs e)
         {
-            List<ItemPath> paths = ClientConfiguration.GetListMapPath();
+            List<ItemPath> paths = Utility.GetListMapPath(Constants.MAPPING_CLIENT_FILENAME);
             string dir = e.FullPath.Substring(0, e.FullPath.LastIndexOf("\\"));
             ItemPath item = paths.Find(i => i.Source == dir);
             if (item != null)
@@ -24,7 +24,7 @@ namespace DongTien.ClientApp
 
         public void Rename(RenamedEventArgs e)
         {
-            List<ItemPath> paths = ClientConfiguration.GetListMapPath();
+            List<ItemPath> paths = Utility.GetListMapPath(Constants.MAPPING_CLIENT_FILENAME);
             string dir = Utility.GetDirFromPath(e.FullPath);
             string fileName = Utility.GetFilenameFromPath(e.FullPath);
 
@@ -43,7 +43,7 @@ namespace DongTien.ClientApp
 
         public void Delete(FileSystemEventArgs e)
         {
-            List<ItemPath> paths = ClientConfiguration.GetListMapPath();
+            List<ItemPath> paths = Utility.GetListMapPath(Constants.MAPPING_CLIENT_FILENAME);
             string dir = Utility.GetDirFromPath(e.FullPath);
             string fileName = Utility.GetFilenameFromPath(e.FullPath);
 
@@ -62,7 +62,7 @@ namespace DongTien.ClientApp
 
         public void SubscribeWatcher(List<FileSystemWatcher> watchers, FileSystemEventHandler changedE, FileSystemEventHandler DeleteE, RenamedEventHandler RenameE)
         {
-            List<ItemPath> paths = ClientConfiguration.GetListMapPath();
+            List<ItemPath> paths = Utility.GetListMapPath(Constants.MAPPING_CLIENT_FILENAME);
 
             foreach (ItemPath item in paths)
             {

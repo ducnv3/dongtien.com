@@ -1,4 +1,6 @@
-﻿using DongTien.Common.Models;
+﻿using DongTien.Common;
+using DongTien.Common.Models;
+using DongTien.ServerApp.Controller;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,10 +11,10 @@ using System.Threading.Tasks;
 namespace DongTien.ServerApp
 {
     class BusinessService
-    {/*
+    {
         public void CopyFile(FileSystemEventArgs e)
         {
-            List<ItemPath> paths = ClientConfiguration.GetListMapPath();
+            List<ItemPath> paths = Utility.GetListMapPath(Constants.MAPPING_SERVER_FILENAME);
             string dir = e.FullPath.Substring(0, e.FullPath.LastIndexOf("\\"));
             ItemPath item = paths.Find(i => i.Source == dir);
             if (item != null)
@@ -21,7 +23,7 @@ namespace DongTien.ServerApp
 
         public void Rename(RenamedEventArgs e)
         {
-            List<ItemPath> paths = ClientConfiguration.GetListMapPath();
+            List<ItemPath> paths = Utility.GetListMapPath(Constants.MAPPING_SERVER_FILENAME);
             string dir = Utility.GetDirFromPath(e.FullPath);
             string fileName = Utility.GetFilenameFromPath(e.FullPath);
 
@@ -40,7 +42,7 @@ namespace DongTien.ServerApp
 
         public void Delete(FileSystemEventArgs e)
         {
-            List<ItemPath> paths = ClientConfiguration.GetListMapPath();
+            List<ItemPath> paths = Utility.GetListMapPath(Constants.MAPPING_SERVER_FILENAME);
             string dir = Utility.GetDirFromPath(e.FullPath);
             string fileName = Utility.GetFilenameFromPath(e.FullPath);
 
@@ -59,7 +61,7 @@ namespace DongTien.ServerApp
 
         public void SubscribeWatcher(List<FileSystemWatcher> watchers, FileSystemEventHandler changedE, FileSystemEventHandler DeleteE, RenamedEventHandler RenameE)
         {
-            List<ItemPath> paths = ClientConfiguration.GetListMapPath();
+            List<ItemPath> paths = Utility.GetListMapPath(Constants.MAPPING_SERVER_FILENAME);
 
             foreach (ItemPath item in paths)
             {
@@ -85,6 +87,6 @@ namespace DongTien.ServerApp
             {
                 watcher.EnableRaisingEvents = false;
             }
-        }*/
+        }
     }
 }

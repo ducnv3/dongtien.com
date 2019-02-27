@@ -19,7 +19,9 @@ namespace DongTien.Common
         public static string BalloonTitle = "Thông báo";
 
         // mapping filename
-        public static string MAPPING_FILENAME = "Mapping.xml";
+        public static string MAPPING_CLIENT_FILENAME = "Mapping.xml";
         public static string IpServer = "IpServer";
+
+        public static string MAPPING_SERVER_FILENAME = "Mapping.xml";
     }
 }

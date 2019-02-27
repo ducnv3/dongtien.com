@@ -2,11 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace DongTien.Common
 {
@@ -120,6 +122,41 @@ namespace DongTien.Common
             p.Start();
             p.WaitForExit();
             p.Exited += e;
+        }
+
+
+        public static List<ItemPath> GetListMapPath(string filename)
+        {
+            try
+            {
+                var xmldoc = new XmlDataDocument();
+                XmlNodeList xmlnode;
+                FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
+                xmldoc.Load(fs);
+                xmlnode = xmldoc.GetElementsByTagName("ItemPath");
+
+                List<ItemPath> paths = new List<ItemPath>();
+
+                for (int i = 0; i < xmlnode.Count; i++)
+                {
+                    ItemPath item = new ItemPath();
+                    string source = xmlnode[i].ChildNodes.Item(0).InnerText.Trim();
+                    string destination = xmlnode[i].ChildNodes.Item(1).InnerText.Trim();
+                    //dataGridView.Rows.Add(source, destination);
+                    item.Source = source;
+                    item.Destination = destination;
+                    paths.Add(item);
+                }
+
+                fs.Close();
+
+                return paths;
+            }
+            catch (IOException e)
+            {
+                //log.Error(e.Message);
+                return new List<ItemPath>();
+            }
         }
 
     }
