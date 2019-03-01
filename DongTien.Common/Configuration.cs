@@ -14,7 +14,7 @@ namespace DongTien.Common
 {
     public static class ClientConfiguration
     {
-        public static void SaveConfigApp(string username, string password, bool isSync)
+        public static void SaveConfigApp(string username, string password, string ipServer, bool isSync)
         {
             string _isSync = isSync == true ? "true" : "false";
 
@@ -25,6 +25,9 @@ namespace DongTien.Common
 
             config.AppSettings.Settings.Remove(Constants.Password);
             config.AppSettings.Settings.Add(Constants.Password, password);
+
+            config.AppSettings.Settings.Remove(Constants.IpServer);
+            config.AppSettings.Settings.Add(Constants.IpServer, ipServer);
 
             config.AppSettings.Settings.Remove(Constants.Sync);
             config.AppSettings.Settings.Add(Constants.Sync, _isSync);

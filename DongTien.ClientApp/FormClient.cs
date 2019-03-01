@@ -62,7 +62,7 @@ namespace DongTien.ClientApp
             //MessageBox.Show("You are in the Form.Shown event.");
             string username = Txt_Username.Text.Trim();
             string password = Txt_Password.Text.Trim();
-            string ipServer = ConfigurationManager.AppSettings[Constants.IpServer];
+            string ipServer = Txt_IpServer.Text.Trim();
 
             service.SaveCertificate(ipServer, username, password, Process_Exited);
         }
@@ -86,10 +86,12 @@ namespace DongTien.ClientApp
         {
             string username = ConfigurationManager.AppSettings[Constants.Username];
             string password = ConfigurationManager.AppSettings[Constants.Password];
+            string ipServer = ConfigurationManager.AppSettings[Constants.IpServer];
             string isSync = ConfigurationManager.AppSettings[Constants.Sync];
 
             Txt_Username.Text = username;
             Txt_Password.Text = password;
+            Txt_IpServer.Text = ipServer;
 
             if (isSync.ToLower() == "true")
             {
@@ -109,9 +111,11 @@ namespace DongTien.ClientApp
         {
             string username = Txt_Username.Text.Trim();
             string password = Txt_Password.Text.Trim();
+            string ipServer = Txt_IpServer.Text.Trim();
+
             bool isSync = rbtn_sync.Checked;
 
-            ClientConfiguration.SaveConfigApp(username, password, isSync);
+            ClientConfiguration.SaveConfigApp(username, password, ipServer, isSync);
             ClientConfiguration.SaveMapPathToXML(gridviewPath);
         }
 
