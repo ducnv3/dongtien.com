@@ -22,21 +22,12 @@ namespace DongTien.ClientApp.Controller
 
         }
 
-        public static void CopyFile(String sourceDir, String desDir)
+        public static void CopyFile(String sourcePath, String desPath)
         {
             try
             {
-                string[] fileList = Directory.GetFiles(sourceDir);
-                foreach (string f in fileList)
-                {
-                    string fName = f.Substring(sourceDir.Length + 1);
-
-                    string sourceFile = sourceDir + "\\" + fName;
-                    string desFile = desDir + "\\" + fName;
-
-                    File.Copy(sourceFile, desFile, true);
-                    File.SetAttributes(desDir, FileAttributes.Normal);
-                }
+                File.Copy(sourcePath, desPath, true);
+                File.SetAttributes(desPath, FileAttributes.Normal);
             }
             catch (DirectoryNotFoundException e1)
             {
@@ -45,7 +36,6 @@ namespace DongTien.ClientApp.Controller
             catch (IOException e2)
             {
                 log.Error(e2.Message);
-
             }
         }
 

@@ -19,7 +19,12 @@ namespace DongTien.ClientApp
             string dir = e.FullPath.Substring(0, e.FullPath.LastIndexOf("\\"));
             ItemPath item = paths.Find(i => i.Source == dir);
             if (item != null)
-                FileController.CopyFile(item.Source, item.Destination);
+            {
+                string filename = e.FullPath.Substring(e.FullPath.LastIndexOf("\\") + 1);
+                string sourceFile = item.Source + "\\" + filename;
+                string desFile = item.Destination + "\\" + filename;
+                FileController.CopyFile(sourceFile, desFile);
+            }
         }
 
         public void Rename(RenamedEventArgs e)
