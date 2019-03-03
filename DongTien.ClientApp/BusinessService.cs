@@ -8,11 +8,18 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using DongTien.ClientApp.Controller;
+using System.Diagnostics;
+using System.Net.NetworkInformation;
+using System.Net;
 
 namespace DongTien.ClientApp
 {
     public class BusinessService
     {
+        private static readonly log4net.ILog log =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+
         public void CopyFile(FileSystemEventArgs e)
         {
             List<ItemPath> paths = Utility.GetListMapPath(Constants.MAPPING_CLIENT_FILENAME);
@@ -25,6 +32,7 @@ namespace DongTien.ClientApp
                 string desFile = item.Destination + "\\" + filename;
                 FileController.CopyFile(sourceFile, desFile);
             }
+            log.Debug("Copy File");
         }
 
         public void Rename(RenamedEventArgs e)
@@ -62,7 +70,15 @@ namespace DongTien.ClientApp
 
         public void SaveCertificate(string ipServer, string username, string password, EventHandler e)
         {
-            Utility.ExecuteCommand(@"/c net use \\"+ ipServer + " /user:" + username + " " + password, e);
+            if (ConnectToServerStatus(ipServer))
+            {
+                Utility.ExecuteCommand(@"/c net use \\" + ipServer + " /user:" + username + " " + password, e);
+                log.Info("Set Cert Success");
+            }
+            else
+            {
+                log.Error("Can't connect to Server");
+            }
         }
 
         public void SubscribeWatcher(List<FileSystemWatcher> watchers, FileSystemEventHandler changedE, FileSystemEventHandler DeleteE, RenamedEventHandler RenameE)
@@ -87,9 +103,38 @@ namespace DongTien.ClientApp
 
         }
 
+        public bool ConnectToServerStatus(string ipServer)
+        {
+            bool netOK = false;
+
+            // Convert IP Server to ArrayByte
+            string[] ips = ipServer.Split('.');
+            byte[] addressIP = new byte[ips.Length];
+            for (int i = 0; i < addressIP.Length; i++)
+            {
+                addressIP[i] = (byte)Int16.Parse(ips[i]);
+            }
+
+            //Test Ping
+            using (Ping png = new Ping())
+            {
+                IPAddress addr = new IPAddress(addressIP);
+                try
+                {
+                    netOK = (png.Send(addr, 1500, new byte[] { 0, 1, 2, 3 }).Status == IPStatus.Success);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                    netOK = false;
+                }
+                return netOK;
+            }
+        }
+
         public void UnSubscribeWatcher(List<FileSystemWatcher> watchers, Action<object, FileSystemEventArgs> watcher_Changed, Action<object, FileSystemEventArgs> watcher_Deleted, Action<object, RenamedEventArgs> watcher_Renamed)
         {
-            foreach(FileSystemWatcher watcher in watchers)
+            foreach (FileSystemWatcher watcher in watchers)
             {
                 watcher.EnableRaisingEvents = false;
             }
