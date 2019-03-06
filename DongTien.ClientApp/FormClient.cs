@@ -13,7 +13,6 @@ using System.Xml;
 using System.IO;
 using DongTien.Common.Models;
 using DongTien.Common;
-using DongTien.ClientApp.Controller;
 using System.Net;
 using System.Diagnostics;
 
@@ -121,8 +120,15 @@ namespace DongTien.ClientApp
 
         private void btn_start_Click(object sender, EventArgs e)
         {
-            onChangeStatusRunning(true);
-            service.SubscribeWatcher(watchers, watcher_Changed, watcher_Deleted, watcher_Renamed);
+            if (service.ConnectToServerStatus(Txt_IpServer.Text.Trim()))
+            {
+                onChangeStatusRunning(true);
+                service.SubscribeWatcher(watchers, watcher_Changed, watcher_Deleted, watcher_Renamed);
+            }
+            else
+            {
+                MessageDialogs.CannotConectToServer();
+            }
         }
 
         private void onChangeStatusRunning(bool isRunning)

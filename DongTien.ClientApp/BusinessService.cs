@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
-using DongTien.ClientApp.Controller;
 using System.Diagnostics;
 using System.Net.NetworkInformation;
 using System.Net;
@@ -19,6 +18,12 @@ namespace DongTien.ClientApp
         private static readonly log4net.ILog log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        private FileProcessor fileProcessor;
+
+        public BusinessService()
+        {
+            fileProcessor = new FileProcessor();
+        }
 
         public void CopyFile(FileSystemEventArgs e)
         {
@@ -28,9 +33,25 @@ namespace DongTien.ClientApp
             if (item != null)
             {
                 string filename = e.FullPath.Substring(e.FullPath.LastIndexOf("\\") + 1);
+
                 string sourceFile = item.Source + "\\" + filename;
                 string desFile = item.Destination + "\\" + filename;
-                FileController.CopyFile(sourceFile, desFile);
+
+                DTProcess dTProcess = new DTProcess();
+                dTProcess.Source = sourceFile;
+                dTProcess.Destination = desFile;
+                dTProcess.Type = TypeProcess.COPY;
+
+                //fileProcessor.EnqueueProcess(dTProcess);
+                try
+                {
+                    File.Copy(sourceFile, desFile, true);
+                    File.SetAttributes(desFile, FileAttributes.Normal);
+                }
+                catch (Exception)
+                {
+
+                }
             }
             log.Debug("Copy File");
         }
@@ -50,7 +71,12 @@ namespace DongTien.ClientApp
                 string oldPath = item.Destination + "\\" + oldName;
                 string newPath = item.Destination + "\\" + newName;
 
-                FileController.Rename(oldPath, newPath);
+                DTProcess dTProcess = new DTProcess();
+                dTProcess.Source = oldPath;
+                dTProcess.Destination = newPath;
+                dTProcess.Type = TypeProcess.RENAME;
+
+                fileProcessor.EnqueueProcess(dTProcess);
             }
         }
 
@@ -64,7 +90,10 @@ namespace DongTien.ClientApp
             if (item != null)
             {
                 string filePath = item.Destination + "\\" + fileName;
-                FileController.Delete(filePath);
+                DTProcess dTProcess = new DTProcess();
+                dTProcess.Source = filePath;
+                dTProcess.Type = TypeProcess.DELETE;
+                fileProcessor.EnqueueProcess(dTProcess);
             }
         }
 
@@ -138,6 +167,7 @@ namespace DongTien.ClientApp
             {
                 watcher.EnableRaisingEvents = false;
             }
+            fileProcessor.Dispose();
         }
     }
 }

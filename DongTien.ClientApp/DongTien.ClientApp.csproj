@@ -65,7 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BusinessService.cs" />
-    <Compile Include="Controller\FileController.cs" />
+    <Compile Include="FileProcessor.cs" />
     <Compile Include="FormClient.cs">
       <SubType>Form</SubType>
     </Compile>

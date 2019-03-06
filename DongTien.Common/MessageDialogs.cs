@@ -31,5 +31,10 @@ namespace DongTien.Common
         {
             MessageBox.Show("Có lỗi xảy ra, vui lòng thực hiện lại !");
         }
+
+        public static void CannotConectToServer()
+        {
+            MessageBox.Show("Không thể kết nối đến server", "Error");
+        }
     }
 }
