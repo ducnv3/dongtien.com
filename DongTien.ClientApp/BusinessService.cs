@@ -42,13 +42,14 @@ namespace DongTien.ClientApp
                 dTProcess.Destination = desFile;
                 dTProcess.Type = TypeProcess.COPY;
 
-                //fileProcessor.EnqueueProcess(dTProcess);
-
-                File.Copy(sourceFile, desFile, true);
-                File.SetAttributes(desFile, FileAttributes.Normal);
-
+                fileProcessor.EnqueueProcess(dTProcess);
+                log.Debug("Copy File: " + e.FullPath + " " + filename);
             }
-            log.Debug("Copy File");
+            else
+            {
+                log.Error("Do not exist path in map: " + e.FullPath);
+            }
+
         }
 
         public void Rename(RenamedEventArgs e)
@@ -97,11 +98,11 @@ namespace DongTien.ClientApp
             if (ConnectToServerStatus(ipServer))
             {
                 Utility.ExecuteCommand(@"/c net use \\" + ipServer + " /user:" + username + " " + password, e);
-                log.Info("Set Cert Success");
+                log.Info("Set Cert Success: " + ipServer);
             }
             else
             {
-                log.Error("Can't connect to Server");
+                log.Error("Can't connect to Server " + ipServer);
             }
         }
 
@@ -117,9 +118,9 @@ namespace DongTien.ClientApp
                 watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
                              | NotifyFilters.FileName | NotifyFilters.DirectoryName; ;
                 watcher.Filter = "*.*";
-                watcher.Changed += new FileSystemEventHandler(changedE);
-                watcher.Deleted += new FileSystemEventHandler(DeleteE);
-                watcher.Renamed += new RenamedEventHandler(RenameE);
+                watcher.Created += changedE;
+                watcher.Deleted += DeleteE;
+                watcher.Renamed += RenameE;
                 watcher.EnableRaisingEvents = true;
 
                 watchers.Add(watcher);

@@ -123,22 +123,7 @@ namespace DongTien.ClientApp
             if (service.ConnectToServerStatus(Txt_IpServer.Text.Trim()))
             {
                 onChangeStatusRunning(true);
-                //service.SubscribeWatcher(watchers, watcher_Changed, watcher_Deleted, watcher_Renamed);
-
-
-                // Test 
-                List<ItemPath> listItem = Utility.GetListMapPath(Constants.MAPPING_CLIENT_FILENAME);
-                FileSystemSafeWatcher watcher = new FileSystemSafeWatcher();
-                watcher.IncludeSubdirectories = true;
-                watcher.Path = listItem[0].Source;
-                watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
-                             | NotifyFilters.FileName | NotifyFilters.DirectoryName; ;
-                watcher.Filter = "*.*";
-                watcher.Changed += new FileSystemEventHandler(watcher_Changed);
-                watcher.Deleted += new FileSystemEventHandler(watcher_Deleted);
-                watcher.Renamed += new RenamedEventHandler(watcher_Renamed);
-                watcher.EnableRaisingEvents = true;
-
+                service.SubscribeWatcher(watchers, watcher_Changed, watcher_Deleted, watcher_Renamed);
             }
             else
             {
