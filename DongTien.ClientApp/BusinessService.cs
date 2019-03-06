@@ -43,15 +43,10 @@ namespace DongTien.ClientApp
                 dTProcess.Type = TypeProcess.COPY;
 
                 //fileProcessor.EnqueueProcess(dTProcess);
-                try
-                {
-                    File.Copy(sourceFile, desFile, true);
-                    File.SetAttributes(desFile, FileAttributes.Normal);
-                }
-                catch (Exception)
-                {
 
-                }
+                File.Copy(sourceFile, desFile, true);
+                File.SetAttributes(desFile, FileAttributes.Normal);
+
             }
             log.Debug("Copy File");
         }
@@ -110,13 +105,13 @@ namespace DongTien.ClientApp
             }
         }
 
-        public void SubscribeWatcher(List<FileSystemWatcher> watchers, FileSystemEventHandler changedE, FileSystemEventHandler DeleteE, RenamedEventHandler RenameE)
+        public void SubscribeWatcher(List<FileSystemSafeWatcher> watchers, FileSystemEventHandler changedE, FileSystemEventHandler DeleteE, RenamedEventHandler RenameE)
         {
             List<ItemPath> paths = Utility.GetListMapPath(Constants.MAPPING_CLIENT_FILENAME);
 
             foreach (ItemPath item in paths)
             {
-                FileSystemWatcher watcher = new FileSystemWatcher();
+                FileSystemSafeWatcher watcher = new FileSystemSafeWatcher();
                 watcher.IncludeSubdirectories = true;
                 watcher.Path = item.Source;
                 watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
@@ -161,9 +156,9 @@ namespace DongTien.ClientApp
             }
         }
 
-        public void UnSubscribeWatcher(List<FileSystemWatcher> watchers, Action<object, FileSystemEventArgs> watcher_Changed, Action<object, FileSystemEventArgs> watcher_Deleted, Action<object, RenamedEventArgs> watcher_Renamed)
+        public void UnSubscribeWatcher(List<FileSystemSafeWatcher> watchers, Action<object, FileSystemEventArgs> watcher_Changed, Action<object, FileSystemEventArgs> watcher_Deleted, Action<object, RenamedEventArgs> watcher_Renamed)
         {
-            foreach (FileSystemWatcher watcher in watchers)
+            foreach (FileSystemSafeWatcher watcher in watchers)
             {
                 watcher.EnableRaisingEvents = false;
             }

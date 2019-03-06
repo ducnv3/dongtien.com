@@ -23,7 +23,7 @@ namespace DongTien.ClientApp
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private BusinessService service;
-        private List<FileSystemWatcher> watchers;
+        private List<FileSystemSafeWatcher> watchers;
 
         public FormClient()
         {
@@ -45,7 +45,7 @@ namespace DongTien.ClientApp
             onChangeStatusRunning(false);
 
             service = new BusinessService();
-            watchers = new List<FileSystemWatcher>();
+            watchers = new List<FileSystemSafeWatcher>();
         }
 
 
@@ -123,7 +123,22 @@ namespace DongTien.ClientApp
             if (service.ConnectToServerStatus(Txt_IpServer.Text.Trim()))
             {
                 onChangeStatusRunning(true);
-                service.SubscribeWatcher(watchers, watcher_Changed, watcher_Deleted, watcher_Renamed);
+                //service.SubscribeWatcher(watchers, watcher_Changed, watcher_Deleted, watcher_Renamed);
+
+
+                // Test 
+                List<ItemPath> listItem = Utility.GetListMapPath(Constants.MAPPING_CLIENT_FILENAME);
+                FileSystemSafeWatcher watcher = new FileSystemSafeWatcher();
+                watcher.IncludeSubdirectories = true;
+                watcher.Path = listItem[0].Source;
+                watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
+                             | NotifyFilters.FileName | NotifyFilters.DirectoryName; ;
+                watcher.Filter = "*.*";
+                watcher.Changed += new FileSystemEventHandler(watcher_Changed);
+                watcher.Deleted += new FileSystemEventHandler(watcher_Deleted);
+                watcher.Renamed += new RenamedEventHandler(watcher_Renamed);
+                watcher.EnableRaisingEvents = true;
+
             }
             else
             {
