@@ -23,5 +23,7 @@ namespace DongTien.Common
         public static string IpServer = "IpServer";
 
         public static string MAPPING_SERVER_FILENAME = "Mapping.xml";
+
+        public static string WINDOWS_FORM_TITLE = "Sync And Share";
     }
 }

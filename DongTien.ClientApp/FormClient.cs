@@ -75,7 +75,7 @@ namespace DongTien.ClientApp
         {
             if (FormWindowState.Minimized == this.WindowState)
             {
-                Hide();
+                ShowInTaskbar = false;
                 notifyIcon.Visible = true;
                 notifyIcon.ShowBalloonTip(1000);
             }
@@ -157,7 +157,7 @@ namespace DongTien.ClientApp
 
         private void notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            Show();
+            ShowInTaskbar = true;
             this.WindowState = FormWindowState.Normal;
             notifyIcon.Visible = false;
         }
