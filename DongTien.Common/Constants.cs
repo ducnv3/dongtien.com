@@ -23,5 +23,6 @@ namespace DongTien.Common
         public static string IpServer = "IpServer";
 
         public static string MAPPING_SERVER_FILENAME = "Mapping.xml";
+        public static string ALLOW_PATHS = "AllowPath.xml";
     }
 }

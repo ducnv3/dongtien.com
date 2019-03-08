@@ -159,5 +159,37 @@ namespace DongTien.Common
             }
         }
 
+
+        public static List<ItemPath> GetListAllowPath(string filename)
+        {
+            try
+            {
+                var xmldoc = new XmlDataDocument();
+                XmlNodeList xmlnode;
+                FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
+                xmldoc.Load(fs);
+                xmlnode = xmldoc.GetElementsByTagName("ItemPath");
+
+                List<ItemPath> paths = new List<ItemPath>();
+
+                for (int i = 0; i < xmlnode.Count; i++)
+                {
+                    ItemPath item = new ItemPath();
+                    string source = xmlnode[i].ChildNodes.Item(0).InnerText.Trim();
+                    item.Source = source;
+                    paths.Add(item);
+                }
+
+                fs.Close();
+
+                return paths;
+            }
+            catch (IOException e)
+            {
+                //log.Error(e.Message);
+                return new List<ItemPath>();
+            }
+        }
+
     }
 }

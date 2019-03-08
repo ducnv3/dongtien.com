@@ -81,6 +81,7 @@ namespace DongTien.ServerApp
             }
 
             ServerConfiguaration.LoadMapPathFromXML(gridViewPath);
+            ServerConfiguaration.LoadAllowPathFromXML(gridAllowPath);
         }
 
         private void btn_start_Click(object sender, EventArgs e)
@@ -137,5 +138,9 @@ namespace DongTien.ServerApp
             ServerConfiguaration.SaveMapPathToXML(gridViewPath);
         }
 
+        private void btn_save_allow_path_Click(object sender, EventArgs e)
+        {
+            ServerConfiguaration.SaveAllowPathToXML(gridAllowPath);
+        }
     }
 }

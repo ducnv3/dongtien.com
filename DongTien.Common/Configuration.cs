@@ -89,21 +89,6 @@ namespace DongTien.Common
     public static class ServerConfiguaration
     {
 
-        public static void LoadMapPathFromXML(DataGridView gridViewPath)
-        {
-            try
-            {
-                List<ItemPath> paths = Utility.GetListMapPath(Constants.MAPPING_SERVER_FILENAME);
-                foreach (ItemPath path in paths)
-                {
-                    gridViewPath.Rows.Add(path.Source, path.Destination);
-                }
-            }
-            catch (IOException e)
-            {
-                //log.Error(e.Message);
-            }
-        }
 
         public static void SaveConfigApp(bool isSync)
         {
@@ -116,6 +101,7 @@ namespace DongTien.Common
             config.Save(ConfigurationSaveMode.Minimal);
         }
 
+        // Save load map path
         public static void SaveMapPathToXML(DataGridView gridviewPath)
         {
             try
@@ -146,5 +132,67 @@ namespace DongTien.Common
                 MessageDialogs.Error();
             }
         }
+        public static void LoadMapPathFromXML(DataGridView gridViewPath)
+        {
+            try
+            {
+                List<ItemPath> paths = Utility.GetListMapPath(Constants.MAPPING_SERVER_FILENAME);
+                foreach (ItemPath path in paths)
+                {
+                    gridViewPath.Rows.Add(path.Source, path.Destination);
+                }
+            }
+            catch (IOException e)
+            {
+                //log.Error(e.Message);
+            }
+        }
+
+        // save load allow path
+        public static void SaveAllowPathToXML(DataGridView gridviewPath)
+        {
+            try
+            {
+                DataTable dt = new DataTable("ItemPath");
+                for (int i = 0; i < gridviewPath.ColumnCount; i++)
+                {
+                    dt.Columns.Add(gridviewPath.Columns[i].Name, typeof(System.String));
+                }
+
+                int numOfCol = gridviewPath.Columns.Count;
+                foreach (DataGridViewRow drow in gridviewPath.Rows)
+                {
+                    DataRow myrow = dt.NewRow();
+                    for (int i = 0; i < numOfCol; i++)
+                    {
+                        myrow[i] = drow.Cells[i].Value;
+                    }
+                    dt.Rows.Add(myrow);
+                }
+                dt.Rows.RemoveAt(dt.Rows.Count - 1);
+                dt.WriteXml(Constants.ALLOW_PATHS);
+                MessageDialogs.SaveSucess();
+            }
+            catch (Exception e)
+            {
+                MessageDialogs.Error();
+            }
+        }
+        public static void LoadAllowPathFromXML(DataGridView gridViewPath)
+        {
+            try
+            {
+                List<ItemPath> paths = Utility.GetListAllowPath(Constants.ALLOW_PATHS);
+                foreach (ItemPath path in paths)
+                {
+                    gridViewPath.Rows.Add(path.Source);
+                }
+            }
+            catch (IOException e)
+            {
+                //log.Error(e.Message);
+            }
+        }
+
     }
 }
