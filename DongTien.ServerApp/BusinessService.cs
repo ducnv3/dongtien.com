@@ -1,24 +1,51 @@
 ﻿using DongTien.Common;
 using DongTien.Common.Models;
-using DongTien.ServerApp.Controller;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DongTien.ServerApp
 {
     class BusinessService
     {
+
+        private static readonly log4net.ILog log =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        private FileProcessor fileProcessor;
+
+        public BusinessService()
+        {
+            fileProcessor = new FileProcessor();
+        }
+
         public void CopyFile(FileSystemEventArgs e)
         {
             List<ItemPath> paths = Utility.GetListMapPath(Constants.MAPPING_SERVER_FILENAME);
             string dir = e.FullPath.Substring(0, e.FullPath.LastIndexOf("\\"));
+
             ItemPath item = paths.Find(i => i.Source == dir);
+
             if (item != null)
-                FileController.CopyFile(item.Source, item.Destination);
+            {
+                string filename = e.FullPath.Substring(e.FullPath.LastIndexOf("\\") + 1);
+
+                string sourceFile = item.Source + "\\" + filename;
+                string desFile = item.Destination + "\\" + filename;
+
+                DTProcess dTProcess = new DTProcess();
+                dTProcess.Source = sourceFile;
+                dTProcess.Destination = desFile;
+                dTProcess.Type = TypeProcess.COPY;
+
+                fileProcessor.EnqueueProcess(dTProcess);
+                log.Info("File: " + e.FullPath + " " + filename);
+            }
+            else
+            {
+                log.Error("Do not exist path in map: " + e.FullPath);
+            }
+
         }
 
         public void Rename(RenamedEventArgs e)
@@ -36,7 +63,17 @@ namespace DongTien.ServerApp
                 string oldPath = item.Destination + "\\" + oldName;
                 string newPath = item.Destination + "\\" + newName;
 
-                FileController.Rename(oldPath, newPath);
+                DTProcess dTProcess = new DTProcess();
+                dTProcess.Source = oldPath;
+                dTProcess.Destination = newPath;
+                dTProcess.Type = TypeProcess.RENAME;
+
+                fileProcessor.EnqueueProcess(dTProcess);
+                log.Info("File: " + oldPath);
+            }
+            else
+            {
+                log.Error("Do not exist path in map: " + e.FullPath);
             }
         }
 
@@ -50,30 +87,34 @@ namespace DongTien.ServerApp
             if (item != null)
             {
                 string filePath = item.Destination + "\\" + fileName;
-                FileController.Delete(filePath);
+                DTProcess dTProcess = new DTProcess();
+                dTProcess.Source = filePath;
+                dTProcess.Type = TypeProcess.DELETE;
+                fileProcessor.EnqueueProcess(dTProcess);
+                log.Info("File : " + e.FullPath);
+            }
+            else
+            {
+                log.Error("Do not exist path in map: " + e.FullPath);
             }
         }
 
-        public void SaveCertificate(string ipServer, string username, string password, EventHandler e)
-        {
-            Utility.ExecuteCommand(@"/c net use \\" + ipServer + " /user:" + username + " " + password, e);
-        }
-
-        public void SubscribeWatcher(List<FileSystemWatcher> watchers, FileSystemEventHandler changedE, FileSystemEventHandler DeleteE, RenamedEventHandler RenameE)
+        public void SubscribeWatcher(List<FileSystemSafeWatcher> watchers, FileSystemEventHandler changedE, FileSystemEventHandler DeleteE, RenamedEventHandler RenameE)
         {
             List<ItemPath> paths = Utility.GetListMapPath(Constants.MAPPING_SERVER_FILENAME);
 
             foreach (ItemPath item in paths)
             {
-                FileSystemWatcher watcher = new FileSystemWatcher();
+                FileSystemSafeWatcher watcher = new FileSystemSafeWatcher();
                 watcher.IncludeSubdirectories = true;
                 watcher.Path = item.Source;
                 watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
                              | NotifyFilters.FileName | NotifyFilters.DirectoryName; ;
+
                 watcher.Filter = "*.*";
-                watcher.Changed += new FileSystemEventHandler(changedE);
-                watcher.Deleted += new FileSystemEventHandler(DeleteE);
-                watcher.Renamed += new RenamedEventHandler(RenameE);
+                watcher.Created += changedE;
+                watcher.Deleted += DeleteE;
+                watcher.Renamed += RenameE;
                 watcher.EnableRaisingEvents = true;
 
                 watchers.Add(watcher);
@@ -81,12 +122,22 @@ namespace DongTien.ServerApp
 
         }
 
-        public void UnSubscribeWatcher(List<FileSystemWatcher> watchers, Action<object, FileSystemEventArgs> watcher_Changed, Action<object, FileSystemEventArgs> watcher_Deleted, Action<object, RenamedEventArgs> watcher_Renamed)
+        public void UnSubscribeWatcher(List<FileSystemSafeWatcher> watchers, Action<object, FileSystemEventArgs> watcher_Changed, Action<object, FileSystemEventArgs> watcher_Deleted, Action<object, RenamedEventArgs> watcher_Renamed)
         {
-            foreach (FileSystemWatcher watcher in watchers)
+            foreach (FileSystemSafeWatcher watcher in watchers)
             {
                 watcher.EnableRaisingEvents = false;
             }
+
+            fileProcessor.Dispose();
+
+            log.Info("Unsubscribe success: " + watchers.Count + " path.");
+        }
+
+        public void CloseQueueFile()
+        {
+            fileProcessor.Dispose();
+            log.Info("Queue File has end.");
         }
     }
 }

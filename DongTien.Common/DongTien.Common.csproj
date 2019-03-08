@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Configuration.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="FileProcessor.cs" />
     <Compile Include="FileSystemSafeWatcher.cs" />
     <Compile Include="MessageDialogs.cs" />
     <Compile Include="Models\ItemPath.cs" />
@@ -51,12 +52,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="References\log4net.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DongTien.ClientApp
+namespace DongTien.Common
 {
-    class FileProcessor : IDisposable
+    public class FileProcessor : IDisposable
     {
         private EventWaitHandle eventWaitHandle = new AutoResetEvent(false);
         private Thread worker;

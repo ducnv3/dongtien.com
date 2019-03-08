@@ -126,7 +126,7 @@ namespace DongTien.Common
                     dt.Rows.Add(myrow);
                 }
                 dt.Rows.RemoveAt(dt.Rows.Count - 1);
-                dt.WriteXml(Constants.MAPPING_CLIENT_FILENAME);
+                dt.WriteXml(Constants.MAPPING_SERVER_FILENAME);
 
                 MessageDialogs.SaveSucess();
             }
@@ -142,7 +142,7 @@ namespace DongTien.Common
                 List<ItemPath> paths = Utility.GetListMapPath(Constants.MAPPING_SERVER_FILENAME);
                 foreach (ItemPath path in paths)
                 {
-                    gridViewPath.Rows.Add(path.Source, path.Destination);
+                    gridViewPath.Rows.Add(path.Source, path.Destination, path.Note);
                 }
             }
             catch (IOException e)

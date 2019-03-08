@@ -12,7 +12,7 @@ namespace DongTien.ServerApp
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private BusinessService service;
-        private List<FileSystemWatcher> watchers;
+        private List<FileSystemSafeWatcher> watchers;
 
         public ServerForm()
         {
@@ -35,7 +35,7 @@ namespace DongTien.ServerApp
             onChangeStatusRunning(false);
 
             service = new BusinessService();
-            watchers = new List<FileSystemWatcher>();
+            watchers = new List<FileSystemSafeWatcher>();
         }
 
 
@@ -52,7 +52,14 @@ namespace DongTien.ServerApp
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            MessageDialogs.CloseForm(e);
+            DialogResult result = MessageDialogs.CloseForm(e);
+
+            if (result == DialogResult.Yes)
+            {
+                service.CloseQueueFile();
+            }
+
+            e.Cancel = (result == DialogResult.No);
         }
 
         private void Form_Resize(object sender, EventArgs e)
@@ -81,7 +88,7 @@ namespace DongTien.ServerApp
             }
 
             ServerConfiguaration.LoadMapPathFromXML(gridViewPath);
-            ServerConfiguaration.LoadAllowPathFromXML(gridAllowPath);
+            
         }
 
         private void btn_start_Click(object sender, EventArgs e)
@@ -136,11 +143,6 @@ namespace DongTien.ServerApp
 
             ServerConfiguaration.SaveConfigApp(isSync);
             ServerConfiguaration.SaveMapPathToXML(gridViewPath);
-        }
-
-        private void btn_save_allow_path_Click(object sender, EventArgs e)
-        {
-            ServerConfiguaration.SaveAllowPathToXML(gridAllowPath);
         }
     }
 }
