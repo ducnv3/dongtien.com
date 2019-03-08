@@ -13,7 +13,6 @@ using System.Xml;
 using System.IO;
 using DongTien.Common.Models;
 using DongTien.Common;
-using DongTien.ClientApp.Controller;
 using System.Net;
 using System.Diagnostics;
 
@@ -24,7 +23,7 @@ namespace DongTien.ClientApp
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private BusinessService service;
-        private List<FileSystemWatcher> watchers;
+        private List<FileSystemSafeWatcher> watchers;
 
         public FormClient()
         {
@@ -46,7 +45,7 @@ namespace DongTien.ClientApp
             onChangeStatusRunning(false);
 
             service = new BusinessService();
-            watchers = new List<FileSystemWatcher>();
+            watchers = new List<FileSystemSafeWatcher>();
         }
 
 
@@ -62,21 +61,28 @@ namespace DongTien.ClientApp
             //MessageBox.Show("You are in the Form.Shown event.");
             string username = Txt_Username.Text.Trim();
             string password = Txt_Password.Text.Trim();
-            string ipServer = ConfigurationManager.AppSettings[Constants.IpServer];
+            string ipServer = Txt_IpServer.Text.Trim();
 
             service.SaveCertificate(ipServer, username, password, Process_Exited);
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            MessageDialogs.CloseForm(e);
+            DialogResult result = MessageDialogs.CloseForm(e);
+
+            if(result == DialogResult.Yes)
+            {
+                service.CloseQueueFile();
+            }
+
+            e.Cancel = (result == DialogResult.No);
         }
 
         private void Form_Resize(object sender, EventArgs e)
         {
             if (FormWindowState.Minimized == this.WindowState)
             {
-                Hide();
+                ShowInTaskbar = false;
                 notifyIcon.Visible = true;
                 notifyIcon.ShowBalloonTip(1000);
             }
@@ -86,10 +92,12 @@ namespace DongTien.ClientApp
         {
             string username = ConfigurationManager.AppSettings[Constants.Username];
             string password = ConfigurationManager.AppSettings[Constants.Password];
+            string ipServer = ConfigurationManager.AppSettings[Constants.IpServer];
             string isSync = ConfigurationManager.AppSettings[Constants.Sync];
 
             Txt_Username.Text = username;
             Txt_Password.Text = password;
+            Txt_IpServer.Text = ipServer;
 
             if (isSync.ToLower() == "true")
             {
@@ -109,16 +117,25 @@ namespace DongTien.ClientApp
         {
             string username = Txt_Username.Text.Trim();
             string password = Txt_Password.Text.Trim();
+            string ipServer = Txt_IpServer.Text.Trim();
+
             bool isSync = rbtn_sync.Checked;
 
-            ClientConfiguration.SaveConfigApp(username, password, isSync);
+            ClientConfiguration.SaveConfigApp(username, password, ipServer, isSync);
             ClientConfiguration.SaveMapPathToXML(gridviewPath);
         }
 
         private void btn_start_Click(object sender, EventArgs e)
         {
-            onChangeStatusRunning(true);
-            service.SubscribeWatcher(watchers, watcher_Changed, watcher_Deleted, watcher_Renamed);
+            if (service.ConnectToServerStatus(Txt_IpServer.Text.Trim()))
+            {
+                onChangeStatusRunning(true);
+                service.SubscribeWatcher(watchers, watcher_Changed, watcher_Deleted, watcher_Renamed);
+            }
+            else
+            {
+                MessageDialogs.CannotConectToServer();
+            }
         }
 
         private void onChangeStatusRunning(bool isRunning)
@@ -143,15 +160,12 @@ namespace DongTien.ClientApp
             service.CopyFile(e);
         }
 
-
-
         private void notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            Show();
+            ShowInTaskbar = true;
             this.WindowState = FormWindowState.Normal;
             notifyIcon.Visible = false;
         }
-
 
         private void Process_Exited(object sender, EventArgs e)
         {

@@ -10,7 +10,7 @@ namespace DongTien.Common
     public static class MessageDialogs
     {
 
-        public static void CloseForm(FormClosingEventArgs e)
+        public static DialogResult CloseForm(FormClosingEventArgs e)
         {
             const string message = "Bạn có chắc chắn muốn thoát ứng dụng?";
             const string caption = "Xác nhận";
@@ -19,7 +19,7 @@ namespace DongTien.Common
                              MessageBoxButtons.YesNo,
                              MessageBoxIcon.Question);
 
-            e.Cancel = (result == DialogResult.No);
+            return result; 
         }
 
         public static void SaveSucess()
@@ -30,6 +30,11 @@ namespace DongTien.Common
         public static void Error()
         {
             MessageBox.Show("Có lỗi xảy ra, vui lòng thực hiện lại !");
+        }
+
+        public static void CannotConectToServer()
+        {
+            MessageBox.Show("Không thể kết nối đến server", "Error");
         }
     }
 }

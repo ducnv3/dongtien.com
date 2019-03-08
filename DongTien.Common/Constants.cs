@@ -24,5 +24,6 @@ namespace DongTien.Common
 
         public static string MAPPING_SERVER_FILENAME = "Mapping.xml";
         public static string ALLOW_PATHS = "AllowPath.xml";
+        public static string WINDOWS_FORM_TITLE = "Sync And Share";
     }
 }

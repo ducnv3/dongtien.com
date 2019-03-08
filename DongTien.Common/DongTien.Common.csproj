@@ -43,8 +43,10 @@
   <ItemGroup>
     <Compile Include="Configuration.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="FileSystemSafeWatcher.cs" />
     <Compile Include="MessageDialogs.cs" />
     <Compile Include="Models\ItemPath.cs" />
+    <Compile Include="Models\DTProcess.cs" />
     <Compile Include="Utility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -31,6 +31,8 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormClient));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.Txt_IpServer = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.Txt_Password = new System.Windows.Forms.TextBox();
             this.Txt_Username = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -39,13 +41,14 @@
             this.gridviewPath = new System.Windows.Forms.DataGridView();
             this.col_source = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.col_destination = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.col_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.rbtn_notsync = new System.Windows.Forms.RadioButton();
             this.rbtn_sync = new System.Windows.Forms.RadioButton();
             this.btn_saveConfig = new System.Windows.Forms.Button();
             this.btn_start = new System.Windows.Forms.Button();
-            this.btn_stop = new System.Windows.Forms.Button();
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.btn_stop = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridviewPath)).BeginInit();
@@ -54,16 +57,34 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.Txt_IpServer);
+            this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.Txt_Password);
             this.groupBox1.Controls.Add(this.Txt_Username);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(752, 102);
+            this.groupBox1.Size = new System.Drawing.Size(752, 136);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Tài khoản xác thực";
+            // 
+            // Txt_IpServer
+            // 
+            this.Txt_IpServer.Location = new System.Drawing.Point(142, 94);
+            this.Txt_IpServer.Name = "Txt_IpServer";
+            this.Txt_IpServer.Size = new System.Drawing.Size(565, 22);
+            this.Txt_IpServer.TabIndex = 5;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(8, 99);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(66, 17);
+            this.label3.TabIndex = 4;
+            this.label3.Text = "IP Server";
             // 
             // Txt_Password
             // 
@@ -100,10 +121,11 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox2.Controls.Add(this.gridviewPath);
-            this.groupBox2.Location = new System.Drawing.Point(13, 125);
+            this.groupBox2.Location = new System.Drawing.Point(13, 154);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(751, 269);
+            this.groupBox2.Size = new System.Drawing.Size(1253, 468);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Cấu hình đường dẫn";
@@ -113,13 +135,14 @@
             this.gridviewPath.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gridviewPath.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.col_source,
-            this.col_destination});
+            this.col_destination,
+            this.col_description});
             this.gridviewPath.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnF2;
             this.gridviewPath.Enabled = false;
-            this.gridviewPath.Location = new System.Drawing.Point(6, 21);
+            this.gridviewPath.Location = new System.Drawing.Point(10, 21);
             this.gridviewPath.Name = "gridviewPath";
             this.gridviewPath.RowTemplate.Height = 24;
-            this.gridviewPath.Size = new System.Drawing.Size(735, 233);
+            this.gridviewPath.Size = new System.Drawing.Size(1226, 426);
             this.gridviewPath.TabIndex = 0;
             // 
             // col_source
@@ -134,13 +157,19 @@
             this.col_destination.Name = "col_destination";
             this.col_destination.Width = 350;
             // 
+            // col_description
+            // 
+            this.col_description.HeaderText = "Mô tả";
+            this.col_description.Name = "col_description";
+            this.col_description.Width = 300;
+            // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.rbtn_notsync);
             this.groupBox3.Controls.Add(this.rbtn_sync);
-            this.groupBox3.Location = new System.Drawing.Point(13, 409);
+            this.groupBox3.Location = new System.Drawing.Point(778, 12);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(751, 66);
+            this.groupBox3.Size = new System.Drawing.Size(484, 66);
             this.groupBox3.TabIndex = 2;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Cấu hình đồng bộ";
@@ -169,7 +198,7 @@
             // 
             // btn_saveConfig
             // 
-            this.btn_saveConfig.Location = new System.Drawing.Point(244, 491);
+            this.btn_saveConfig.Location = new System.Drawing.Point(790, 102);
             this.btn_saveConfig.Name = "btn_saveConfig";
             this.btn_saveConfig.Size = new System.Drawing.Size(132, 26);
             this.btn_saveConfig.TabIndex = 3;
@@ -179,23 +208,13 @@
             // 
             // btn_start
             // 
-            this.btn_start.Location = new System.Drawing.Point(402, 491);
+            this.btn_start.Location = new System.Drawing.Point(943, 102);
             this.btn_start.Name = "btn_start";
             this.btn_start.Size = new System.Drawing.Size(98, 26);
             this.btn_start.TabIndex = 4;
             this.btn_start.Text = "Bắt đầu";
             this.btn_start.UseVisualStyleBackColor = true;
             this.btn_start.Click += new System.EventHandler(this.btn_start_Click);
-            // 
-            // btn_stop
-            // 
-            this.btn_stop.Location = new System.Drawing.Point(522, 491);
-            this.btn_stop.Name = "btn_stop";
-            this.btn_stop.Size = new System.Drawing.Size(99, 26);
-            this.btn_stop.TabIndex = 5;
-            this.btn_stop.Text = "Kết thúc";
-            this.btn_stop.UseVisualStyleBackColor = true;
-            this.btn_stop.Click += new System.EventHandler(this.btn_stop_Click);
             // 
             // notifyIcon
             // 
@@ -204,11 +223,21 @@
             this.notifyIcon.Visible = true;
             this.notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon_MouseDoubleClick);
             // 
+            // btn_stop
+            // 
+            this.btn_stop.Location = new System.Drawing.Point(1068, 102);
+            this.btn_stop.Name = "btn_stop";
+            this.btn_stop.Size = new System.Drawing.Size(101, 26);
+            this.btn_stop.TabIndex = 5;
+            this.btn_stop.Text = "Kết thúc";
+            this.btn_stop.UseVisualStyleBackColor = true;
+            this.btn_stop.Click += new System.EventHandler(this.btn_stop_Click);
+            // 
             // FormClient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(776, 542);
+            this.ClientSize = new System.Drawing.Size(1279, 677);
             this.Controls.Add(this.btn_stop);
             this.Controls.Add(this.btn_start);
             this.Controls.Add(this.btn_saveConfig);
@@ -216,7 +245,7 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Name = "FormClient";
-            this.Text = "Sync And Share";
+            this.Text = DongTien.Common.Constants.WINDOWS_FORM_TITLE;
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
@@ -240,11 +269,14 @@
         private System.Windows.Forms.RadioButton rbtn_sync;
         private System.Windows.Forms.Button btn_saveConfig;
         private System.Windows.Forms.Button btn_start;
-        private System.Windows.Forms.Button btn_stop;
-        private System.Windows.Forms.DataGridViewTextBoxColumn col_source;
-        private System.Windows.Forms.DataGridViewTextBoxColumn col_destination;
         private System.Windows.Forms.TextBox Txt_Password;
         private System.Windows.Forms.NotifyIcon notifyIcon;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox Txt_IpServer;
+        private System.Windows.Forms.DataGridViewTextBoxColumn col_source;
+        private System.Windows.Forms.DataGridViewTextBoxColumn col_destination;
+        private System.Windows.Forms.DataGridViewTextBoxColumn col_description;
+        private System.Windows.Forms.Button btn_stop;
     }
 }
 
