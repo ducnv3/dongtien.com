@@ -72,7 +72,7 @@ namespace DongTien.Common
                 List<ItemPath> paths = Utility.GetListMapPath(Constants.MAPPING_CLIENT_FILENAME);
                 foreach(ItemPath path in paths)
                 {
-                    dataGridView.Rows.Add(path.Source, path.Destination);
+                    dataGridView.Rows.Add(path.Source, path.Destination, path.Note);
                 }
             }
             catch (IOException e)

@@ -142,9 +142,12 @@ namespace DongTien.Common
                     ItemPath item = new ItemPath();
                     string source = xmlnode[i].ChildNodes.Item(0).InnerText.Trim();
                     string destination = xmlnode[i].ChildNodes.Item(1).InnerText.Trim();
-                    //dataGridView.Rows.Add(source, destination);
+                    string description = xmlnode[i].ChildNodes.Item(2).InnerText.Trim();
+
                     item.Source = source;
                     item.Destination = destination;
+                    item.Note = description;
+
                     paths.Add(item);
                 }
 

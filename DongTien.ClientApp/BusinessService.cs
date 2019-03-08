@@ -23,6 +23,7 @@ namespace DongTien.ClientApp
         public BusinessService()
         {
             fileProcessor = new FileProcessor();
+            log.Info("Init queue process.");
         }
 
         public void CopyFile(FileSystemEventArgs e)
@@ -43,7 +44,7 @@ namespace DongTien.ClientApp
                 dTProcess.Type = TypeProcess.COPY;
 
                 fileProcessor.EnqueueProcess(dTProcess);
-                log.Debug("Copy File: " + e.FullPath + " " + filename);
+                log.Info("File: " + e.FullPath + " " + filename);
             }
             else
             {
@@ -73,6 +74,11 @@ namespace DongTien.ClientApp
                 dTProcess.Type = TypeProcess.RENAME;
 
                 fileProcessor.EnqueueProcess(dTProcess);
+                log.Info("File: " + oldPath);
+            }
+            else
+            {
+                log.Error("Do not exist path in map: " + e.FullPath);
             }
         }
 
@@ -90,6 +96,11 @@ namespace DongTien.ClientApp
                 dTProcess.Source = filePath;
                 dTProcess.Type = TypeProcess.DELETE;
                 fileProcessor.EnqueueProcess(dTProcess);
+                log.Info("File : " + e.FullPath);
+            }
+            else
+            {
+                log.Error("Do not exist path in map: " + e.FullPath);
             }
         }
 
@@ -98,11 +109,11 @@ namespace DongTien.ClientApp
             if (ConnectToServerStatus(ipServer))
             {
                 Utility.ExecuteCommand(@"/c net use \\" + ipServer + " /user:" + username + " " + password, e);
-                log.Info("Set Cert Success: " + ipServer);
+                log.Info("Set cert success: " + ipServer);
             }
             else
             {
-                log.Error("Can't connect to Server " + ipServer);
+                log.Error("Can't ping to server :" + ipServer);
             }
         }
 
@@ -126,6 +137,7 @@ namespace DongTien.ClientApp
                 watchers.Add(watcher);
             }
 
+            log.Info("Subscribe success: " + paths.Count + " path.");
         }
 
         public bool ConnectToServerStatus(string ipServer)
@@ -164,6 +176,14 @@ namespace DongTien.ClientApp
                 watcher.EnableRaisingEvents = false;
             }
             fileProcessor.Dispose();
+
+            log.Info("Unsubscribe success: " + watchers.Count + " path.");
+        }
+
+        public void CloseQueueFile()
+        {
+            fileProcessor.Dispose();
+            log.Info("Queue File has end.");
         }
     }
 }

@@ -68,7 +68,14 @@ namespace DongTien.ClientApp
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            MessageDialogs.CloseForm(e);
+            DialogResult result = MessageDialogs.CloseForm(e);
+
+            if(result == DialogResult.Yes)
+            {
+                service.CloseQueueFile();
+            }
+
+            e.Cancel = (result == DialogResult.No);
         }
 
         private void Form_Resize(object sender, EventArgs e)
@@ -153,15 +160,12 @@ namespace DongTien.ClientApp
             service.CopyFile(e);
         }
 
-
-
         private void notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             Show();
             this.WindowState = FormWindowState.Normal;
             notifyIcon.Visible = false;
         }
-
 
         private void Process_Exited(object sender, EventArgs e)
         {

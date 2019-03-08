@@ -10,6 +10,7 @@ namespace DongTien.Common.Models
     {
         public String Destination { get; set; }
         public String Source { get; set; }
+        public String Note { get; set; }
 
         public ItemPath()
         {
