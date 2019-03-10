@@ -96,7 +96,7 @@ namespace DongTien.ClientApp
             string isSync = ConfigurationManager.AppSettings[Constants.Sync];
 
             Txt_Username.Text = username;
-            Txt_Password.Text = password;
+            Txt_Password.Text = Utility.Decrypt(password,true);
             Txt_IpServer.Text = ipServer;
 
             if (isSync.ToLower() == "true")
@@ -116,7 +116,7 @@ namespace DongTien.ClientApp
         private void btn_saveConfig_Click(object sender, EventArgs e)
         {
             string username = Txt_Username.Text.Trim();
-            string password = Txt_Password.Text.Trim();
+            string password = Utility.Encrypt(Txt_Password.Text, true);
             string ipServer = Txt_IpServer.Text.Trim();
 
             bool isSync = rbtn_sync.Checked;

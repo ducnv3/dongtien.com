@@ -14,6 +14,7 @@ namespace DongTien.Common
 {
     public static class Utility
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
         /// Encrypt a string using dual encryption method. Return a encrypted cipher Text
@@ -23,6 +24,8 @@ namespace DongTien.Common
         /// <returns></returns>
         public static string Encrypt(string toEncrypt, bool useHashing)
         {
+            try
+            {
             byte[] keyArray;
             byte[] toEncryptArray = UTF8Encoding.UTF8.GetBytes(toEncrypt);
 
@@ -63,6 +66,12 @@ namespace DongTien.Common
             tdes.Clear();
             //Return the encrypted data into unreadable string format
             return Convert.ToBase64String(resultArray, 0, resultArray.Length);
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+                return string.Empty;
+            }
         }
 
         /// <summary>
@@ -73,41 +82,50 @@ namespace DongTien.Common
         /// <returns></returns>
         public static string Decrypt(string cipherString, bool useHashing)
         {
-            byte[] keyArray;
-            byte[] toEncryptArray = Convert.FromBase64String(cipherString);
-
-
-            string key = Constants.StringKey;
-
-            if (useHashing)
+            try
             {
-                MD5CryptoServiceProvider hashmd5 = new MD5CryptoServiceProvider();
-                keyArray = hashmd5.ComputeHash(UTF8Encoding.UTF8.GetBytes(key));
-                hashmd5.Clear();
+                byte[] keyArray;
+                byte[] toEncryptArray = Convert.FromBase64String(cipherString);
+
+
+                string key = Constants.StringKey;
+
+                if (useHashing)
+                {
+                    MD5CryptoServiceProvider hashmd5 = new MD5CryptoServiceProvider();
+                    keyArray = hashmd5.ComputeHash(UTF8Encoding.UTF8.GetBytes(key));
+                    hashmd5.Clear();
+                }
+                else
+                    keyArray = UTF8Encoding.UTF8.GetBytes(key);
+
+                TripleDESCryptoServiceProvider tdes = new TripleDESCryptoServiceProvider();
+                tdes.Key = keyArray;
+                tdes.Mode = CipherMode.ECB;
+                tdes.Padding = PaddingMode.PKCS7;
+
+                ICryptoTransform cTransform = tdes.CreateDecryptor();
+                byte[] resultArray = cTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
+
+                tdes.Clear();
+                return UTF8Encoding.UTF8.GetString(resultArray);
             }
-            else
-                keyArray = UTF8Encoding.UTF8.GetBytes(key);
+            catch (Exception e)
+            {
+                log.Error("Error - Decrypt", e);
+                return string.Empty;
+            }
 
-            TripleDESCryptoServiceProvider tdes = new TripleDESCryptoServiceProvider();
-            tdes.Key = keyArray;
-            tdes.Mode = CipherMode.ECB;
-            tdes.Padding = PaddingMode.PKCS7;
-
-            ICryptoTransform cTransform = tdes.CreateDecryptor();
-            byte[] resultArray = cTransform.TransformFinalBlock(toEncryptArray, 0, toEncryptArray.Length);
-
-            tdes.Clear();
-            return UTF8Encoding.UTF8.GetString(resultArray);
         }
 
         public static String GetFilenameFromPath(string path)
         {
-            return path.Substring(path.LastIndexOf("\\") + 1);
+            return string.IsNullOrEmpty(path) ? string.Empty : path.Substring(path.LastIndexOf("\\") + 1) ;
         }
 
         public static String GetDirFromPath(string path)
         {
-            return path.Substring(0, path.LastIndexOf("\\"));
+            return string.IsNullOrEmpty(path) ? string.Empty : path.Substring(0, path.LastIndexOf("\\"));
         }
 
         public static void ExecuteCommand(String command, EventHandler e)
@@ -140,9 +158,9 @@ namespace DongTien.Common
                 for (int i = 0; i < xmlnode.Count; i++)
                 {
                     ItemPath item = new ItemPath();
-                    string source = xmlnode[i].ChildNodes.Item(0).InnerText.Trim();
-                    string destination = xmlnode[i].ChildNodes.Item(1).InnerText.Trim();
-                    string description = xmlnode[i].ChildNodes.Item(2).InnerText.Trim();
+                    string source = xmlnode[i].ChildNodes.Item(0) == null ? string.Empty : xmlnode[i].ChildNodes.Item(0).InnerText.Trim();
+                    string destination = xmlnode[i].ChildNodes.Item(1) == null ? string.Empty : xmlnode[i].ChildNodes.Item(1).InnerText.Trim();
+                    string description = xmlnode[i].ChildNodes.Item(2) == null ? string.Empty : xmlnode[i].ChildNodes.Item(2).InnerText.Trim();
 
                     item.Source = source;
                     item.Destination = destination;
@@ -157,7 +175,7 @@ namespace DongTien.Common
             }
             catch (IOException e)
             {
-                //log.Error(e.Message);
+                log.Error(e.Message);
                 return new List<ItemPath>();
             }
         }
@@ -178,7 +196,7 @@ namespace DongTien.Common
                 for (int i = 0; i < xmlnode.Count; i++)
                 {
                     ItemPath item = new ItemPath();
-                    string source = xmlnode[i].ChildNodes.Item(0).InnerText.Trim();
+                    string source = xmlnode[i].ChildNodes.Item(0) == null ? string.Empty : xmlnode[i].ChildNodes.Item(0).InnerText.Trim();
                     item.Source = source;
                     paths.Add(item);
                 }
@@ -189,7 +207,7 @@ namespace DongTien.Common
             }
             catch (IOException e)
             {
-                //log.Error(e.Message);
+                log.Error(e.Message);
                 return new List<ItemPath>();
             }
         }
