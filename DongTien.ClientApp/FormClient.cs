@@ -28,7 +28,7 @@ namespace DongTien.ClientApp
         /// </summary>
         private BusinessService service;
         private List<FileSystemSafeWatcher> watchers;
-        private BackgroundWorker wk = null;
+        protected BackgroundWorker wk { get; set; }
 
         /// <summary>
         /// this is form main
