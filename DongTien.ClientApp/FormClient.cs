@@ -15,6 +15,7 @@ using DongTien.Common.Models;
 using DongTien.Common;
 using System.Net;
 using System.Diagnostics;
+using System.Threading;
 
 namespace DongTien.ClientApp
 {
@@ -22,16 +23,85 @@ namespace DongTien.ClientApp
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+        /// <summary>
+        /// Business Service
+        /// </summary>
         private BusinessService service;
         private List<FileSystemSafeWatcher> watchers;
+        private BackgroundWorker wk = null;
 
+        /// <summary>
+        /// this is form main
+        /// </summary>
         public FormClient()
         {
             InitializeComponent();
             ConfigClientForm();
             LoadConfigApp();
             SetEvents();
+            RunAsyncCopyFiles();
         }
+
+        /// <summary>
+        /// method start implement Async
+        /// </summary>
+        protected void RunAsyncCopyFiles()
+        {
+            try
+            {
+                wk = new BackgroundWorker();
+                wk.DoWork += wk_DoWork;
+                wk.RunWorkerCompleted += wk_RunWorkerCompleted;
+                wk.ProgressChanged += wk_ProgressChanged;
+                wk.WorkerReportsProgress = true;
+                wk.WorkerSupportsCancellation = true;
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Event change by worker
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void wk_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            label4.Text = e.ProgressPercentage.ToString();
+        }
+
+        /// <summary>
+        /// Event worker is completed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void wk_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            label4.Text = "Chờ đồng bộ"; 
+        }
+
+        /// <summary>
+        /// Event start worker
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void wk_DoWork(object sender, DoWorkEventArgs e)
+        {
+            for (int i = 0; i <= 100; i++)
+            {
+                if (wk.CancellationPending == true)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+                wk.ReportProgress(i);
+                System.Threading.Thread.Sleep(250);
+            }
+            e.Result = 42;
+        }
+
 
         private void ConfigClientForm()
         {
@@ -58,7 +128,6 @@ namespace DongTien.ClientApp
 
         private void Form1_Load(object sender, System.EventArgs e)
         {
-            //MessageBox.Show("You are in the Form.Shown event.");
             string username = Txt_Username.Text.Trim();
             string password = Txt_Password.Text.Trim();
             string ipServer = Txt_IpServer.Text.Trim();
@@ -99,7 +168,7 @@ namespace DongTien.ClientApp
             Txt_Password.Text = Utility.Decrypt(password,true);
             Txt_IpServer.Text = ipServer;
 
-            if (isSync.ToLower() == "true")
+            if (string.Equals(isSync.ToLower(),"true"))
             {
                 rbtn_sync.Checked = true;
                 rbtn_notsync.Checked = false;
@@ -176,6 +245,45 @@ namespace DongTien.ClientApp
         {
             onChangeStatusRunning(false);
             service.UnSubscribeWatcher(watchers, watcher_Changed, watcher_Deleted, watcher_Renamed);
+        }
+
+        /// <summary>
+        /// Async trigger
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ASyncFiles_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (wk.IsBusy)
+                {
+                    wk.CancelAsync();
+                    btn_ASyncFiles.Text = Constants.LABEL_START_SYNC;
+                }
+                else
+                {
+                    wk.RunWorkerAsync();
+                    btn_ASyncFiles.Text = Constants.LABEL_STOP_SYNC;
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex.Message);
+            }
+
+        }
+
+        private void rbtn_sync_CheckedChanged(object sender, EventArgs e)
+        {
+            btn_ASyncFiles.Enabled = true;
+        }
+
+        private void rbtn_notsync_CheckedChanged(object sender, EventArgs e)
+        {
+            btn_ASyncFiles.Enabled = false;
+            wk.CancelAsync();
+            btn_ASyncFiles.Text = Constants.LABEL_START_SYNC;
         }
     }
 }

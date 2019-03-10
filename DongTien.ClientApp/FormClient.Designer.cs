@@ -49,6 +49,8 @@
             this.btn_start = new System.Windows.Forms.Button();
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.btn_stop = new System.Windows.Forms.Button();
+            this.btn_ASyncFiles = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridviewPath)).BeginInit();
@@ -63,59 +65,67 @@
             this.groupBox1.Controls.Add(this.Txt_Username);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Location = new System.Drawing.Point(12, 12);
+            this.groupBox1.Location = new System.Drawing.Point(9, 10);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(752, 136);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBox1.Size = new System.Drawing.Size(564, 110);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Tài khoản xác thực";
             // 
             // Txt_IpServer
             // 
-            this.Txt_IpServer.Location = new System.Drawing.Point(142, 94);
+            this.Txt_IpServer.Location = new System.Drawing.Point(106, 76);
+            this.Txt_IpServer.Margin = new System.Windows.Forms.Padding(2);
             this.Txt_IpServer.Name = "Txt_IpServer";
-            this.Txt_IpServer.Size = new System.Drawing.Size(565, 22);
+            this.Txt_IpServer.Size = new System.Drawing.Size(425, 20);
             this.Txt_IpServer.TabIndex = 5;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(8, 99);
+            this.label3.Location = new System.Drawing.Point(6, 80);
+            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(66, 17);
+            this.label3.Size = new System.Drawing.Size(51, 13);
             this.label3.TabIndex = 4;
             this.label3.Text = "IP Server";
             // 
             // Txt_Password
             // 
-            this.Txt_Password.Location = new System.Drawing.Point(142, 64);
+            this.Txt_Password.Location = new System.Drawing.Point(106, 52);
+            this.Txt_Password.Margin = new System.Windows.Forms.Padding(2);
             this.Txt_Password.Name = "Txt_Password";
             this.Txt_Password.PasswordChar = '*';
-            this.Txt_Password.Size = new System.Drawing.Size(565, 22);
+            this.Txt_Password.Size = new System.Drawing.Size(425, 20);
             this.Txt_Password.TabIndex = 3;
             // 
             // Txt_Username
             // 
-            this.Txt_Username.Location = new System.Drawing.Point(142, 31);
+            this.Txt_Username.Location = new System.Drawing.Point(106, 25);
+            this.Txt_Username.Margin = new System.Windows.Forms.Padding(2);
             this.Txt_Username.Name = "Txt_Username";
-            this.Txt_Username.Size = new System.Drawing.Size(565, 22);
+            this.Txt_Username.Size = new System.Drawing.Size(425, 20);
             this.Txt_Username.TabIndex = 2;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(8, 67);
+            this.label2.Location = new System.Drawing.Point(6, 54);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(66, 17);
+            this.label2.Size = new System.Drawing.Size(52, 13);
             this.label2.TabIndex = 1;
             this.label2.Text = "Mật khẩu";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(8, 31);
+            this.label1.Location = new System.Drawing.Point(6, 25);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(95, 17);
+            this.label1.Size = new System.Drawing.Size(73, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Tên tài khoản";
             // 
@@ -123,9 +133,11 @@
             // 
             this.groupBox2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox2.Controls.Add(this.gridviewPath);
-            this.groupBox2.Location = new System.Drawing.Point(13, 154);
+            this.groupBox2.Location = new System.Drawing.Point(10, 125);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(1253, 468);
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBox2.Size = new System.Drawing.Size(940, 380);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Cấu hình đường dẫn";
@@ -139,10 +151,11 @@
             this.col_description});
             this.gridviewPath.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnF2;
             this.gridviewPath.Enabled = false;
-            this.gridviewPath.Location = new System.Drawing.Point(10, 21);
+            this.gridviewPath.Location = new System.Drawing.Point(8, 17);
+            this.gridviewPath.Margin = new System.Windows.Forms.Padding(2);
             this.gridviewPath.Name = "gridviewPath";
             this.gridviewPath.RowTemplate.Height = 24;
-            this.gridviewPath.Size = new System.Drawing.Size(1226, 426);
+            this.gridviewPath.Size = new System.Drawing.Size(920, 346);
             this.gridviewPath.TabIndex = 0;
             // 
             // col_source
@@ -166,10 +179,13 @@
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.rbtn_notsync);
+            this.groupBox3.Controls.Add(this.btn_ASyncFiles);
             this.groupBox3.Controls.Add(this.rbtn_sync);
-            this.groupBox3.Location = new System.Drawing.Point(778, 12);
+            this.groupBox3.Location = new System.Drawing.Point(584, 10);
+            this.groupBox3.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(484, 66);
+            this.groupBox3.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBox3.Size = new System.Drawing.Size(363, 67);
             this.groupBox3.TabIndex = 2;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Cấu hình đồng bộ";
@@ -177,30 +193,35 @@
             // rbtn_notsync
             // 
             this.rbtn_notsync.AutoSize = true;
-            this.rbtn_notsync.Location = new System.Drawing.Point(237, 31);
+            this.rbtn_notsync.Location = new System.Drawing.Point(115, 25);
+            this.rbtn_notsync.Margin = new System.Windows.Forms.Padding(2);
             this.rbtn_notsync.Name = "rbtn_notsync";
-            this.rbtn_notsync.Size = new System.Drawing.Size(126, 21);
+            this.rbtn_notsync.Size = new System.Drawing.Size(99, 17);
             this.rbtn_notsync.TabIndex = 1;
             this.rbtn_notsync.TabStop = true;
             this.rbtn_notsync.Text = "Không đồng bộ";
             this.rbtn_notsync.UseVisualStyleBackColor = true;
+            this.rbtn_notsync.CheckedChanged += new System.EventHandler(this.rbtn_notsync_CheckedChanged);
             // 
             // rbtn_sync
             // 
             this.rbtn_sync.AutoSize = true;
-            this.rbtn_sync.Location = new System.Drawing.Point(21, 31);
+            this.rbtn_sync.Location = new System.Drawing.Point(16, 25);
+            this.rbtn_sync.Margin = new System.Windows.Forms.Padding(2);
             this.rbtn_sync.Name = "rbtn_sync";
-            this.rbtn_sync.Size = new System.Drawing.Size(102, 21);
+            this.rbtn_sync.Size = new System.Drawing.Size(81, 17);
             this.rbtn_sync.TabIndex = 0;
             this.rbtn_sync.TabStop = true;
             this.rbtn_sync.Text = "Có đồng bộ";
             this.rbtn_sync.UseVisualStyleBackColor = true;
+            this.rbtn_sync.CheckedChanged += new System.EventHandler(this.rbtn_sync_CheckedChanged);
             // 
             // btn_saveConfig
             // 
-            this.btn_saveConfig.Location = new System.Drawing.Point(790, 102);
+            this.btn_saveConfig.Location = new System.Drawing.Point(584, 90);
+            this.btn_saveConfig.Margin = new System.Windows.Forms.Padding(2);
             this.btn_saveConfig.Name = "btn_saveConfig";
-            this.btn_saveConfig.Size = new System.Drawing.Size(132, 26);
+            this.btn_saveConfig.Size = new System.Drawing.Size(99, 30);
             this.btn_saveConfig.TabIndex = 3;
             this.btn_saveConfig.Text = "Lưu cấu hình";
             this.btn_saveConfig.UseVisualStyleBackColor = true;
@@ -208,9 +229,10 @@
             // 
             // btn_start
             // 
-            this.btn_start.Location = new System.Drawing.Point(943, 102);
+            this.btn_start.Location = new System.Drawing.Point(687, 90);
+            this.btn_start.Margin = new System.Windows.Forms.Padding(2);
             this.btn_start.Name = "btn_start";
-            this.btn_start.Size = new System.Drawing.Size(98, 26);
+            this.btn_start.Size = new System.Drawing.Size(90, 30);
             this.btn_start.TabIndex = 4;
             this.btn_start.Text = "Bắt đầu";
             this.btn_start.UseVisualStyleBackColor = true;
@@ -225,27 +247,51 @@
             // 
             // btn_stop
             // 
-            this.btn_stop.Location = new System.Drawing.Point(1068, 102);
+            this.btn_stop.Location = new System.Drawing.Point(781, 90);
+            this.btn_stop.Margin = new System.Windows.Forms.Padding(2);
             this.btn_stop.Name = "btn_stop";
-            this.btn_stop.Size = new System.Drawing.Size(101, 26);
+            this.btn_stop.Size = new System.Drawing.Size(99, 30);
             this.btn_stop.TabIndex = 5;
             this.btn_stop.Text = "Kết thúc";
             this.btn_stop.UseVisualStyleBackColor = true;
             this.btn_stop.Click += new System.EventHandler(this.btn_stop_Click);
             // 
+            // btn_ASyncFiles
+            // 
+            this.btn_ASyncFiles.Location = new System.Drawing.Point(255, 19);
+            this.btn_ASyncFiles.Name = "btn_ASyncFiles";
+            this.btn_ASyncFiles.Size = new System.Drawing.Size(99, 30);
+            this.btn_ASyncFiles.TabIndex = 6;
+            this.btn_ASyncFiles.Text = "Bắt đầu đồng bộ";
+            this.btn_ASyncFiles.UseVisualStyleBackColor = true;
+            this.btn_ASyncFiles.Click += new System.EventHandler(this.ASyncFiles_Click);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.ForeColor = System.Drawing.Color.Blue;
+            this.label4.Location = new System.Drawing.Point(853, 519);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(80, 13);
+            this.label4.TabIndex = 7;
+            this.label4.Text = "Chờ đồng bộ";
+            // 
             // FormClient
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1279, 677);
+            this.ClientSize = new System.Drawing.Size(959, 550);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.btn_stop);
             this.Controls.Add(this.btn_start);
             this.Controls.Add(this.btn_saveConfig);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "FormClient";
-            this.Text = DongTien.Common.Constants.WINDOWS_FORM_TITLE;
+            this.Text = "Sync And Share";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
@@ -253,6 +299,7 @@
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -277,6 +324,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn col_destination;
         private System.Windows.Forms.DataGridViewTextBoxColumn col_description;
         private System.Windows.Forms.Button btn_stop;
+        private System.Windows.Forms.Button btn_ASyncFiles;
+        private System.Windows.Forms.Label label4;
     }
 }
 

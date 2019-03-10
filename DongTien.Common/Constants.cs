@@ -14,6 +14,10 @@ namespace DongTien.Common
         public static string Password = "Password";
         public static string Sync = "Sync";
 
+        public static string LABEL_START_SYNC = "Bắt đầu đồng bộ";
+
+        public static string LABEL_STOP_SYNC = "Dừng đồng bộ";
+
         //config notification
         public static string BalloonText = "Ứng dụng đã được thu nhỏ !";
         public static string BalloonTitle = "Thông báo";
