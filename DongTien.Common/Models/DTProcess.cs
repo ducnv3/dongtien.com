@@ -24,29 +24,35 @@ namespace DongTien.Common.Models
 
         public void Execute()
         {
-            if (Type == TypeProcess.COPY)
+            try
             {
-                if (!String.IsNullOrEmpty(Source) || !String.IsNullOrEmpty(Destination))
+                if (Type == TypeProcess.COPY)
                 {
-                    File.Copy(Source, Destination, true);
-                    File.SetAttributes(Destination, FileAttributes.Normal);
+                    if (!String.IsNullOrEmpty(Source) || !String.IsNullOrEmpty(Destination))
+                    {
+                        File.Copy(Source, Destination, true);
+                        File.SetAttributes(Destination, FileAttributes.Normal);
+                    }
+                }
+                else if (Type == TypeProcess.RENAME)
+                {
+                    if ((!String.IsNullOrEmpty(Source) || !String.IsNullOrEmpty(Destination))
+                        && File.Exists(Source))
+                    {
+                        File.Move(Source, Destination);
+                    }
+
+                }
+                else if (Type == TypeProcess.DELETE)
+                {
+                    if (!String.IsNullOrEmpty(Source))
+                        File.Delete(Source);
                 }
             }
-            else if (Type == TypeProcess.RENAME)
+            catch(Exception)
             {
-                if ((!String.IsNullOrEmpty(Source) || !String.IsNullOrEmpty(Destination))
-                    && File.Exists(Source))
-                {
-                    File.Move(Source, Destination);
-                }
-
+                throw;
             }
-            else if (Type == TypeProcess.DELETE)
-            {
-                if (!String.IsNullOrEmpty(Source))
-                    File.Delete(Source);
-            }
-
         }
     }
 

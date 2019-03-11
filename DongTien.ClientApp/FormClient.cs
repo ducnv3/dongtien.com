@@ -70,6 +70,8 @@ namespace DongTien.ClientApp
         protected void wk_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             label4.Text = e.ProgressPercentage.ToString();
+            Console.WriteLine("Processing !");
+
         }
 
         /// <summary>
@@ -79,7 +81,8 @@ namespace DongTien.ClientApp
         /// <param name="e"></param>
         protected void wk_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            label4.Text = "Chờ đồng bộ"; 
+            label4.Text = "Chờ đồng bộ";
+            Console.WriteLine("Complete !");
         }
 
         /// <summary>
@@ -89,17 +92,26 @@ namespace DongTien.ClientApp
         /// <param name="e"></param>
         protected void wk_DoWork(object sender, DoWorkEventArgs e)
         {
-            for (int i = 0; i <= 100; i++)
+
+            List<ItemPath> paths = Utility.GetListMapPath(Constants.MAPPING_CLIENT_FILENAME);
+
+            int count = 0;
+
+            foreach (var item in paths)
             {
                 if (wk.CancellationPending == true)
                 {
                     e.Cancel = true;
                     return;
                 }
-                wk.ReportProgress(i);
-                System.Threading.Thread.Sleep(250);
+                service.CopyAll(item.Source, item.Destination);
+                count++;
+                wk.ReportProgress(count * 100 / paths.Count);
             }
             e.Result = 42;
+
+            Console.WriteLine("do work !");
+
         }
 
 
@@ -139,7 +151,7 @@ namespace DongTien.ClientApp
         {
             DialogResult result = MessageDialogs.CloseForm(e);
 
-            if(result == DialogResult.Yes)
+            if (result == DialogResult.Yes)
             {
                 service.CloseQueueFile();
             }
@@ -165,10 +177,10 @@ namespace DongTien.ClientApp
             string isSync = ConfigurationManager.AppSettings[Constants.Sync];
 
             Txt_Username.Text = username;
-            Txt_Password.Text = Utility.Decrypt(password,true);
+            Txt_Password.Text = Utility.Decrypt(password, true);
             Txt_IpServer.Text = ipServer;
 
-            if (string.Equals(isSync.ToLower(),"true"))
+            if (string.Equals(isSync.ToLower(), "true"))
             {
                 rbtn_sync.Checked = true;
                 rbtn_notsync.Checked = false;

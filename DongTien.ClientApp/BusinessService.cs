@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Net.NetworkInformation;
 using System.Net;
+using System.ComponentModel;
 
 namespace DongTien.ClientApp
 {
@@ -180,6 +181,41 @@ namespace DongTien.ClientApp
         {
             fileProcessor.Dispose();
             log.Info("Queue File has end.");
+        }
+
+        public void CopyAll(string sourceDir, string desDir)
+        {
+            try
+            {
+                string[] fileList = Directory.GetFiles(sourceDir);
+
+                foreach (string filePath in fileList)
+                {
+                    try
+                    {
+                        string filename = filePath.Substring(filePath.LastIndexOf("\\") + 1);
+
+                        string sourceFile = sourceDir + "\\" + filename;
+                        string desFile = desDir + "\\" + filename;
+
+                        DTProcess dTProcess = new DTProcess();
+                        dTProcess.Source = sourceFile;
+                        dTProcess.Destination = desFile;
+                        dTProcess.Type = TypeProcess.COPY;
+
+                        fileProcessor.EnqueueProcess(dTProcess);
+                        log.Info("File: " + sourceFile);
+                    }
+                    catch (Exception e)
+                    {
+                        log.Error(e.Message);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+            }
         }
     }
 }

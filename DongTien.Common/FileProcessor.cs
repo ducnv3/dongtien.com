@@ -44,7 +44,14 @@ namespace DongTien.Common
 
                 if (currentProcess != null)
                 {
-                    ProcessFile(currentProcess);
+                    try
+                    {
+                        ProcessFile(currentProcess);
+                    }
+                    catch (Exception)
+                    {
+                        throw;
+                    }
                 }
                 else
                 {
@@ -55,7 +62,14 @@ namespace DongTien.Common
 
         private void ProcessFile(DTProcess Process)
         {
-            Process.Execute();
+            try
+            {
+                Process.Execute();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
 
