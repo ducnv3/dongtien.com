@@ -15,7 +15,7 @@ namespace DongTien.Common
 
         private readonly object locker = new object();
 
-        private Queue<DTProcess> fileNamesQueue = new Queue<DTProcess>();
+        private Queue<DTProcess> processQueue = new Queue<DTProcess>();
 
         public FileProcessor()
         {
@@ -23,10 +23,18 @@ namespace DongTien.Common
             worker.Start();
         }
 
+        public bool CheckExistProcess(DTProcess Process)
+        {
+            return processQueue.Contains(Process, new DTProcessComparer());
+        }
+
         public void EnqueueProcess(DTProcess Process)
         {
+            if (processQueue.Contains(Process, new DTProcessComparer()))
+                return;
+
             lock (locker)
-                fileNamesQueue.Enqueue(Process);
+                processQueue.Enqueue(Process);
             eventWaitHandle.Set();
         }
 
@@ -36,9 +44,9 @@ namespace DongTien.Common
             {
                 DTProcess currentProcess = null;
                 lock (locker)
-                    if (fileNamesQueue.Count > 0)
+                    if (processQueue.Count > 0)
                     {
-                        currentProcess = fileNamesQueue.Dequeue();
+                        currentProcess = processQueue.Dequeue();
                         if (currentProcess == null) return;
                     }
 
@@ -85,5 +93,20 @@ namespace DongTien.Common
             eventWaitHandle.Close();
         }
         #endregion
+    }
+
+    public class DTProcessComparer : IEqualityComparer<DTProcess>
+    {
+        public bool Equals(DTProcess x, DTProcess y)
+        {
+            return x.Destination == y.Destination &&
+                x.Source == y.Source
+                && x.Type == y.Type ? true : false;
+        }
+
+        public int GetHashCode(DTProcess obj)
+        {
+            return obj.ToString().GetHashCode();
+        }
     }
 }

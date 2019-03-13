@@ -16,6 +16,7 @@ using DongTien.Common;
 using System.Net;
 using System.Diagnostics;
 using System.Threading;
+using Timer = System.Timers.Timer;
 
 namespace DongTien.ClientApp
 {
@@ -30,6 +31,10 @@ namespace DongTien.ClientApp
         private List<FileSystemSafeWatcher> watchers;
         protected BackgroundWorker wk { get; set; }
 
+        protected bool IsSync = false;
+
+        private Timer timer { get; set; }
+
         /// <summary>
         /// this is form main
         /// </summary>
@@ -39,13 +44,35 @@ namespace DongTien.ClientApp
             ConfigClientForm();
             LoadConfigApp();
             SetEvents();
-            RunAsyncCopyFiles();
+            InitSyncFileProcess();
+        }
+
+        private void SetTimerAsync()
+        {
+            timer = new Timer();
+            timer.Interval = int.Parse(ConfigurationManager.AppSettings[Constants.TimeAsync]);
+            timer.Enabled = true;
+            timer.AutoReset = true;
+
+            timer.Elapsed += OnTimedEvent;
+        }
+
+        private void OnTimedEvent(Object source,
+            System.Timers.ElapsedEventArgs e)
+        {
+            Console.WriteLine("Timer Call !!");
+            if (IsSync && !wk.IsBusy)
+            {
+                RunSyncFile();
+                Console.WriteLine("Timer Call Success !!");
+            }
+
         }
 
         /// <summary>
         /// method start implement Async
         /// </summary>
-        protected void RunAsyncCopyFiles()
+        protected void InitSyncFileProcess()
         {
             try
             {
@@ -55,6 +82,8 @@ namespace DongTien.ClientApp
                 wk.ProgressChanged += wk_ProgressChanged;
                 wk.WorkerReportsProgress = true;
                 wk.WorkerSupportsCancellation = true;
+
+                SetTimerAsync();
             }
             catch (Exception ex)
             {
@@ -69,7 +98,7 @@ namespace DongTien.ClientApp
         /// <param name="e"></param>
         protected void wk_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            label4.Text = e.ProgressPercentage.ToString();
+            //label4.Text = e.ProgressPercentage.ToString();
             Console.WriteLine("Processing !");
 
         }
@@ -99,14 +128,16 @@ namespace DongTien.ClientApp
 
             foreach (var item in paths)
             {
+                count++;
+                wk.ReportProgress(count * 100 / paths.Count);
+
                 if (wk.CancellationPending == true)
                 {
                     e.Cancel = true;
                     return;
                 }
                 service.CopyAll(item.Source, item.Destination);
-                count++;
-                wk.ReportProgress(count * 100 / paths.Count);
+
             }
             e.Result = 42;
 
@@ -266,24 +297,41 @@ namespace DongTien.ClientApp
         /// <param name="e"></param>
         private void ASyncFiles_Click(object sender, EventArgs e)
         {
+            IsSync = !IsSync;
+            RunSyncFile();
+        }
+
+        private void RunSyncFile()
+        {
             try
             {
                 if (wk.IsBusy)
                 {
                     wk.CancelAsync();
                     btn_ASyncFiles.Text = Constants.LABEL_START_SYNC;
+                    timer.Start();
                 }
                 else
                 {
-                    wk.RunWorkerAsync();
-                    btn_ASyncFiles.Text = Constants.LABEL_STOP_SYNC;
+                    if (IsSync)
+                    {
+                        wk.RunWorkerAsync();
+                        btn_ASyncFiles.Text = Constants.LABEL_STOP_SYNC;
+                        timer.Start();
+                    }
+                    else
+                    {
+                        btn_ASyncFiles.Text = Constants.LABEL_START_SYNC;
+                        wk.CancelAsync();
+                        timer.Close();
+                    }
+
                 }
             }
             catch (Exception ex)
             {
                 log.Error(ex.Message);
             }
-
         }
 
         private void rbtn_sync_CheckedChanged(object sender, EventArgs e)

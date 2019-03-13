@@ -12,10 +12,10 @@ namespace DongTien.Common
 
         public static string Username = "Username";
         public static string Password = "Password";
-        public static string Sync = "Sync";
+        public static string Sync = "Sync"; 
+        public static string TimeAsync = "TimeAsync"; 
 
         public static string LABEL_START_SYNC = "Bắt đầu đồng bộ";
-
         public static string LABEL_STOP_SYNC = "Dừng đồng bộ";
 
         //config notification
