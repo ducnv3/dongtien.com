@@ -60,11 +60,9 @@ namespace DongTien.ClientApp
         private void OnTimedEvent(Object source,
             System.Timers.ElapsedEventArgs e)
         {
-            Console.WriteLine("Timer Call !!");
             if (IsSync && !wk.IsBusy)
             {
                 RunSyncFile();
-                Console.WriteLine("Timer Call Success !!");
             }
 
         }
@@ -99,8 +97,6 @@ namespace DongTien.ClientApp
         protected void wk_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             //label4.Text = e.ProgressPercentage.ToString();
-            Console.WriteLine("Processing !");
-
         }
 
         /// <summary>
@@ -111,7 +107,6 @@ namespace DongTien.ClientApp
         protected void wk_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             label4.Text = "Chờ đồng bộ";
-            Console.WriteLine("Complete !");
         }
 
         /// <summary>
@@ -140,8 +135,6 @@ namespace DongTien.ClientApp
 
             }
             e.Result = 42;
-
-            Console.WriteLine("do work !");
 
         }
 

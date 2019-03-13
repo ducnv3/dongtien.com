@@ -38,8 +38,12 @@ namespace DongTien.ServerApp
                 dTProcess.Destination = desFile;
                 dTProcess.Type = TypeProcess.COPY;
 
-                fileProcessor.EnqueueProcess(dTProcess);
-                log.Info("File: " + e.FullPath + " " + filename);
+                if (fileProcessor.CheckExistProcess(dTProcess))
+                {
+                    fileProcessor.EnqueueProcess(dTProcess);
+                    log.Info("File: " + e.FullPath + " " + filename);
+                }
+                
             }
             else
             {
@@ -68,8 +72,12 @@ namespace DongTien.ServerApp
                 dTProcess.Destination = newPath;
                 dTProcess.Type = TypeProcess.RENAME;
 
-                fileProcessor.EnqueueProcess(dTProcess);
-                log.Info("File: " + oldPath);
+                if (fileProcessor.CheckExistProcess(dTProcess))
+                {
+                    fileProcessor.EnqueueProcess(dTProcess);
+                    log.Info("File: " + oldPath);
+                }
+
             }
             else
             {
@@ -90,8 +98,12 @@ namespace DongTien.ServerApp
                 DTProcess dTProcess = new DTProcess();
                 dTProcess.Source = filePath;
                 dTProcess.Type = TypeProcess.DELETE;
-                fileProcessor.EnqueueProcess(dTProcess);
-                log.Info("File : " + e.FullPath);
+
+                if (fileProcessor.CheckExistProcess(dTProcess))
+                {
+                    fileProcessor.EnqueueProcess(dTProcess);
+                    log.Info("File : " + e.FullPath);
+                }
             }
             else
             {
@@ -138,6 +150,44 @@ namespace DongTien.ServerApp
         {
             fileProcessor.Dispose();
             log.Info("Queue File has end.");
+        }
+
+        public void CopyAll(string sourceDir, string desDirs)
+        {
+            try
+            {
+                string[] fileList = Directory.GetFiles(sourceDir);
+
+                foreach (string filePath in fileList)
+                {
+                    try
+                    {
+                        string filename = filePath.Substring(filePath.LastIndexOf("\\") + 1);
+
+                        string sourceFile = sourceDir + "\\" + filename;
+                        string desFile = desDirs + "\\" + filename;
+
+                        DTProcess dTProcess = new DTProcess();
+                        dTProcess.Source = sourceFile;
+                        dTProcess.Destination = desFile;
+                        dTProcess.Type = TypeProcess.COPY;
+
+                        if (!fileProcessor.CheckExistProcess(dTProcess))
+                        {
+                            fileProcessor.EnqueueProcess(dTProcess);
+                            log.Info("File: " + sourceFile);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        log.Error(e.Message);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                log.Error(e.Message);
+            }
         }
     }
 }

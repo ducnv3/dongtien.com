@@ -1,18 +1,28 @@
 ﻿using DongTien.Common;
+using DongTien.Common.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Configuration;
 using System.IO;
+using System.Timers;
 using System.Windows.Forms;
+
+using Timer = System.Timers.Timer;
 
 namespace DongTien.ServerApp
 {
     public partial class ServerForm : Form
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog log = 
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private BusinessService service;
         private List<FileSystemSafeWatcher> watchers;
+
+        protected BackgroundWorker wk { get; set; }
+        protected bool IsSync = false;
+        private Timer timer { get; set; }
 
         public ServerForm()
         {
@@ -20,6 +30,7 @@ namespace DongTien.ServerApp
             ConfigServerForm();
             LoadConfigApp();
             SetEvents();
+            InitSyncFileProcess();
         }
 
 
@@ -38,11 +49,69 @@ namespace DongTien.ServerApp
             watchers = new List<FileSystemSafeWatcher>();
         }
 
-
         private void SetEvents()
         {
             this.Resize += Form_Resize;
             this.Shown += Form1_Load;
+        }
+
+        protected void InitSyncFileProcess()
+        {
+            try
+            {
+                wk = new BackgroundWorker();
+                wk.DoWork += wk_DoWork;
+                wk.RunWorkerCompleted += wk_RunWorkerCompleted;
+                wk.ProgressChanged += wk_ProgressChanged;
+                wk.WorkerReportsProgress = true;
+                wk.WorkerSupportsCancellation = true;
+
+                SetTimerAsync();
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex.Message);
+            }
+        }
+
+        private void SetTimerAsync()
+        {
+            timer = new Timer();
+            timer.Interval = int.Parse(ConfigurationManager.AppSettings[Constants.TimeAsync]);
+            timer.Enabled = true;
+            timer.AutoReset = true;
+
+            timer.Elapsed += OnTimedEvent;
+        }
+
+        private void OnTimedEvent(object sender, ElapsedEventArgs e)
+        {
+            if (!wk.IsBusy)
+            {
+                RunSyncFile();
+            }
+        }
+
+        private void RunSyncFile()
+        {
+            try
+            {
+                if (wk.IsBusy)
+                {
+                    wk.CancelAsync();
+                    timer.Start();
+                }
+                else
+                {
+                    wk.RunWorkerAsync();
+                    timer.Start();
+                }
+                log.Info("Run Sync File Hourly !");
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex.Message);
+            }
         }
 
         private void Form1_Load(object sender, System.EventArgs e)
@@ -88,7 +157,7 @@ namespace DongTien.ServerApp
             }
 
             ServerConfiguaration.LoadMapPathFromXML(gridViewPath);
-            
+
         }
 
         private void btn_start_Click(object sender, EventArgs e)
@@ -143,6 +212,50 @@ namespace DongTien.ServerApp
 
             ServerConfiguaration.SaveConfigApp(isSync);
             ServerConfiguaration.SaveMapPathToXML(gridViewPath);
+        }
+
+        /// <summary>
+        /// Event change by worker
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void wk_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            //label4.Text = e.ProgressPercentage.ToString();
+        }
+
+        /// <summary>
+        /// Event worker is completed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void wk_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            //label4.Text = "Chờ đồng bộ";
+        }
+
+        /// <summary>
+        /// Event start worker
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void wk_DoWork(object sender, DoWorkEventArgs e)
+        {
+
+            List<ItemPath> paths = Utility.GetListMapPath(Constants.MAPPING_SERVER_FILENAME);
+            int count = 0;
+            foreach (var item in paths)
+            {
+                count++;
+                wk.ReportProgress(count * 100 / paths.Count);
+                if (wk.CancellationPending == true)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+                service.CopyAll(item.Source, item.Destination);
+            }
+            e.Result = 42;
         }
     }
 }
