@@ -14,14 +14,16 @@ namespace DongTien.ServerApp
 {
     public partial class ServerForm : Form
     {
-        private static readonly log4net.ILog log = 
+        private static readonly log4net.ILog log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private BusinessService service;
         private List<FileSystemSafeWatcher> watchers;
 
         protected BackgroundWorker wk { get; set; }
+
         protected bool IsSync = false;
+
         private Timer timer { get; set; }
 
         public ServerForm()
@@ -53,6 +55,21 @@ namespace DongTien.ServerApp
         {
             this.Resize += Form_Resize;
             this.Shown += Form1_Load;
+
+            this.rbtn_sync.CheckedChanged += OnChangeSyncRadioStatus;
+        }
+
+        private void OnChangeSyncRadioStatus(object sender, EventArgs e)
+        {
+            bool status = rbtn_sync.Checked;
+            if (!status)
+            {
+                btn_sync.Enabled = false;
+            }
+            else
+            {
+                btn_sync.Enabled = true;
+            }
         }
 
         protected void InitSyncFileProcess()
@@ -82,12 +99,22 @@ namespace DongTien.ServerApp
             timer.AutoReset = true;
 
             timer.Elapsed += OnTimedEvent;
+            timer.Stop();
         }
 
         private void OnTimedEvent(object sender, ElapsedEventArgs e)
         {
-            if (!wk.IsBusy)
+            log.Info("Run Sync Files Schedule !");
+            Console.WriteLine("Call !!");
+            if (wk.IsBusy)
             {
+                wk.CancelAsync();
+                btn_sync.Text = Constants.LABEL_STOP_SYNC;
+                timer.Stop();
+            }
+            else
+            {
+                btn_sync.Text = Constants.LABEL_STOP_SYNC;
                 RunSyncFile();
             }
         }
@@ -96,17 +123,17 @@ namespace DongTien.ServerApp
         {
             try
             {
-                if (wk.IsBusy)
+                if (IsSync)
                 {
-                    wk.CancelAsync();
-                    timer.Start();
+                    wk.RunWorkerAsync();
+                    btn_sync.Text = Constants.LABEL_STOP_SYNC;
                 }
                 else
                 {
-                    wk.RunWorkerAsync();
-                    timer.Start();
+                    btn_sync.Text = Constants.LABEL_START_SYNC;
+                    wk.CancelAsync();
+                    timer.Close();
                 }
-                log.Info("Run Sync File Hourly !");
             }
             catch (Exception ex)
             {
@@ -143,18 +170,9 @@ namespace DongTien.ServerApp
 
         private void LoadConfigApp()
         {
-            string isSync = ConfigurationManager.AppSettings[Constants.Sync];
-
-            if (isSync.ToLower() == "true")
-            {
-                rbtn_sync.Checked = true;
-                rbtn_not_sync.Checked = false;
-            }
-            else
-            {
-                rbtn_sync.Checked = false;
-                rbtn_not_sync.Checked = true;
-            }
+            rbtn_sync.Checked = false;
+            rbtn_not_sync.Checked = true;
+            btn_sync.Enabled = false;
 
             ServerConfiguaration.LoadMapPathFromXML(gridViewPath);
 
@@ -257,5 +275,33 @@ namespace DongTien.ServerApp
             }
             e.Result = 42;
         }
+
+        private void btn_sync_Click(object sender, EventArgs e)
+        {
+            IsSync = !IsSync;
+
+            if (IsSync)
+            {
+                timer.Start();
+                btn_sync.Text = Constants.LABEL_STOP_SYNC;
+            }
+            else
+            {
+                timer.Stop();
+                btn_sync.Text = Constants.LABEL_START_SYNC;
+            }
+
+            if (wk.IsBusy)
+            {
+                wk.CancelAsync();
+                timer.Stop();
+            }
+            else
+            {
+                RunSyncFile();
+            }
+        }
+
+
     }
 }
