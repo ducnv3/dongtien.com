@@ -324,6 +324,10 @@ namespace DongTien.ClientApp
         private void ASyncFiles_Click(object sender, EventArgs e)
         {
             IsSync = !IsSync;
+            if (IsSync)
+            {
+                timer.Start();
+            }
 
             if (wk.IsBusy)
             {
@@ -343,10 +347,8 @@ namespace DongTien.ClientApp
             {
                 if (IsSync)
                 {
-                    //service.InitQueueFile();
                     wk.RunWorkerAsync();
                     btn_ASyncFiles.Text = Constants.LABEL_STOP_SYNC;
-                    timer.Start();
                 }
                 else
                 {
