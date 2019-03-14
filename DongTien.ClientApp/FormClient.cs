@@ -55,14 +55,18 @@ namespace DongTien.ClientApp
             timer.AutoReset = true;
 
             timer.Elapsed += OnTimedEvent;
+            timer.Stop();
         }
 
         private void OnTimedEvent(Object source,
             System.Timers.ElapsedEventArgs e)
         {
+            log.Info("Auto Sync!");
+            Console.WriteLine("Call Sync !");
             if (IsSync && !wk.IsBusy)
             {
                 RunSyncFile();
+                Console.WriteLine("Sync Success!");
             }
 
         }
@@ -200,9 +204,11 @@ namespace DongTien.ClientApp
             string ipServer = ConfigurationManager.AppSettings[Constants.IpServer];
             string isSync = ConfigurationManager.AppSettings[Constants.Sync];
 
-            Txt_Username.Text = username;
-            Txt_Password.Text = Utility.Decrypt(password, true);
-            Txt_IpServer.Text = ipServer;
+            Txt_Username.Text = username == null ? "" : username;
+            Txt_Password.Text = password == null ? "" : Utility.Decrypt(password, true);
+            Txt_IpServer.Text = ipServer == null ? "" : ipServer;
+
+            isSync = isSync == null ? "false" : "true";
 
             if (string.Equals(isSync.ToLower(), "true"))
             {
@@ -220,22 +226,49 @@ namespace DongTien.ClientApp
 
         private void btn_saveConfig_Click(object sender, EventArgs e)
         {
+            int rs = saveConfigApp();
+            if (rs == 1)
+            {
+                MessageDialogs.SaveSucess();
+            }
+            else
+            {
+                MessageDialogs.Error();
+            }
+        }
+
+        private int saveConfigApp()
+        {
             string username = Txt_Username.Text.Trim();
             string password = Utility.Encrypt(Txt_Password.Text, true);
             string ipServer = Txt_IpServer.Text.Trim();
 
             bool isSync = rbtn_sync.Checked;
 
-            ClientConfiguration.SaveConfigApp(username, password, ipServer, isSync);
-            ClientConfiguration.SaveMapPathToXML(gridviewPath);
+            int r1 = ClientConfiguration.
+                SaveConfigApp(username, password, ipServer, isSync);
+
+            int r2 = ClientConfiguration.
+                SaveMapPathToXML(gridviewPath);
+
+            return r1 == 1 && r2 == 1 ? 1 : -1;
         }
 
         private void btn_start_Click(object sender, EventArgs e)
         {
             if (service.ConnectToServerStatus(Txt_IpServer.Text.Trim()))
             {
-                onChangeStatusRunning(true);
-                service.SubscribeWatcher(watchers, watcher_Changed, watcher_Deleted, watcher_Renamed);
+                saveConfigApp();
+                if (service.ValidateMapPaths())
+                {
+                    onChangeStatusRunning(true);
+                    service.SubscribeWatcher(watchers, watcher_Changed,
+                        watcher_Deleted, watcher_Renamed);
+                }
+                else
+                {
+                    MessageDialogs.ValidateMapFail();
+                }
             }
             else
             {
@@ -291,34 +324,35 @@ namespace DongTien.ClientApp
         private void ASyncFiles_Click(object sender, EventArgs e)
         {
             IsSync = !IsSync;
-            RunSyncFile();
+
+            if (wk.IsBusy)
+            {
+                wk.CancelAsync();
+                btn_ASyncFiles.Text = Constants.LABEL_START_SYNC;
+                timer.Stop();
+            }
+            else
+            {
+                RunSyncFile();
+            }
         }
 
         private void RunSyncFile()
         {
             try
             {
-                if (wk.IsBusy)
+                if (IsSync)
                 {
-                    wk.CancelAsync();
-                    btn_ASyncFiles.Text = Constants.LABEL_START_SYNC;
+                    //service.InitQueueFile();
+                    wk.RunWorkerAsync();
+                    btn_ASyncFiles.Text = Constants.LABEL_STOP_SYNC;
                     timer.Start();
                 }
                 else
                 {
-                    if (IsSync)
-                    {
-                        wk.RunWorkerAsync();
-                        btn_ASyncFiles.Text = Constants.LABEL_STOP_SYNC;
-                        timer.Start();
-                    }
-                    else
-                    {
-                        btn_ASyncFiles.Text = Constants.LABEL_START_SYNC;
-                        wk.CancelAsync();
-                        timer.Close();
-                    }
-
+                    btn_ASyncFiles.Text = Constants.LABEL_START_SYNC;
+                    wk.CancelAsync();
+                    timer.Close();
                 }
             }
             catch (Exception ex)
@@ -335,7 +369,8 @@ namespace DongTien.ClientApp
         private void rbtn_notsync_CheckedChanged(object sender, EventArgs e)
         {
             btn_ASyncFiles.Enabled = false;
-            wk.CancelAsync();
+            if (wk != null)
+                wk.CancelAsync();
             btn_ASyncFiles.Text = Constants.LABEL_START_SYNC;
         }
     }

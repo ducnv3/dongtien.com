@@ -212,5 +212,17 @@ namespace DongTien.Common
             }
         }
 
+        public static String GetIpServerFromPath(string path)
+        {
+            int index1 = path.IndexOf("\\\\");
+            int index2 = path.IndexOf("\\",index1 + 2);
+            if(index1 == 0 && index2 > index1)
+            {
+                string ip = path.Substring(index1 + 2, index2 - index1 - 2);
+                return ip;
+            }
+            return "";
+        }
+
     }
 }

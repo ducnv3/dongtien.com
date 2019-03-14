@@ -58,7 +58,7 @@ namespace DongTien.Common
                     }
                     catch (Exception)
                     {
-                        throw;
+                        
                     }
                 }
                 else
@@ -99,6 +99,8 @@ namespace DongTien.Common
     {
         public bool Equals(DTProcess x, DTProcess y)
         {
+            if (x == null || y == null) return false;
+
             return x.Destination == y.Destination &&
                 x.Source == y.Source
                 && x.Type == y.Type ? true : false;

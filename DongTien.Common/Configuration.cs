@@ -14,27 +14,36 @@ namespace DongTien.Common
 {
     public static class ClientConfiguration
     {
-        public static void SaveConfigApp(string username, string password, string ipServer, bool isSync)
+        public static int SaveConfigApp(string username, string password, string ipServer, bool isSync)
         {
-            string _isSync = isSync == true ? "true" : "false";
+            try
+            {
+                string _isSync = isSync == true ? "true" : "false";
 
-            Configuration config = ConfigurationManager.OpenExeConfiguration(Application.ExecutablePath);
+                Configuration config = ConfigurationManager.OpenExeConfiguration(Application.ExecutablePath);
 
-            config.AppSettings.Settings.Remove(Constants.Username);
-            config.AppSettings.Settings.Add(Constants.Username, username);
+                config.AppSettings.Settings.Remove(Constants.Username);
+                config.AppSettings.Settings.Add(Constants.Username, username);
 
-            config.AppSettings.Settings.Remove(Constants.Password);
-            config.AppSettings.Settings.Add(Constants.Password, password);
+                config.AppSettings.Settings.Remove(Constants.Password);
+                config.AppSettings.Settings.Add(Constants.Password, password);
 
-            config.AppSettings.Settings.Remove(Constants.IpServer);
-            config.AppSettings.Settings.Add(Constants.IpServer, ipServer);
+                config.AppSettings.Settings.Remove(Constants.IpServer);
+                config.AppSettings.Settings.Add(Constants.IpServer, ipServer);
 
-            config.AppSettings.Settings.Remove(Constants.Sync);
-            config.AppSettings.Settings.Add(Constants.Sync, _isSync);
-            config.Save(ConfigurationSaveMode.Minimal);
+                config.AppSettings.Settings.Remove(Constants.Sync);
+                config.AppSettings.Settings.Add(Constants.Sync, _isSync);
+                config.Save(ConfigurationSaveMode.Minimal);
+                return 1;
+            }
+            catch (Exception)
+            {
+                return -1;
+            }
+
         }
 
-        public static void SaveMapPathToXML(DataGridView gridviewPath)
+        public static int SaveMapPathToXML(DataGridView gridviewPath)
         {
             try
             {
@@ -57,11 +66,12 @@ namespace DongTien.Common
                 dt.Rows.RemoveAt(dt.Rows.Count - 1);
                 dt.WriteXml(Constants.MAPPING_CLIENT_FILENAME);
 
-                MessageDialogs.SaveSucess();
+                return 1;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 MessageDialogs.Error();
+                return -1;
             }
         }
 
@@ -70,7 +80,7 @@ namespace DongTien.Common
             try
             {
                 List<ItemPath> paths = Utility.GetListMapPath(Constants.MAPPING_CLIENT_FILENAME);
-                foreach(ItemPath path in paths)
+                foreach (ItemPath path in paths)
                 {
                     dataGridView.Rows.Add(path.Source, path.Destination, path.Note);
                 }
@@ -81,12 +91,6 @@ namespace DongTien.Common
             }
         }
 
-        public static void SaveConfigApp(bool isSync)
-        {
-            throw new NotImplementedException();
-        }
-
-        
     }
 
     public static class ServerConfiguaration

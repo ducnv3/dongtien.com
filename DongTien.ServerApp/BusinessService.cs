@@ -140,9 +140,6 @@ namespace DongTien.ServerApp
             {
                 watcher.EnableRaisingEvents = false;
             }
-
-            fileProcessor.Dispose();
-
             log.Info("Unsubscribe success: " + watchers.Count + " path.");
         }
 

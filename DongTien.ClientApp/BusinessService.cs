@@ -7,6 +7,7 @@ using System.IO;
 using System.Net.NetworkInformation;
 using System.Net;
 using System.ComponentModel;
+using System.Configuration;
 
 namespace DongTien.ClientApp
 {
@@ -21,6 +22,24 @@ namespace DongTien.ClientApp
         {
             fileProcessor = new FileProcessor();
             log.Info("Init queue process.");
+        }
+
+        public bool ValidateMapPaths()
+        {
+            List<ItemPath> paths = Utility.GetListMapPath(Constants.MAPPING_CLIENT_FILENAME);
+
+            string IpServer = 
+                ConfigurationManager.AppSettings[Constants.IpServer].Trim();
+
+            log.Error("IP Server = " + IpServer);
+
+            foreach (var item in paths)
+            {
+                string ip = Utility.GetIpServerFromPath(item.Destination);
+                log.Error("Ip map: " + ip);
+                if (ip != IpServer) return false;
+            }
+            return true;
         }
 
         public void CopyFile(FileSystemEventArgs e)
@@ -78,7 +97,7 @@ namespace DongTien.ClientApp
                     fileProcessor.EnqueueProcess(dTProcess);
                     log.Info("File: " + oldPath);
                 }
-               
+
             }
             else
             {
@@ -183,9 +202,15 @@ namespace DongTien.ClientApp
             {
                 watcher.EnableRaisingEvents = false;
             }
-            fileProcessor.Dispose();
-
             log.Info("Unsubscribe success: " + watchers.Count + " path.");
+        }
+
+        public void InitQueueFile()
+        {
+            if(fileProcessor == null)
+            {
+                fileProcessor = new FileProcessor();
+            }
         }
 
         public void CloseQueueFile()
@@ -214,8 +239,11 @@ namespace DongTien.ClientApp
                         dTProcess.Destination = desFile;
                         dTProcess.Type = TypeProcess.COPY;
 
-                        fileProcessor.EnqueueProcess(dTProcess);
-                        log.Info("File: " + sourceFile);
+                        if (!fileProcessor.CheckExistProcess(dTProcess))
+                        {
+                            fileProcessor.EnqueueProcess(dTProcess);
+                            log.Info("File: " + sourceFile);
+                        }
                     }
                     catch (Exception e)
                     {
