@@ -14,7 +14,7 @@ namespace DongTien.ServerApp
 {
     public partial class ServerForm : Form
     {
-        private static readonly log4net.ILog log = 
+        private static readonly log4net.ILog log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private BusinessService service;
@@ -143,7 +143,7 @@ namespace DongTien.ServerApp
 
         private void LoadConfigApp()
         {
-            string isSync = ConfigurationManager.AppSettings[Constants.Sync];
+            string isSync = ConfigurationManager.AppSettings[Constants.Sync] == null ? "false" : "true";
 
             if (isSync.ToLower() == "true")
             {

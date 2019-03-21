@@ -9,38 +9,78 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using System.Xml.Linq;
+using System.Xml.Schema;
 
 namespace DongTien.Common
 {
     public static class ClientConfiguration
     {
-        public static int SaveConfigApp(string username, string password, string ipServer, bool isSync)
+        public static int SaveConfigApp(string username, string password,
+            string ipServer, bool isSync)
         {
             try
             {
-                string _isSync = isSync == true ? "true" : "false";
+                string filename = "ConfigApp.xml";
 
-                Configuration config = ConfigurationManager.OpenExeConfiguration(Application.ExecutablePath);
+                XmlDocument xmlDoc = new XmlDocument();
+                XmlNode rootNode = xmlDoc.CreateElement("configurations");
+                xmlDoc.AppendChild(rootNode);
 
-                config.AppSettings.Settings.Remove(Constants.Username);
-                config.AppSettings.Settings.Add(Constants.Username, username);
+                XmlNode userNode = xmlDoc.CreateElement("Username");
+                userNode.InnerText = username;
+                rootNode.AppendChild(userNode);
 
-                config.AppSettings.Settings.Remove(Constants.Password);
-                config.AppSettings.Settings.Add(Constants.Password, password);
+                userNode = xmlDoc.CreateElement("Password");
+                userNode.InnerText = password;
+                rootNode.AppendChild(userNode);
 
-                config.AppSettings.Settings.Remove(Constants.IpServer);
-                config.AppSettings.Settings.Add(Constants.IpServer, ipServer);
+                userNode = xmlDoc.CreateElement("IpServer");
+                userNode.InnerText = ipServer;
+                rootNode.AppendChild(userNode);
 
-                config.AppSettings.Settings.Remove(Constants.Sync);
-                config.AppSettings.Settings.Add(Constants.Sync, _isSync);
-                config.Save(ConfigurationSaveMode.Minimal);
+                userNode = xmlDoc.CreateElement("Sync");
+                userNode.InnerText = isSync.ToString();
+                rootNode.AppendChild(userNode);
+
+                xmlDoc.Save(filename);
+
                 return 1;
             }
             catch (Exception)
             {
                 return -1;
             }
+        }
 
+        public static List<String> LoadConfigApp()
+        {
+            string filename = "ConfigApp.xml";
+            try
+            {
+                var data = new List<string>();
+
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.Load(filename);
+
+                XmlNodeList userNodes = xmlDoc.SelectNodes("//configurations//Username");
+                data.Add(userNodes[0].InnerText);
+
+                userNodes = xmlDoc.SelectNodes("//configurations//Password");
+                data.Add(userNodes[0].InnerText);
+
+                userNodes = xmlDoc.SelectNodes("//configurations//IpServer");
+                data.Add(userNodes[0].InnerText);
+
+                userNodes = xmlDoc.SelectNodes("//configurations//Sync");
+                data.Add(userNodes[0].InnerText);
+
+                return data;
+            }
+            catch (Exception)
+            {
+                return new List<string>();
+            }
         }
 
         public static int SaveMapPathToXML(DataGridView gridviewPath)

@@ -28,7 +28,8 @@ namespace DongTien.Common.Models
             {
                 if (Type == TypeProcess.COPY)
                 {
-                    if (!String.IsNullOrEmpty(Source) || !String.IsNullOrEmpty(Destination))
+                    if (!String.IsNullOrEmpty(Source) || 
+                        !String.IsNullOrEmpty(Destination))
                     {
                         File.Copy(Source, Destination, true);
                         File.SetAttributes(Destination, FileAttributes.Normal);
@@ -36,8 +37,8 @@ namespace DongTien.Common.Models
                 }
                 else if (Type == TypeProcess.RENAME)
                 {
-                    if ((!String.IsNullOrEmpty(Source) || !String.IsNullOrEmpty(Destination))
-                        && File.Exists(Source))
+                    if ((!String.IsNullOrEmpty(Source) || 
+                        !String.IsNullOrEmpty(Destination)))
                     {
                         File.Move(Source, Destination);
                     }

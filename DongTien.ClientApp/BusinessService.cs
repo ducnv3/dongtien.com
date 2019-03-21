@@ -27,12 +27,10 @@ namespace DongTien.ClientApp
         public bool ValidateMapPaths()
         {
             List<ItemPath> paths = Utility.GetListMapPath(Constants.MAPPING_CLIENT_FILENAME);
-
-            string IpServer = 
-                ConfigurationManager.AppSettings[Constants.IpServer].Trim();
+            var config = ClientConfiguration.LoadConfigApp();
+            string IpServer = config.Count == 4 ? config[2] : "";
 
             log.Error("IP Server = " + IpServer);
-
             foreach (var item in paths)
             {
                 string ip = Utility.GetIpServerFromPath(item.Destination);
@@ -95,7 +93,7 @@ namespace DongTien.ClientApp
                 if (!fileProcessor.CheckExistProcess(dTProcess))
                 {
                     fileProcessor.EnqueueProcess(dTProcess);
-                    log.Info("File: " + oldPath);
+                    log.Info("File: " + oldPath  +" to " + newPath);
                 }
 
             }
@@ -157,6 +155,7 @@ namespace DongTien.ClientApp
                              | NotifyFilters.FileName | NotifyFilters.DirectoryName; ;
                 watcher.Filter = "*.*";
                 watcher.Created += changedE;
+                watcher.Changed += changedE;
                 watcher.Deleted += DeleteE;
                 watcher.Renamed += RenameE;
                 watcher.EnableRaisingEvents = true;
@@ -170,29 +169,37 @@ namespace DongTien.ClientApp
         public bool ConnectToServerStatus(string ipServer)
         {
             bool netOK = false;
-
-            // Convert IP Server to ArrayByte
-            string[] ips = ipServer.Split('.');
-            byte[] addressIP = new byte[ips.Length];
-            for (int i = 0; i < addressIP.Length; i++)
+            try
             {
-                addressIP[i] = (byte)Int16.Parse(ips[i]);
+                // Convert IP Server to ArrayByte
+                string[] ips = ipServer.Split('.');
+                byte[] addressIP = new byte[ips.Length];
+                for (int i = 0; i < addressIP.Length; i++)
+                {
+                    addressIP[i] = (byte)Int16.Parse(ips[i]);
+                }
+
+
+                //Test Ping
+                using (Ping png = new Ping())
+                {
+                    IPAddress addr = new IPAddress(addressIP);
+                    try
+                    {
+                        netOK = (png.Send(addr, 1500, new byte[] { 0, 1, 2, 3 }).Status == IPStatus.Success);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.ToString());
+                        netOK = false;
+                    }
+                    return netOK;
+                }
+
             }
-
-            //Test Ping
-            using (Ping png = new Ping())
+            catch (Exception)
             {
-                IPAddress addr = new IPAddress(addressIP);
-                try
-                {
-                    netOK = (png.Send(addr, 1500, new byte[] { 0, 1, 2, 3 }).Status == IPStatus.Success);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.ToString());
-                    netOK = false;
-                }
-                return netOK;
+                return false;
             }
         }
 
@@ -207,7 +214,7 @@ namespace DongTien.ClientApp
 
         public void InitQueueFile()
         {
-            if(fileProcessor == null)
+            if (fileProcessor == null)
             {
                 fileProcessor = new FileProcessor();
             }

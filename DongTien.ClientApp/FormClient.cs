@@ -199,18 +199,27 @@ namespace DongTien.ClientApp
 
         private void LoadConfigApp()
         {
-            string username = ConfigurationManager.AppSettings[Constants.Username];
-            string password = ConfigurationManager.AppSettings[Constants.Password];
-            string ipServer = ConfigurationManager.AppSettings[Constants.IpServer];
-            string isSync = ConfigurationManager.AppSettings[Constants.Sync];
+            List<string> config = ClientConfiguration.LoadConfigApp();
+
+            string username = null;
+            string password = null;
+            string ipServer = null;
+            string isSync = null;
+
+            if(config.Count == 4)
+            {
+                username = config[0];
+                password = config[1];
+                ipServer = config[2];
+                isSync = config[3];
+            }
 
             Txt_Username.Text = username == null ? "" : username;
             Txt_Password.Text = password == null ? "" : Utility.Decrypt(password, true);
             Txt_IpServer.Text = ipServer == null ? "" : ipServer;
+            isSync = isSync == null ? "false" : isSync;
 
-            isSync = isSync == null ? "false" : "true";
-
-            if (string.Equals(isSync.ToLower(), "true"))
+            if (isSync.ToLower() == "true")
             {
                 rbtn_sync.Checked = true;
                 rbtn_notsync.Checked = false;
