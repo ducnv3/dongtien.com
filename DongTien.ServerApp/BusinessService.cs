@@ -38,7 +38,7 @@ namespace DongTien.ServerApp
                 dTProcess.Destination = desFile;
                 dTProcess.Type = TypeProcess.COPY;
 
-                if (fileProcessor.CheckExistProcess(dTProcess))
+                if (!fileProcessor.CheckExistProcess(dTProcess))
                 {
                     fileProcessor.EnqueueProcess(dTProcess);
                     log.Info("File: " + e.FullPath + " " + filename);
@@ -72,7 +72,7 @@ namespace DongTien.ServerApp
                 dTProcess.Destination = newPath;
                 dTProcess.Type = TypeProcess.RENAME;
 
-                if (fileProcessor.CheckExistProcess(dTProcess))
+                if (!fileProcessor.CheckExistProcess(dTProcess))
                 {
                     fileProcessor.EnqueueProcess(dTProcess);
                     log.Info("File: " + oldPath);
@@ -99,7 +99,7 @@ namespace DongTien.ServerApp
                 dTProcess.Source = filePath;
                 dTProcess.Type = TypeProcess.DELETE;
 
-                if (fileProcessor.CheckExistProcess(dTProcess))
+                if (!fileProcessor.CheckExistProcess(dTProcess))
                 {
                     fileProcessor.EnqueueProcess(dTProcess);
                     log.Info("File : " + e.FullPath);
