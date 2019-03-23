@@ -17,7 +17,7 @@ namespace DongTien.Common.Models
         public TypeProcess Type { get; set; }
         public String Source { get; set; }
         public String Destination { get; set; }
-
+        public FtpClient ftp { get; set; }
         public DTProcess()
         {
         }
@@ -30,8 +30,11 @@ namespace DongTien.Common.Models
                 {
                     if (!String.IsNullOrEmpty(Source) || !String.IsNullOrEmpty(Destination))
                     {
-                        File.Copy(Source, Destination, true);
-                        File.SetAttributes(Destination, FileAttributes.Normal);
+                        //File.Copy(Source, Destination, true);
+                        //File.SetAttributes(Destination, FileAttributes.Normal);
+                        ftp.ChangeDir("Root\\PhongHanhChinh"); // path relative
+                        ftp.Upload(Source);
+                        ftp.Close();
                     }
                 }
                 else if (Type == TypeProcess.RENAME)
