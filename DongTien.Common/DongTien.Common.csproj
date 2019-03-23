@@ -49,6 +49,7 @@
     <Compile Include="Constants.cs" />
     <Compile Include="FileProcessor.cs" />
     <Compile Include="FileSystemSafeWatcher.cs" />
+    <Compile Include="FtpClient.cs" />
     <Compile Include="MessageDialogs.cs" />
     <Compile Include="Models\ItemPath.cs" />
     <Compile Include="Models\DTProcess.cs" />

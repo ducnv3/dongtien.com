@@ -51,8 +51,7 @@
     <ATTRIBUTE name="CurrentFeature" value="MainFeature"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFilesComponent">
-    <ROW File="App.config" Component_="App.config" FileName="APP~1.CON|App.config" Attributes="0" SourcePath="..\DongTien.ClientApp\bin\Debug\App.config" SelfReg="false" NextFile="ClientLogFile.txt"/>
-    <ROW File="ClientLogFile.txt" Component_="App.config" FileName="CLIENT~1.TXT|ClientLogFile.txt" Attributes="0" SourcePath="..\DongTien.ClientApp\bin\Debug\ClientLogFile.txt" SelfReg="false" NextFile="DongTien.ClientApp.exe"/>
+    <ROW File="App.config" Component_="App.config" FileName="APP~1.CON|App.config" Attributes="0" SourcePath="..\DongTien.ClientApp\bin\Debug\App.config" SelfReg="false" NextFile="DongTien.ClientApp.exe"/>
     <ROW File="DongTien.ClientApp.exe" Component_="DongTien.ClientApp.exe" FileName="DONGTI~1.EXE|DongTien.ClientApp.exe" Attributes="0" SourcePath="..\DongTien.ClientApp\bin\Debug\DongTien.ClientApp.exe" SelfReg="false" NextFile="DongTien.ClientApp.exe.config" DigSign="true"/>
     <ROW File="DongTien.ClientApp.exe.config" Component_="App.config" FileName="DONGTI~1.CON|DongTien.ClientApp.exe.config" Attributes="0" SourcePath="..\DongTien.ClientApp\bin\Debug\DongTien.ClientApp.exe.config" SelfReg="false" NextFile="DongTien.ClientApp.pdb"/>
     <ROW File="DongTien.ClientApp.pdb" Component_="DongTien.ClientApp.exe" FileName="DONGTI~1.PDB|DongTien.ClientApp.pdb" Attributes="0" SourcePath="..\DongTien.ClientApp\bin\Debug\DongTien.ClientApp.pdb" SelfReg="false" NextFile="DongTien.ClientApp.vshost.exe"/>
@@ -246,7 +245,7 @@
     <ROW Action="SET_TARGETDIR_TO_APPDIR" Type="51" Source="TARGETDIR" Target="[APPDIR]"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiIconsComponent">
-    <ROW Name="DongTien.ClientApp.exe" SourcePath="\\vmware-host\Shared Folders\Downloads 2\icon.ico" Index="0"/>
+    <ROW Name="DongTien.ClientApp_1.exe" SourcePath="icon.ico" Index="0"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiInstExSeqComponent">
     <ROW Action="AI_DOWNGRADE" Condition="AI_NEWERPRODUCTFOUND AND (UILevel &lt;&gt; 5)" Sequence="210"/>
@@ -301,8 +300,8 @@
     <ROW Registry="Version" Root="-1" Key="Software\[Manufacturer]\[ProductName]" Name="Version" Value="[ProductVersion]" Component_="ProductInformation"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiShortsComponent">
-    <ROW Shortcut="DongTienSyncFiles" Directory_="DesktopFolder" Name="DONGTI~1|Dong Tien Sync Files" Component_="DongTien.ClientApp.exe" Target="[#DongTien.ClientApp.exe]" Hotkey="0" Icon_="DongTien.ClientApp.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR" CustomFlags="1"/>
-    <ROW Shortcut="DongTienSyncFiles_1" Directory_="StartupFolder" Name="DONGTI~1|Dong Tien Sync Files" Component_="DongTien.ClientApp.exe" Target="[#DongTien.ClientApp.exe]" Hotkey="0" Icon_="DongTien.ClientApp.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR" CustomFlags="1"/>
+    <ROW Shortcut="DongTienSyncFiles" Directory_="DesktopFolder" Name="DONGTI~1|Dong Tien Sync Files" Component_="DongTien.ClientApp.exe" Target="[#DongTien.ClientApp.exe]" Hotkey="0" Icon_="DongTien.ClientApp_1.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR" CustomFlags="1"/>
+    <ROW Shortcut="DongTienSyncFiles_1" Directory_="StartupFolder" Name="DONGTI~1|Dong Tien Sync Files" Component_="DongTien.ClientApp.exe" Target="[#DongTien.ClientApp.exe]" Hotkey="0" Icon_="DongTien.ClientApp_1.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR" CustomFlags="1"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiThemeComponent">
     <ATTRIBUTE name="UsedTheme" value="azure"/>

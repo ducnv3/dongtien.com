@@ -258,7 +258,7 @@
     <ROW Action="SET_TARGETDIR_TO_APPDIR" Type="51" Source="TARGETDIR" Target="[APPDIR]"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiIconsComponent">
-    <ROW Name="DongTien.ServerApp.exe" SourcePath="\\vmware-host\Shared Folders\Downloads 2\icon.ico" Index="0"/>
+    <ROW Name="DongTien.ServerApp_1.exe" SourcePath="..\AISetupClient\icon.ico" Index="0"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiInstExSeqComponent">
     <ROW Action="AI_DOWNGRADE" Condition="AI_NEWERPRODUCTFOUND AND (UILevel &lt;&gt; 5)" Sequence="210"/>
@@ -313,9 +313,9 @@
     <ROW Registry="Version" Root="-1" Key="Software\[Manufacturer]\[ProductName]" Name="Version" Value="[ProductVersion]" Component_="ProductInformation"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiShortsComponent">
-    <ROW Shortcut="DongTien.ServerApp" Directory_="StartupFolder" Name="DONGTI~1|Dong Tien Share Files" Component_="DongTien.ServerApp.exe" Target="[#DongTien.ServerApp.exe]" Hotkey="0" Icon_="DongTien.ServerApp.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR" CustomFlags="1"/>
+    <ROW Shortcut="DongTien.ServerApp" Directory_="StartupFolder" Name="DONGTI~1|Dong Tien Share Files" Component_="DongTien.ServerApp.exe" Target="[#DongTien.ServerApp.exe]" Hotkey="0" Icon_="DongTien.ServerApp_1.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR" CustomFlags="1"/>
     <ROW Shortcut="DongTien.ServerApp.exe" Directory_="SHORTCUTDIR" Name="DONGTI~1.EXE|DongTien.ServerApp.exe" Component_="DongTien.ServerApp.exe" Target="[#DongTien.ServerApp.exe]" Description="DongTien.ServerApp.exe" Hotkey="0" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
-    <ROW Shortcut="DongTienShareFiles" Directory_="DesktopFolder" Name="DONGTI~1|Dong Tien Share Files" Component_="DongTien.ServerApp.exe" Target="[#DongTien.ServerApp.exe]" Hotkey="0" Icon_="DongTien.ServerApp.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR" CustomFlags="1"/>
+    <ROW Shortcut="DongTienShareFiles" Directory_="DesktopFolder" Name="DONGTI~1|Dong Tien Share Files" Component_="DongTien.ServerApp.exe" Target="[#DongTien.ServerApp.exe]" Hotkey="0" Icon_="DongTien.ServerApp_1.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR" CustomFlags="1"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiThemeComponent">
     <ATTRIBUTE name="UsedTheme" value="azure"/>

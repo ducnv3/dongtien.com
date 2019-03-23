@@ -40,7 +40,7 @@ namespace DongTien.ClientApp
             return true;
         }
 
-        public void CopyFile(FileSystemEventArgs e)
+        public void CopyFile(FileSystemEventArgs e, FtpClient ftp)
         {
             List<ItemPath> paths = Utility.GetListMapPath(Constants.MAPPING_CLIENT_FILENAME);
             string dir = e.FullPath.Substring(0, e.FullPath.LastIndexOf("\\"));
@@ -56,7 +56,7 @@ namespace DongTien.ClientApp
                 dTProcess.Source = sourceFile;
                 dTProcess.Destination = desFile;
                 dTProcess.Type = TypeProcess.COPY;
-
+                dTProcess.ftp = ftp;
                 if (!fileProcessor.CheckExistProcess(dTProcess))
                 {
                     fileProcessor.EnqueueProcess(dTProcess);
@@ -201,6 +201,13 @@ namespace DongTien.ClientApp
             {
                 return false;
             }
+        }
+
+        public FtpClient ConnectToFTPServer(string ipServer, string user, string pwd, int timeout, int port)
+        {
+            var ftp = new FtpClient(ipServer,user,pwd, timeout, port);
+            ftp.Login();
+            return ftp;
         }
 
         public void UnSubscribeWatcher(List<FileSystemSafeWatcher> watchers, Action<object, FileSystemEventArgs> watcher_Changed, Action<object, FileSystemEventArgs> watcher_Deleted, Action<object, RenamedEventArgs> watcher_Renamed)
