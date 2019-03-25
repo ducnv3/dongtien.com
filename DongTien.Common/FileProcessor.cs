@@ -101,8 +101,8 @@ namespace DongTien.Common
         {
             if (x == null || y == null) return false;
 
-            return x.Destination == y.Destination &&
-                x.Source == y.Source
+            return x.DesDir == y.DesDir &&
+                x.SourceDir == y.SourceDir
                 && x.Type == y.Type ? true : false;
         }
 

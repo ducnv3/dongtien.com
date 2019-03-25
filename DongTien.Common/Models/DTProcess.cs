@@ -15,8 +15,8 @@ namespace DongTien.Common.Models
         */
 
         public TypeProcess Type { get; set; }
-        public String Source { get; set; }
-        public String Destination { get; set; }
+        public String SourceDir { get; set; }
+        public String DesDir { get; set; }
         public FtpClient ftp { get; set; }
         public DTProcess()
         {
@@ -28,32 +28,48 @@ namespace DongTien.Common.Models
             {
                 if (Type == TypeProcess.COPY)
                 {
-                    if (!String.IsNullOrEmpty(Source) || 
-                        !String.IsNullOrEmpty(Destination))
+                    if (!String.IsNullOrEmpty(SourceDir) ||
+                        !String.IsNullOrEmpty(DesDir))
                     {
-                        //File.Copy(Source, Destination, true);
-                        //File.SetAttributes(Destination, FileAttributes.Normal);
-                        ftp.ChangeDir("Root\\PhongHanhChinh"); // path relative
-                        ftp.Upload(Source);
+                        var dir = DesDir;
+                        var filename = Utility.GetFilenameFromPath(SourceDir);
+
+                        ftp.ChangeDir(dir); // path relative
+                        ftp.Upload(SourceDir);
                         ftp.Close();
                     }
                 }
                 else if (Type == TypeProcess.RENAME)
                 {
-                    if ((!String.IsNullOrEmpty(Source) || 
-                        !String.IsNullOrEmpty(Destination)))
+                    if ((!String.IsNullOrEmpty(SourceDir) ||
+                        !String.IsNullOrEmpty(DesDir)))
                     {
-                        File.Move(Source, Destination);
+                        var dir = Utility.GetDirFromPath(DesDir);
+
+                        var oldname = Utility.GetFilenameFromPath(SourceDir);
+                        var newname = Utility.GetFilenameFromPath(DesDir);
+                        var newpath = Utility.GetDirFromPath(SourceDir) + "\\" + newname;
+                        ftp.ChangeDir(dir); // path relative
+                        ftp.DeleteFile(oldname);
+                        ftp.Upload(newpath);
+                        ftp.Close();
                     }
 
                 }
                 else if (Type == TypeProcess.DELETE)
                 {
-                    if (!String.IsNullOrEmpty(Source))
-                        File.Delete(Source);
+                    if (!String.IsNullOrEmpty(SourceDir))
+                    {
+                        var dir = Utility.GetDirFromPath(SourceDir);
+                        var filename = Utility.GetFilenameFromPath(SourceDir);
+
+                        ftp.ChangeDir(dir); // path relative
+                        ftp.DeleteFile(filename);
+                        ftp.Close();
+                    }
                 }
             }
-            catch(Exception)
+            catch (Exception e)
             {
                 throw;
             }

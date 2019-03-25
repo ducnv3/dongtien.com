@@ -17,11 +17,41 @@ namespace DongTien.ClientApp
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private FileProcessor fileProcessor;
+        protected FtpClient ftp = null;
 
         public BusinessService()
         {
+            InitFtp();
             fileProcessor = new FileProcessor();
             log.Info("Init queue process.");
+        }
+
+
+        private void InitFtp()
+        {
+            List<string> config = ClientConfiguration.LoadConfigApp();
+
+            string username = null;
+            string password = null;
+            string ipServer = null;
+            string isSync = null;
+
+            if (config.Count == 4)
+            {
+                username = config[0];
+                password = config[1] == null ? "" : Utility.Decrypt(config[1], true);
+                ipServer = config[2];
+                isSync = config[3];
+                try
+                {
+                    ftp = new FtpClient(ipServer, username, password, 5, 21);
+                    ftp.Login();
+                }catch(Exception e)
+                {
+                    log.Error(e.Message);
+                }
+            }
+
         }
 
         public bool ValidateMapPaths()
@@ -40,8 +70,9 @@ namespace DongTien.ClientApp
             return true;
         }
 
-        public void CopyFile(FileSystemEventArgs e, FtpClient ftp)
+        public void CopyFile(FileSystemEventArgs e)
         {
+            InitFtp();
             List<ItemPath> paths = Utility.GetListMapPath(Constants.MAPPING_CLIENT_FILENAME);
             string dir = e.FullPath.Substring(0, e.FullPath.LastIndexOf("\\"));
             ItemPath item = paths.Find(i => i.Source == dir);
@@ -50,11 +81,10 @@ namespace DongTien.ClientApp
                 string filename = e.FullPath.Substring(e.FullPath.LastIndexOf("\\") + 1);
 
                 string sourceFile = item.Source + "\\" + filename;
-                string desFile = item.Destination + "\\" + filename;
 
                 DTProcess dTProcess = new DTProcess();
-                dTProcess.Source = sourceFile;
-                dTProcess.Destination = desFile;
+                dTProcess.SourceDir = sourceFile;
+                dTProcess.DesDir = item.Destination;
                 dTProcess.Type = TypeProcess.COPY;
                 dTProcess.ftp = ftp;
                 if (!fileProcessor.CheckExistProcess(dTProcess))
@@ -67,33 +97,33 @@ namespace DongTien.ClientApp
             {
                 log.Error("Do not exist path in map: " + e.FullPath);
             }
-
+            
         }
 
         public void Rename(RenamedEventArgs e)
         {
+            InitFtp();
             List<ItemPath> paths = Utility.GetListMapPath(Constants.MAPPING_CLIENT_FILENAME);
             string dir = Utility.GetDirFromPath(e.FullPath);
-            string fileName = Utility.GetFilenameFromPath(e.FullPath);
-
+            
             ItemPath item = paths.Find(i => i.Source == dir);
             if (item != null)
             {
-                string oldName = Utility.GetFilenameFromPath(e.OldFullPath);
                 string newName = Utility.GetFilenameFromPath(e.FullPath);
-
-                string oldPath = item.Destination + "\\" + oldName;
                 string newPath = item.Destination + "\\" + newName;
 
+                string oldname = Utility.GetFilenameFromPath(e.OldFullPath);
+
                 DTProcess dTProcess = new DTProcess();
-                dTProcess.Source = oldPath;
-                dTProcess.Destination = newPath;
+                dTProcess.SourceDir = e.OldFullPath;
+                dTProcess.DesDir = newPath;
                 dTProcess.Type = TypeProcess.RENAME;
+                dTProcess.ftp = ftp;
 
                 if (!fileProcessor.CheckExistProcess(dTProcess))
                 {
                     fileProcessor.EnqueueProcess(dTProcess);
-                    log.Info("File: " + oldPath  +" to " + newPath);
+                    log.Info("File: " + oldname + " to " + newPath);
                 }
 
             }
@@ -105,6 +135,7 @@ namespace DongTien.ClientApp
 
         public void Delete(FileSystemEventArgs e)
         {
+            InitFtp();
             List<ItemPath> paths = Utility.GetListMapPath(Constants.MAPPING_CLIENT_FILENAME);
             string dir = Utility.GetDirFromPath(e.FullPath);
             string fileName = Utility.GetFilenameFromPath(e.FullPath);
@@ -114,9 +145,9 @@ namespace DongTien.ClientApp
             {
                 string filePath = item.Destination + "\\" + fileName;
                 DTProcess dTProcess = new DTProcess();
-                dTProcess.Source = filePath;
+                dTProcess.SourceDir = filePath;
                 dTProcess.Type = TypeProcess.DELETE;
-
+                dTProcess.ftp = ftp;
                 if (!fileProcessor.CheckExistProcess(dTProcess))
                 {
                     fileProcessor.EnqueueProcess(dTProcess);
@@ -127,6 +158,7 @@ namespace DongTien.ClientApp
             {
                 log.Error("Do not exist path in map: " + e.FullPath);
             }
+            ftp.Close();
         }
 
         public void SaveCertificate(string ipServer, string username, string password, EventHandler e)
@@ -205,7 +237,7 @@ namespace DongTien.ClientApp
 
         public FtpClient ConnectToFTPServer(string ipServer, string user, string pwd, int timeout, int port)
         {
-            var ftp = new FtpClient(ipServer,user,pwd, timeout, port);
+            var ftp = new FtpClient(ipServer, user, pwd, timeout, port);
             ftp.Login();
             return ftp;
         }
@@ -249,8 +281,8 @@ namespace DongTien.ClientApp
                         string desFile = desDir + "\\" + filename;
 
                         DTProcess dTProcess = new DTProcess();
-                        dTProcess.Source = sourceFile;
-                        dTProcess.Destination = desFile;
+                        dTProcess.SourceDir = sourceFile;
+                        dTProcess.DesDir = desFile;
                         dTProcess.Type = TypeProcess.COPY;
 
                         if (!fileProcessor.CheckExistProcess(dTProcess))

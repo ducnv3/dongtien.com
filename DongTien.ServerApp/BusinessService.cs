@@ -34,8 +34,8 @@ namespace DongTien.ServerApp
                 string desFile = item.Destination + "\\" + filename;
 
                 DTProcess dTProcess = new DTProcess();
-                dTProcess.Source = sourceFile;
-                dTProcess.Destination = desFile;
+                dTProcess.SourceDir = sourceFile;
+                dTProcess.DesDir = desFile;
                 dTProcess.Type = TypeProcess.COPY;
 
                 if (!fileProcessor.CheckExistProcess(dTProcess))
@@ -68,8 +68,8 @@ namespace DongTien.ServerApp
                 string newPath = item.Destination + "\\" + newName;
 
                 DTProcess dTProcess = new DTProcess();
-                dTProcess.Source = oldPath;
-                dTProcess.Destination = newPath;
+                dTProcess.SourceDir = oldPath;
+                dTProcess.DesDir = newPath;
                 dTProcess.Type = TypeProcess.RENAME;
 
                 if (!fileProcessor.CheckExistProcess(dTProcess))
@@ -96,7 +96,7 @@ namespace DongTien.ServerApp
             {
                 string filePath = item.Destination + "\\" + fileName;
                 DTProcess dTProcess = new DTProcess();
-                dTProcess.Source = filePath;
+                dTProcess.SourceDir = filePath;
                 dTProcess.Type = TypeProcess.DELETE;
 
                 if (!fileProcessor.CheckExistProcess(dTProcess))
@@ -165,8 +165,8 @@ namespace DongTien.ServerApp
                         string desFile = desDirs + "\\" + filename;
 
                         DTProcess dTProcess = new DTProcess();
-                        dTProcess.Source = sourceFile;
-                        dTProcess.Destination = desFile;
+                        dTProcess.SourceDir = sourceFile;
+                        dTProcess.DesDir = desFile;
                         dTProcess.Type = TypeProcess.COPY;
 
                         if (!fileProcessor.CheckExistProcess(dTProcess))

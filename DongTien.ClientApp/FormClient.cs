@@ -30,8 +30,6 @@ namespace DongTien.ClientApp
         private BusinessService service;
         private List<FileSystemSafeWatcher> watchers;
         protected BackgroundWorker wk { get; set; }
-        protected FtpClient ftp = null;
-
         protected bool IsSync = false;
 
         private Timer timer { get; set; }
@@ -172,7 +170,7 @@ namespace DongTien.ClientApp
             string username = Txt_Username.Text.Trim();
             string password = Txt_Password.Text.Trim();
             string ipServer = Txt_IpServer.Text.Trim();
-           // service.SaveCertificate(ipServer, username, password, Process_Exited);
+            // service.SaveCertificate(ipServer, username, password, Process_Exited);
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
@@ -206,7 +204,7 @@ namespace DongTien.ClientApp
             string ipServer = null;
             string isSync = null;
 
-            if(config.Count == 4)
+            if (config.Count == 4)
             {
                 username = config[0];
                 password = config[1];
@@ -265,25 +263,22 @@ namespace DongTien.ClientApp
 
         private void btn_start_Click(object sender, EventArgs e)
         {
-           // if (service.ConnectToServerStatus(Txt_IpServer.Text.Trim()))
-            try 
+            // if (service.ConnectToServerStatus(Txt_IpServer.Text.Trim()))
+            try
             {
-                ftp = new FtpClient(Txt_IpServer.Text.Trim(), Txt_Username.Text.Trim(), Txt_Password.Text, 10, 21);
-                ftp.Login();
-
                 saveConfigApp();
-                if (service.ValidateMapPaths())
-                {
-                    onChangeStatusRunning(true);
-                    service.SubscribeWatcher(watchers, watcher_Changed,
-                        watcher_Deleted, watcher_Renamed);
-                }
-                else
-                {
-                    MessageDialogs.ValidateMapFail();
-                }
+                //if (service.ValidateMapPaths())
+                //{
+                onChangeStatusRunning(true);
+                service.SubscribeWatcher(watchers, watcher_Changed,
+                    watcher_Deleted, watcher_Renamed);
+                //}
+                //else
+                //{
+                //    MessageDialogs.ValidateMapFail();
+                //}
             }
-        	catch (Exception ex)
+            catch (Exception ex)
             {
                 log.Error(ex);
                 MessageDialogs.CannotConectToServer();
@@ -309,9 +304,7 @@ namespace DongTien.ClientApp
 
         public void watcher_Changed(object source, FileSystemEventArgs e)
         {
-            ftp = new FtpClient(Txt_IpServer.Text.Trim(), Txt_Username.Text.Trim(), Txt_Password.Text, 10, 21);
-            ftp.Login();
-            service.CopyFile(e, ftp);
+            service.CopyFile(e);
         }
 
         private void notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
