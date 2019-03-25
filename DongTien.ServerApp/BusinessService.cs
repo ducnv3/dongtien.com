@@ -123,6 +123,20 @@ namespace DongTien.ServerApp
 
             foreach (ItemPath item in paths)
             {
+                if(!Directory.Exists(item.Source) || !Directory.Exists(item.Destination))
+                {
+                    if (!Directory.Exists(item.Source))
+                    {
+                        log.Error("Not exist: " + item.Source);
+                    }
+
+                    if (!Directory.Exists(item.Destination))
+                    {
+                        log.Error("Not exist: " + item.Destination);
+                    }
+                    continue;
+                }
+
                 FileSystemSafeWatcher watcher = new FileSystemSafeWatcher();
                 watcher.IncludeSubdirectories = true;
                 watcher.Path = item.Source;
