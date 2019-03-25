@@ -37,6 +37,8 @@ namespace DongTien.ServerApp
                 dTProcess.SourceDir = sourceFile;
                 dTProcess.DesDir = desFile;
                 dTProcess.Type = TypeProcess.COPY;
+                dTProcess.ClientProcess = false;
+                dTProcess.log = log;
 
                 if (!fileProcessor.CheckExistProcess(dTProcess))
                 {
@@ -71,6 +73,8 @@ namespace DongTien.ServerApp
                 dTProcess.SourceDir = oldPath;
                 dTProcess.DesDir = newPath;
                 dTProcess.Type = TypeProcess.RENAME;
+                dTProcess.ClientProcess = false;
+                dTProcess.log = log;
 
                 if (!fileProcessor.CheckExistProcess(dTProcess))
                 {
@@ -98,6 +102,8 @@ namespace DongTien.ServerApp
                 DTProcess dTProcess = new DTProcess();
                 dTProcess.SourceDir = filePath;
                 dTProcess.Type = TypeProcess.DELETE;
+                dTProcess.ClientProcess = false;
+                dTProcess.log = log;
 
                 if (!fileProcessor.CheckExistProcess(dTProcess))
                 {
