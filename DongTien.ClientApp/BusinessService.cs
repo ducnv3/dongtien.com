@@ -87,6 +87,8 @@ namespace DongTien.ClientApp
                 dTProcess.DesDir = item.Destination;
                 dTProcess.Type = TypeProcess.COPY;
                 dTProcess.ftp = ftp;
+                dTProcess.log = log;
+
                 if (!fileProcessor.CheckExistProcess(dTProcess))
                 {
                     fileProcessor.EnqueueProcess(dTProcess);
@@ -119,6 +121,7 @@ namespace DongTien.ClientApp
                 dTProcess.DesDir = newPath;
                 dTProcess.Type = TypeProcess.RENAME;
                 dTProcess.ftp = ftp;
+                dTProcess.log = log;
 
                 if (!fileProcessor.CheckExistProcess(dTProcess))
                 {
@@ -148,6 +151,8 @@ namespace DongTien.ClientApp
                 dTProcess.SourceDir = filePath;
                 dTProcess.Type = TypeProcess.DELETE;
                 dTProcess.ftp = ftp;
+                dTProcess.log = log;
+
                 if (!fileProcessor.CheckExistProcess(dTProcess))
                 {
                     fileProcessor.EnqueueProcess(dTProcess);
