@@ -47,11 +47,19 @@ namespace DongTien.Common.Models
         {
             try
             {
+                InitFtp(); 
+                ftp.ChangeDir(DesDir);
+              //  ftp.ChangeDir(pathOnServer); // change dir when loop to new directory 
+                foreach (string file in Directory.GetFiles(SourceDir, "*.*"))
+                {
+                    ftp.Upload(file, true);
+                }
+                ftp.Close();
+
                 // string rootLocal = SourceDir;// @"C:\Users\ducnv3\Desktop\testdongtien\boc chi phi";
                 // string rootServer = DesDir;// "Phong thi cong\\boc chi phi";
                 // Get all subdirectories
                 string[] subdirectoryEntries = Directory.GetDirectories(SourceDir);
-
                 // Loop through them to see if they have any other subdirectories
                 foreach (string subdirectory in subdirectoryEntries)
                 {
@@ -63,17 +71,14 @@ namespace DongTien.Common.Models
                 throw e;
             }
 
-        }
-
-        
+        } 
 
         private void LoadSubDirs(string dir)
-        {        
+        {
+            string pathOnServer = dir.Replace(SourceDir + "\\", string.Empty);
             try
             {
-                string pathOnServer = dir.Replace(SourceDir + "\\", string.Empty);
-                ftp = new FtpClient();
-                ftp.Login();
+                InitFtp();  
                 ftp.ChangeDir(DesDir);
                 // make the root dir if it doed not exist
                 //if (ftp.GetFileList(pathOnServer).Length < 1){
@@ -95,7 +100,23 @@ namespace DongTien.Common.Models
             }
             catch(Exception e)
             {
-                throw e;
+                if (e.Message.Contains("Cannot create a file when that file already exists")) // if folder exist then upload files to folders
+                {
+                    ftp.ChangeDir(pathOnServer); // change dir when loop to new directory 
+                    foreach (string file in Directory.GetFiles(dir, "*.*"))
+                    {
+                        ftp.Upload(file, true);
+                    }
+                    ftp.Close();
+                    pairPath.Add(dir, DesDir + "\\" + pathOnServer);
+                    // loop to sub-folder
+                    string[] subdirectoryEntries = Directory.GetDirectories(dir);
+                    foreach (string subdirectory in subdirectoryEntries)
+                    {
+                        LoadSubDirs(subdirectory);
+                    }
+                }
+                else throw e;
             }
         }
 
@@ -108,7 +129,7 @@ namespace DongTien.Common.Models
                 {
                     var dir = DesDir;
                     var filename = Utility.GetFilenameFromPath(SourceDir);
-
+                    Console.Write(DesDir);
                     ftp.ChangeDir(dir); // path relative
                     ftp.Upload(SourceDir);
                     ftp.Close();
@@ -171,6 +192,35 @@ namespace DongTien.Common.Models
                     File.Delete(SourceDir);
             }
         }
+
+        private void InitFtp()
+        {
+            List<string> config = ClientConfiguration.LoadConfigApp();
+
+            string username = null;
+            string password = null;
+            string ipServer = null;
+            string isSync = null;
+
+            if (config.Count == 4)
+            {
+                username = config[0];
+                password = config[1] == null ? "" : Utility.Decrypt(config[1], true);
+                ipServer = config[2];
+                isSync = config[3];
+                try
+                {
+                    ftp = new FtpClient(ipServer, username, password, 5, 21);
+                    ftp.Login();
+                }
+                catch (Exception e)
+                {
+                    log.Error(e.Message);
+                }
+            }
+
+        }
+
     }
 
     public enum TypeProcess

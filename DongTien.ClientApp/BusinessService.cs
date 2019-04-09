@@ -73,67 +73,73 @@ namespace DongTien.ClientApp
 
         public void CopyFile(FileSystemEventArgs e)
         {
-            InitFtp();
+           
             List<ItemPath> paths = Utility.GetListMapPath(Constants.MAPPING_CLIENT_FILENAME);
             string dir = e.FullPath.Substring(0, e.FullPath.LastIndexOf("\\"));
-            ItemPath item = paths.Find(i => i.Source == dir);
-            if (item != null)
+           // var items = paths.Find(i => i.Source == dir);
+            foreach (var item in paths)
             {
-                string filename = e.FullPath.Substring(e.FullPath.LastIndexOf("\\") + 1);
-
-                string sourceFile = item.Source + "\\" + filename;
-
-                DTProcess dTProcess = new DTProcess();
-                dTProcess.SourceDir = sourceFile;
-                dTProcess.DesDir = item.Destination;
-                dTProcess.Type = TypeProcess.COPY;
-                dTProcess.ftp = ftp;
-                dTProcess.log = log;
-
-                if (!fileProcessor.CheckExistProcess(dTProcess))
+                if (item.Source == dir)
                 {
-                    fileProcessor.EnqueueProcess(dTProcess);
-                    log.Info("File: " + e.FullPath + " " + filename);
+                    InitFtp();
+                    string filename = e.FullPath.Substring(e.FullPath.LastIndexOf("\\") + 1);
+
+                    string sourceFile = item.Source + "\\" + filename;
+
+                    DTProcess dTProcess = new DTProcess();
+                    dTProcess.SourceDir = sourceFile;
+                    dTProcess.DesDir = item.Destination;
+                    dTProcess.Type = TypeProcess.COPY;
+                    dTProcess.ftp = ftp;
+                    dTProcess.log = log;
+
+                    if (!fileProcessor.CheckExistProcess(dTProcess))
+                    {
+                        fileProcessor.EnqueueProcess(dTProcess);
+                        log.Info("File: " + e.FullPath + " " + filename);
+                    }
                 }
-            }
-            else
-            {
-                log.Error("Do not exist path in map: " + e.FullPath);
+                else
+                {
+                    log.Error("Do not exist path in map: " + e.FullPath);
+                }
             }
             
         }
 
         public void Rename(RenamedEventArgs e)
         {
-            InitFtp();
             List<ItemPath> paths = Utility.GetListMapPath(Constants.MAPPING_CLIENT_FILENAME);
             string dir = Utility.GetDirFromPath(e.FullPath);
             
-            ItemPath item = paths.Find(i => i.Source == dir);
-            if (item != null)
+           // ItemPath item = paths.Find(i => i.Source == dir);
+            foreach (var item in paths)
             {
-                string newName = Utility.GetFilenameFromPath(e.FullPath);
-                string newPath = item.Destination + "\\" + newName;
-
-                string oldname = Utility.GetFilenameFromPath(e.OldFullPath);
-
-                DTProcess dTProcess = new DTProcess();
-                dTProcess.SourceDir = e.OldFullPath;
-                dTProcess.DesDir = newPath;
-                dTProcess.Type = TypeProcess.RENAME;
-                dTProcess.ftp = ftp;
-                dTProcess.log = log;
-
-                if (!fileProcessor.CheckExistProcess(dTProcess))
+                if (item.Source == dir)
                 {
-                    fileProcessor.EnqueueProcess(dTProcess);
-                    log.Info("File: " + oldname + " to " + newPath);
-                }
+                    InitFtp();
+                    string newName = Utility.GetFilenameFromPath(e.FullPath);
+                    string newPath = item.Destination + "\\" + newName;
 
-            }
-            else
-            {
-                log.Error("Do not exist path in map: " + e.FullPath);
+                    string oldname = Utility.GetFilenameFromPath(e.OldFullPath);
+
+                    DTProcess dTProcess = new DTProcess();
+                    dTProcess.SourceDir = e.OldFullPath;
+                    dTProcess.DesDir = newPath;
+                    dTProcess.Type = TypeProcess.RENAME;
+                    dTProcess.ftp = ftp;
+                    dTProcess.log = log;
+
+                    if (!fileProcessor.CheckExistProcess(dTProcess))
+                    {
+                        fileProcessor.EnqueueProcess(dTProcess);
+                        log.Info("File: " + oldname + " to " + newPath);
+                    }
+                }
+                else
+                {
+                    log.Error("Do not exist path in map: " + e.FullPath);
+                }
             }
         }
 
@@ -144,25 +150,28 @@ namespace DongTien.ClientApp
             string dir = Utility.GetDirFromPath(e.FullPath);
             string fileName = Utility.GetFilenameFromPath(e.FullPath);
 
-            ItemPath item = paths.Find(i => i.Source == dir);
-            if (item != null)
+            foreach (var item in paths)
             {
-                string filePath = item.Destination + "\\" + fileName;
-                DTProcess dTProcess = new DTProcess();
-                dTProcess.SourceDir = filePath;
-                dTProcess.Type = TypeProcess.DELETE;
-                dTProcess.ftp = ftp;
-                dTProcess.log = log;
-
-                if (!fileProcessor.CheckExistProcess(dTProcess))
+                if (item.Source == dir)
                 {
-                    fileProcessor.EnqueueProcess(dTProcess);
-                    log.Info("File : " + e.FullPath);
+                    InitFtp();
+                    string filePath = item.Destination + "\\" + fileName;
+                    DTProcess dTProcess = new DTProcess();
+                    dTProcess.SourceDir = filePath;
+                    dTProcess.Type = TypeProcess.DELETE;
+                    dTProcess.ftp = ftp;
+                    dTProcess.log = log;
+
+                    if (!fileProcessor.CheckExistProcess(dTProcess))
+                    {
+                        fileProcessor.EnqueueProcess(dTProcess);
+                        log.Info("File : " + e.FullPath);
+                    }
                 }
-            }
-            else
-            {
-                log.Error("Do not exist path in map: " + e.FullPath);
+                else
+                {
+                    log.Error("Do not exist path in map: " + e.FullPath);
+                }
             }
             ftp.Close();
         }
@@ -183,22 +192,27 @@ namespace DongTien.ClientApp
         public void SubscribeWatcher(List<FileSystemSafeWatcher> watchers, FileSystemEventHandler changedE, FileSystemEventHandler DeleteE, RenamedEventHandler RenameE)
         {
             List<ItemPath> paths = Utility.GetListMapPath(Constants.MAPPING_CLIENT_FILENAME);
-
+            var checkSourceUnique = new List<string>();
             foreach (ItemPath item in paths)
             {
-                FileSystemSafeWatcher watcher = new FileSystemSafeWatcher();
-                watcher.IncludeSubdirectories = true;
-                watcher.Path = item.Source;
-                watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
-                             | NotifyFilters.FileName | NotifyFilters.DirectoryName; ;
-                watcher.Filter = "*.*";
-                watcher.Created += changedE;
-                watcher.Changed += changedE;
-                watcher.Deleted += DeleteE;
-                watcher.Renamed += RenameE;
-                watcher.EnableRaisingEvents = true;
+                if (!checkSourceUnique.Contains(item.Source))
+                {
+                    checkSourceUnique.Add(item.Source);
 
-                watchers.Add(watcher);
+                    FileSystemSafeWatcher watcher = new FileSystemSafeWatcher();
+                    watcher.IncludeSubdirectories = true;
+                    watcher.Path = item.Source;
+                    watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
+                                 | NotifyFilters.FileName | NotifyFilters.DirectoryName; ;
+                    watcher.Filter = "*.*";
+                    watcher.Created += changedE;
+                    watcher.Changed += changedE;
+                    watcher.Deleted += DeleteE;
+                    watcher.Renamed += RenameE;
+                    watcher.EnableRaisingEvents = true;
+
+                    watchers.Add(watcher);
+                }
             }
 
             log.Info("Subscribe success: " + paths.Count + " path.");
@@ -311,12 +325,10 @@ namespace DongTien.ClientApp
 
         public Dictionary<string,string> AutoMapFolderClientServer(string sourceDir, string desDir)
         {
-            // InitFtp();
              try
              {
                  // upload folder client to server by loop
                  DTProcess dTProcess = new DTProcess();
-                // dTProcess.ftp = ftp;
                  dTProcess.SourceDir = sourceDir;
                  dTProcess.DesDir = desDir;
                  dTProcess.SyncFolderClientToServer();
@@ -330,5 +342,6 @@ namespace DongTien.ClientApp
                  return null;
              }
         }
+
     }
 }

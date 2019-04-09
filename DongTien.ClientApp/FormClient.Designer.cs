@@ -39,9 +39,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.gridviewPath = new System.Windows.Forms.DataGridView();
-            this.col_source = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.col_destination = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.col_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.rbtn_notsync = new System.Windows.Forms.RadioButton();
             this.btn_ASyncFiles = new System.Windows.Forms.Button();
@@ -64,6 +61,11 @@
             this.btnOpenDialogFolder = new System.Windows.Forms.Button();
             this.txtPathLocalToMap = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
+            this.btnPaste = new System.Windows.Forms.Button();
+            this.lblStatus = new System.Windows.Forms.Label();
+            this.col_source = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.col_destination = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.col_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridviewPath)).BeginInit();
@@ -179,24 +181,6 @@
             this.gridviewPath.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.gridviewPath.Size = new System.Drawing.Size(889, 315);
             this.gridviewPath.TabIndex = 0;
-            // 
-            // col_source
-            // 
-            this.col_source.HeaderText = "Nguồn";
-            this.col_source.Name = "col_source";
-            this.col_source.Width = 350;
-            // 
-            // col_destination
-            // 
-            this.col_destination.HeaderText = "Đích";
-            this.col_destination.Name = "col_destination";
-            this.col_destination.Width = 350;
-            // 
-            // col_description
-            // 
-            this.col_description.HeaderText = "Mô tả";
-            this.col_description.Name = "col_description";
-            this.col_description.Width = 300;
             // 
             // groupBox3
             // 
@@ -319,6 +303,9 @@
             // 
             // tabControl1
             // 
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Location = new System.Drawing.Point(2, 3);
@@ -343,6 +330,8 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.lblStatus);
+            this.tabPage2.Controls.Add(this.btnPaste);
             this.tabPage2.Controls.Add(this.label8);
             this.tabPage2.Controls.Add(this.label7);
             this.tabPage2.Controls.Add(this.label6);
@@ -364,7 +353,7 @@
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label8.ForeColor = System.Drawing.Color.Red;
-            this.label8.Location = new System.Drawing.Point(166, 53);
+            this.label8.Location = new System.Drawing.Point(166, 51);
             this.label8.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(363, 13);
@@ -376,7 +365,7 @@
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.ForeColor = System.Drawing.Color.Red;
-            this.label7.Location = new System.Drawing.Point(166, 98);
+            this.label7.Location = new System.Drawing.Point(166, 102);
             this.label7.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(209, 13);
@@ -386,7 +375,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(28, 78);
+            this.label6.Location = new System.Drawing.Point(28, 82);
             this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(130, 13);
@@ -395,7 +384,7 @@
             // 
             // txtPathServer
             // 
-            this.txtPathServer.Location = new System.Drawing.Point(169, 76);
+            this.txtPathServer.Location = new System.Drawing.Point(169, 80);
             this.txtPathServer.Margin = new System.Windows.Forms.Padding(2);
             this.txtPathServer.Name = "txtPathServer";
             this.txtPathServer.Size = new System.Drawing.Size(392, 20);
@@ -413,11 +402,11 @@
             // 
             // btnOpenDialogFolder
             // 
-            this.btnOpenDialogFolder.Location = new System.Drawing.Point(567, 29);
+            this.btnOpenDialogFolder.Location = new System.Drawing.Point(570, 24);
             this.btnOpenDialogFolder.Name = "btnOpenDialogFolder";
-            this.btnOpenDialogFolder.Size = new System.Drawing.Size(27, 20);
+            this.btnOpenDialogFolder.Size = new System.Drawing.Size(106, 32);
             this.btnOpenDialogFolder.TabIndex = 11;
-            this.btnOpenDialogFolder.Text = "...";
+            this.btnOpenDialogFolder.Text = "Chọn đường dẫn";
             this.btnOpenDialogFolder.UseVisualStyleBackColor = true;
             this.btnOpenDialogFolder.Click += new System.EventHandler(this.btnOpenDialogFolder_Click);
             // 
@@ -439,6 +428,46 @@
             this.label5.Size = new System.Drawing.Size(137, 13);
             this.label5.TabIndex = 9;
             this.label5.Text = "Đường dẫn nguồn cần map";
+            // 
+            // btnPaste
+            // 
+            this.btnPaste.Location = new System.Drawing.Point(570, 73);
+            this.btnPaste.Name = "btnPaste";
+            this.btnPaste.Size = new System.Drawing.Size(106, 32);
+            this.btnPaste.TabIndex = 17;
+            this.btnPaste.Text = "Dán đường dẫn";
+            this.btnPaste.UseVisualStyleBackColor = true;
+            this.btnPaste.Click += new System.EventHandler(this.btnPaste_Click);
+            // 
+            // lblStatus
+            // 
+            this.lblStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblStatus.AutoSize = true;
+            this.lblStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStatus.ForeColor = System.Drawing.Color.Blue;
+            this.lblStatus.Location = new System.Drawing.Point(570, 119);
+            this.lblStatus.Name = "lblStatus";
+            this.lblStatus.Size = new System.Drawing.Size(86, 13);
+            this.lblStatus.TabIndex = 18;
+            this.lblStatus.Text = "Chờ thực hiện";
+            // 
+            // col_source
+            // 
+            this.col_source.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.col_source.HeaderText = "Nguồn";
+            this.col_source.Name = "col_source";
+            // 
+            // col_destination
+            // 
+            this.col_destination.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.col_destination.HeaderText = "Đích";
+            this.col_destination.Name = "col_destination";
+            // 
+            // col_description
+            // 
+            this.col_description.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.col_description.HeaderText = "Mô tả";
+            this.col_description.Name = "col_description";
             // 
             // FormClient
             // 
@@ -484,9 +513,6 @@
         private System.Windows.Forms.NotifyIcon notifyIcon;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox Txt_IpServer;
-        private System.Windows.Forms.DataGridViewTextBoxColumn col_source;
-        private System.Windows.Forms.DataGridViewTextBoxColumn col_destination;
-        private System.Windows.Forms.DataGridViewTextBoxColumn col_description;
         private System.Windows.Forms.Button btn_stop;
         private System.Windows.Forms.Button btn_ASyncFiles;
         private System.Windows.Forms.Label label4;
@@ -503,6 +529,11 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Button btnPaste;
+        private System.Windows.Forms.Label lblStatus;
+        private System.Windows.Forms.DataGridViewTextBoxColumn col_source;
+        private System.Windows.Forms.DataGridViewTextBoxColumn col_destination;
+        private System.Windows.Forms.DataGridViewTextBoxColumn col_description;
     }
 }
 

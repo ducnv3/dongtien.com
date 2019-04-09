@@ -419,25 +419,33 @@ namespace DongTien.Common
                                 }
 
                                 bool raiseEvent = true;
-                                FileAttributes attr = File.GetAttributes(current.Args.FullPath);
-
-                                if (!attr.HasFlag(FileAttributes.Directory) && (current.Args.ChangeType == WatcherChangeTypes.Created || current.Args.ChangeType == WatcherChangeTypes.Changed))
+                                try
                                 {
-                                    //check if the file has been completely copied (can be opened for read)
-                                    FileStream stream = null;
-                                    try
+                                    FileAttributes attr = File.GetAttributes(current.Args.FullPath);
+
+                                    if (!attr.HasFlag(FileAttributes.Directory) && (current.Args.ChangeType == WatcherChangeTypes.Created || current.Args.ChangeType == WatcherChangeTypes.Changed))
                                     {
-                                        stream = File.Open(current.Args.FullPath, FileMode.Open, FileAccess.Read, FileShare.None);
-                                        // If this succeeds, the file is finished
+                                        //check if the file has been completely copied (can be opened for read)
+                                        FileStream stream = null;
+                                        try
+                                        {
+                                            stream = File.Open(current.Args.FullPath, FileMode.Open, FileAccess.Read, FileShare.None);
+                                            // If this succeeds, the file is finished
+                                        }
+                                        catch (IOException)
+                                        {
+                                            raiseEvent = false;
+                                        }
+                                        finally
+                                        {
+                                            if (stream != null) stream.Close();
+                                        }
                                     }
-                                    catch (IOException)
-                                    {
-                                        raiseEvent = false;
-                                    }
-                                    finally
-                                    {
-                                        if (stream != null) stream.Close();
-                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    if(!ex.Message.Contains("Could not find file"))
+                                    throw;
                                 }
 
                                 if (raiseEvent)
