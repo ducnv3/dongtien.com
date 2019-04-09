@@ -18,6 +18,7 @@ namespace DongTien.ClientApp
 
         private FileProcessor fileProcessor;
         protected FtpClient ftp = null;
+        public string ErrorMessage = string.Empty;
 
         public BusinessService()
         {
@@ -306,6 +307,28 @@ namespace DongTien.ClientApp
             {
                 log.Error(e.Message);
             }
+        }
+
+        public Dictionary<string,string> AutoMapFolderClientServer(string sourceDir, string desDir)
+        {
+            // InitFtp();
+             try
+             {
+                 // upload folder client to server by loop
+                 DTProcess dTProcess = new DTProcess();
+                // dTProcess.ftp = ftp;
+                 dTProcess.SourceDir = sourceDir;
+                 dTProcess.DesDir = desDir;
+                 dTProcess.SyncFolderClientToServer();
+                 ftp.Close();
+                 return dTProcess.pairPath;
+             }
+             catch (Exception ex)
+             {
+                 log.Error(ex.Message);
+                 ErrorMessage = ex.Message;
+                 return null;
+             }
         }
     }
 }

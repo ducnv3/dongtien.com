@@ -141,7 +141,6 @@ namespace DongTien.ClientApp
 
         }
 
-
         private void ConfigClientForm()
         {
             // Fixed Size
@@ -156,8 +155,6 @@ namespace DongTien.ClientApp
             service = new BusinessService();
             watchers = new List<FileSystemSafeWatcher>();
         }
-
-
 
         private void SetEvents()
         {
@@ -384,5 +381,34 @@ namespace DongTien.ClientApp
                 wk.CancelAsync();
             btn_ASyncFiles.Text = Constants.LABEL_START_SYNC;
         }
+
+        private void btnOpenDialogFolder_Click(object sender, EventArgs e)
+        {
+            folderBrowserDialog.ShowDialog();
+            txtPathLocalToMap.Text = folderBrowserDialog.SelectedPath;
+        }
+
+        private void btnCreateMapFolderAuto_Click(object sender, EventArgs e)
+        {
+            if(string.IsNullOrEmpty(txtPathLocalToMap.Text) || string.IsNullOrEmpty(txtPathServer.Text.Trim()))
+            {
+                MessageBox.Show("Dữ liệu nguồn và đích không để trống.","Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;   
+            }
+           var result = service.AutoMapFolderClientServer(txtPathLocalToMap.Text, txtPathServer.Text);
+           if (result!=null)
+           {
+               DataTable tblSource =gridviewPath.DataSource as DataTable;
+               foreach (var item in result)
+               {
+                   var r = (gridviewPath.DataSource as DataTable).Select(string.Format("col_source = '{0}' AND col_destination = '{1}'", item.Key, item.Value));
+                   if(r.Length ==0) (gridviewPath.DataSource as DataTable).Rows.Add(new string[] { item.Key, item.Value });
+               }
+               MessageBox.Show("Thực hiện thành công.");
+           }
+           else
+               MessageBox.Show("Có lỗi xảy ra\n" + service.ErrorMessage, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
     }
 }

@@ -120,15 +120,30 @@ namespace DongTien.Common
             try
             {
                 List<ItemPath> paths = Utility.GetListMapPath(Constants.MAPPING_CLIENT_FILENAME);
+                DataTable dt = new DataTable();
+                dt.Columns.Add("col_source");
+                dt.Columns.Add("col_destination");
+                dt.Columns.Add("col_description");
                 foreach (ItemPath path in paths)
                 {
-                    dataGridView.Rows.Add(path.Source, path.Destination, path.Note);
+                    DataRow row = dt.NewRow();
+                    row["col_source"] = path.Source;
+                    row["col_destination"] = path.Destination;
+                    row["col_description"] = path.Note;
+                    // gridViewPath.Rows.Add(path.Source, path.Destination, path.Note);
+                    dt.Rows.Add(row);
                 }
+                dataGridView.Columns[0].DataPropertyName = "col_source";
+                dataGridView.Columns[1].DataPropertyName = "col_destination";
+                dataGridView.Columns[2].DataPropertyName = "col_description";
+                dataGridView.DataSource = dt;
+
             }
             catch (IOException e)
             {
                 //log.Error(e.Message);
             }
+
         }
 
     }

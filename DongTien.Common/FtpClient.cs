@@ -37,7 +37,7 @@ namespace DongTien.Common
 		// defaults
 		private string server = "192.168.1.101";
 		private string remotePath = ".";
-		private string username = "administrator";
+		private string username = "phongthicong";
 		private string password = "abcde12345-";
 		private string message = null;
 		private string result = null;

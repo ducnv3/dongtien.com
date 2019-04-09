@@ -419,7 +419,9 @@ namespace DongTien.Common
                                 }
 
                                 bool raiseEvent = true;
-                                if (current.Args.ChangeType == WatcherChangeTypes.Created || current.Args.ChangeType == WatcherChangeTypes.Changed)
+                                FileAttributes attr = File.GetAttributes(current.Args.FullPath);
+
+                                if (!attr.HasFlag(FileAttributes.Directory) && (current.Args.ChangeType == WatcherChangeTypes.Created || current.Args.ChangeType == WatcherChangeTypes.Changed))
                                 {
                                     //check if the file has been completely copied (can be opened for read)
                                     FileStream stream = null;
