@@ -55,7 +55,7 @@ namespace DongTien.Common.Models
                     ftp.Upload(file, true);
                 }
                 ftp.Close();
-
+                pairPath.Add(SourceDir, DesDir);
                 // string rootLocal = SourceDir;// @"C:\Users\ducnv3\Desktop\testdongtien\boc chi phi";
                 // string rootServer = DesDir;// "Phong thi cong\\boc chi phi";
                 // Get all subdirectories
