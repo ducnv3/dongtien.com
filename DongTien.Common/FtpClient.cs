@@ -30,7 +30,7 @@ namespace DongTien.Common
 		}
 
 		private static int BUFFER_SIZE = 512;
-		private static Encoding ASCII = Encoding.ASCII;
+		private static Encoding ASCII = Encoding.UTF8;
 
 		private bool verboseDebugging = false;
 
@@ -284,7 +284,7 @@ namespace DongTien.Common
 			this.loggedin = true;
 
 			Debug.WriteLine( "Connected to " + this.server, "FtpClient" );
-
+            this.sendCommand("OPTS UTF8 ON");
 			this.ChangeDir(this.remotePath);
 		}
 		
@@ -294,7 +294,7 @@ namespace DongTien.Common
 		public void Close()
 		{
 			Debug.WriteLine("Closing connection to " + this.server, "FtpClient" );
-
+          //  this.sendCommand("OPTS UTF8 OFF");
 			if( this.clientSocket != null )
 			{
 				this.sendCommand("QUIT");
@@ -789,7 +789,7 @@ namespace DongTien.Common
 		{
 			if ( this.verboseDebugging ) Debug.WriteLine(command,"FtpClient");
 
-			Byte[] cmdBytes = Encoding.ASCII.GetBytes( ( command + "\r\n" ).ToCharArray() );
+			Byte[] cmdBytes = Encoding.UTF8.GetBytes( ( command + "\r\n" ).ToCharArray() );
 			clientSocket.Send( cmdBytes, cmdBytes.Length, 0);
 			this.readResponse();
 		}
@@ -800,6 +800,7 @@ namespace DongTien.Common
 		/// <returns>Connected socket</returns>
 		private Socket createDataSocket()
 		{
+            this.sendCommand("OPTS UTF8 ON");
 			this.sendCommand("PASV");
 
 			if ( this.resultCode != 227 ) throw new FtpException(this.result.Substring(4));

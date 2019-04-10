@@ -102,6 +102,7 @@ namespace DongTien.Common.Models
             {
                 if (e.Message.Contains("Cannot create a file when that file already exists")) // if folder exist then upload files to folders
                 {
+                    InitFtp(); 
                     ftp.ChangeDir(pathOnServer); // change dir when loop to new directory 
                     foreach (string file in Directory.GetFiles(dir, "*.*"))
                     {
@@ -215,7 +216,7 @@ namespace DongTien.Common.Models
                 }
                 catch (Exception e)
                 {
-                    log.Error(e.Message);
+                    log.Error("Không thể truy cập được đến server");
                 }
             }
 

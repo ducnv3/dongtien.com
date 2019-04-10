@@ -390,15 +390,17 @@ namespace DongTien.ClientApp
 
         private void btnCreateMapFolderAuto_Click(object sender, EventArgs e)
         {
+            lblStatus.Text = "Đang thực hiện";
             DialogResult confirm = MessageBox.Show("Bạn có chắc muốn thực hiện", " Xác nhận hành động", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (confirm == System.Windows.Forms.DialogResult.No) return;
-
+            if (confirm == System.Windows.Forms.DialogResult.No)
+            { lblStatus.Text = "Chờ thực hiện"; return; }
+            
             if(string.IsNullOrEmpty(txtPathLocalToMap.Text) || string.IsNullOrEmpty(txtPathServer.Text.Trim()))
             {
                 MessageBox.Show("Dữ liệu nguồn và đích không để trống.","Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;   
             }
-            lblStatus.Text = "Đang thực hiện";
+            
            var result = service.AutoMapFolderClientServer(txtPathLocalToMap.Text, txtPathServer.Text);
            if (result != null)
            {
