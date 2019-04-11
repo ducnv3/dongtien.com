@@ -43,12 +43,12 @@
   <COMPONENT cid="caphyon.advinst.msicomp.MsiCompsComponent">
     <ROW Component="AI_CustomARPName" ComponentId="{2ED70A07-7896-4B8B-922C-EC74946EC9EB}" Directory_="APPDIR" Attributes="4" KeyPath="DisplayName" Options="1"/>
     <ROW Component="AI_ExePath" ComponentId="{1DF3434B-D3F9-4A62-A23F-2C8424DFA411}" Directory_="APPDIR" Attributes="4" KeyPath="AI_ExePath"/>
-    <ROW Component="App.config" ComponentId="{48A419B9-35CB-40F4-A89B-1891BAF86DA6}" Directory_="APPDIR" Attributes="0" KeyPath="App.config" Type="0"/>
+    <ROW Component="App.config" ComponentId="{FBEF68B7-49E0-41A7-BF9A-9F5914039C92}" Directory_="APPDIR" Attributes="0" KeyPath="App.config" Type="0"/>
     <ROW Component="DongTien.ClientApp.exe" ComponentId="{B8E10623-38C2-4BB1-B293-097AF88451F5}" Directory_="APPDIR" Attributes="0" KeyPath="DongTien.ClientApp.exe"/>
-    <ROW Component="DongTien.ClientApp.vshost.exe" ComponentId="{FEA2BA5D-565B-4CB6-B8B8-F64F41BE69ED}" Directory_="APPDIR" Attributes="0" KeyPath="DongTien.ClientApp.vshost.exe"/>
-    <ROW Component="DongTien.Common.dll" ComponentId="{2E90A9CB-2965-420B-A555-25BB7E08C556}" Directory_="APPDIR" Attributes="0" KeyPath="DongTien.Common.dll"/>
+    <ROW Component="DongTien.ClientApp.vshost.exe" ComponentId="{7D58C3C7-0737-4686-947D-A4387236F0A3}" Directory_="APPDIR" Attributes="0" KeyPath="DongTien.ClientApp.vshost.exe"/>
+    <ROW Component="DongTien.Common.dll" ComponentId="{39840E2C-32F3-4ED8-B845-AC483676E5AB}" Directory_="APPDIR" Attributes="0" KeyPath="DongTien.Common.dll"/>
     <ROW Component="ProductInformation" ComponentId="{50B7252C-F4AD-4509-B797-2B6AAF359FF8}" Directory_="APPDIR" Attributes="4" KeyPath="Version"/>
-    <ROW Component="log4net.dll" ComponentId="{E7F00168-C6CD-4980-9DAB-25F000111DC7}" Directory_="APPDIR" Attributes="0" KeyPath="log4net.dll"/>
+    <ROW Component="log4net.dll" ComponentId="{CCCD9A35-7700-4E5A-9B44-B59FBF904E57}" Directory_="APPDIR" Attributes="0" KeyPath="log4net.dll"/>
     <ROW Component="log4net.dll_1" ComponentId="{1F093947-BE46-4989-8914-6FA2A3DA3C46}" Directory_="References_Dir" Attributes="0" KeyPath="log4net.dll_1"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFeatsComponent">
@@ -56,18 +56,19 @@
     <ATTRIBUTE name="CurrentFeature" value="MainFeature"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFilesComponent">
-    <ROW File="App.config" Component_="App.config" FileName="APP~1.CON|App.config" Attributes="0" SourcePath="..\DongTien.ClientApp\bin\Debug\App.config" SelfReg="false" NextFile="DongTien.ClientApp.exe"/>
-    <ROW File="DongTien.ClientApp.exe" Component_="DongTien.ClientApp.exe" FileName="DONGTI~1.EXE|DongTien.ClientApp.exe" Attributes="0" SourcePath="..\DongTien.ClientApp\bin\Debug\DongTien.ClientApp.exe" SelfReg="false" NextFile="DongTien.ClientApp.exe.config" DigSign="true"/>
+    <ROW File="App.config" Component_="App.config" FileName="APP~1.CON|App.config" Attributes="0" SourcePath="..\DongTien.ClientApp\bin\Debug\App.config" SelfReg="false" NextFile="ConfigApp.xml"/>
+    <ROW File="ConfigApp.xml" Component_="App.config" FileName="CONFIG~1.XML|ConfigApp.xml" Attributes="0" SourcePath="..\DongTien.ClientApp\bin\Debug\ConfigApp.xml" SelfReg="false" NextFile="DongTien.ClientApp.exe.config"/>
+    <ROW File="DongTien.ClientApp.exe" Component_="DongTien.ClientApp.exe" FileName="DONGTI~1.EXE|DongTien.ClientApp.exe" Attributes="0" SourcePath="..\DongTien.ClientApp\bin\Debug\DongTien.ClientApp.exe" SelfReg="false" NextFile="log4net.dll_1"/>
     <ROW File="DongTien.ClientApp.exe.config" Component_="App.config" FileName="DONGTI~1.CON|DongTien.ClientApp.exe.config" Attributes="0" SourcePath="..\DongTien.ClientApp\bin\Debug\DongTien.ClientApp.exe.config" SelfReg="false" NextFile="DongTien.ClientApp.pdb"/>
     <ROW File="DongTien.ClientApp.pdb" Component_="DongTien.ClientApp.exe" FileName="DONGTI~1.PDB|DongTien.ClientApp.pdb" Attributes="0" SourcePath="..\DongTien.ClientApp\bin\Debug\DongTien.ClientApp.pdb" SelfReg="false" NextFile="DongTien.ClientApp.vshost.exe"/>
-    <ROW File="DongTien.ClientApp.vshost.exe" Component_="DongTien.ClientApp.vshost.exe" FileName="DONGTI~2.EXE|DongTien.ClientApp.vshost.exe" Attributes="0" SourcePath="..\DongTien.ClientApp\bin\Debug\DongTien.ClientApp.vshost.exe" SelfReg="false" NextFile="DongTien.ClientApp.vshost.exe.config" DigSign="true"/>
-    <ROW File="DongTien.ClientApp.vshost.exe.config" Component_="App.config" FileName="DONGTI~2.CON|DongTien.ClientApp.vshost.exe.config" Attributes="0" SourcePath="..\DongTien.ClientApp\bin\Debug\DongTien.ClientApp.vshost.exe.config" SelfReg="false" NextFile="DongTien.ClientApp.vshost.exe.manifest"/>
+    <ROW File="DongTien.ClientApp.vshost.exe" Component_="DongTien.ClientApp.vshost.exe" FileName="DONGTI~2.EXE|DongTien.ClientApp.vshost.exe" Attributes="0" SourcePath="..\DongTien.ClientApp\bin\Debug\DongTien.ClientApp.vshost.exe" SelfReg="false" NextFile="DongTien.ClientApp.vshost.exe.Config" DigSign="true"/>
+    <ROW File="DongTien.ClientApp.vshost.exe.Config" Component_="App.config" FileName="DONGTI~2.CON|DongTien.ClientApp.vshost.exe.Config" Attributes="0" SourcePath="..\DongTien.ClientApp\bin\Debug\DongTien.ClientApp.vshost.exe.Config" SelfReg="false" NextFile="DongTien.ClientApp.vshost.exe.manifest"/>
     <ROW File="DongTien.ClientApp.vshost.exe.manifest" Component_="App.config" FileName="DONGTI~1.MAN|DongTien.ClientApp.vshost.exe.manifest" Attributes="0" SourcePath="..\DongTien.ClientApp\bin\Debug\DongTien.ClientApp.vshost.exe.manifest" SelfReg="false" NextFile="DongTien.Common.dll"/>
     <ROW File="DongTien.Common.dll" Component_="DongTien.Common.dll" FileName="DONGTI~1.DLL|DongTien.Common.dll" Attributes="0" SourcePath="..\DongTien.ClientApp\bin\Debug\DongTien.Common.dll" SelfReg="false" NextFile="DongTien.Common.pdb"/>
     <ROW File="DongTien.Common.pdb" Component_="DongTien.Common.dll" FileName="DONGTI~2.PDB|DongTien.Common.pdb" Attributes="0" SourcePath="..\DongTien.ClientApp\bin\Debug\DongTien.Common.pdb" SelfReg="false" NextFile="log4net.dll"/>
-    <ROW File="Mapping.xml" Component_="App.config" FileName="Mapping.xml" Attributes="0" SourcePath="..\DongTien.ClientApp\bin\Debug\Mapping.xml" SelfReg="false" NextFile="log4net.dll_1"/>
+    <ROW File="Mapping.xml" Component_="App.config" FileName="Mapping.xml" Attributes="0" SourcePath="..\DongTien.ClientApp\bin\Debug\Mapping.xml" SelfReg="false"/>
     <ROW File="log4net.dll" Component_="log4net.dll" FileName="log4net.dll" Attributes="0" SourcePath="..\DongTien.ClientApp\bin\Debug\log4net.dll" SelfReg="false" NextFile="Mapping.xml"/>
-    <ROW File="log4net.dll_1" Component_="log4net.dll_1" FileName="log4net.dll" Attributes="0" SourcePath="..\DongTien.ClientApp\bin\Debug\References\log4net.dll" SelfReg="false"/>
+    <ROW File="log4net.dll_1" Component_="log4net.dll_1" FileName="log4net.dll" Attributes="0" SourcePath="..\DongTien.ClientApp\bin\Debug\References\log4net.dll" SelfReg="false" NextFile="App.config"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.BootstrOptComponent">
     <ROW BootstrOptKey="GlobalOptions" DownloadFolder="[AppDataFolder][|Manufacturer]\[|ProductName]\prerequisites" Options="2"/>
@@ -313,8 +314,8 @@
     <ROW Registry="VersionMinor" Root="-1" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductName] [ProductVersion]" Name="VersionMinor" Value="#0" Component_="AI_CustomARPName"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiShortsComponent">
-    <ROW Shortcut="DongTienSyncFiles" Directory_="DesktopFolder" Name="DONGTI~1|Dong Tien Sync Files" Component_="DongTien.ClientApp.exe" Target="[#DongTien.ClientApp.exe]" Hotkey="0" Icon_="DongTien.ClientApp_1.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
-    <ROW Shortcut="DongTienSyncFiles_1" Directory_="StartupFolder" Name="DONGTI~1|Dong Tien Sync Files" Component_="DongTien.ClientApp.exe" Target="[#DongTien.ClientApp.exe]" Hotkey="0" Icon_="DongTien.ClientApp_1.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
+    <ROW Shortcut="DongTien.ClientApp" Directory_="StartupFolder" Name="DONGTI~1.CLI|DongTien.ClientApp" Component_="DongTien.ClientApp.exe" Target="[#DongTien.ClientApp.exe]" Hotkey="0" Icon_="DongTien.ClientApp_1.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
+    <ROW Shortcut="DongTien.ClientApp_1" Directory_="DesktopFolder" Name="DONGTI~1.CLI|DongTien.ClientApp" Component_="DongTien.ClientApp.exe" Target="[#DongTien.ClientApp.exe]" Hotkey="0" Icon_="DongTien.ClientApp_1.exe" IconIndex="0" ShowCmd="1" WkDir="APPDIR"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiThemeComponent">
     <ATTRIBUTE name="UsedTheme" value="azure"/>

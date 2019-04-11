@@ -49,7 +49,6 @@ namespace DongTien.Common.Models
             {
                 InitFtp(); 
                 ftp.ChangeDir(DesDir);
-              //  ftp.ChangeDir(pathOnServer); // change dir when loop to new directory 
                 foreach (string file in Directory.GetFiles(SourceDir, "*.*"))
                 {
                     ftp.Upload(file, true);
@@ -65,6 +64,7 @@ namespace DongTien.Common.Models
                 {
                     LoadSubDirs(subdirectory);
                 }
+                
             }
             catch (Exception e)
             {
@@ -75,22 +75,29 @@ namespace DongTien.Common.Models
 
         private void LoadSubDirs(string dir)
         {
-            string pathOnServer = dir.Replace(SourceDir + "\\", string.Empty);
+            string currentFolderOnServer = dir.Replace(SourceDir + "\\", string.Empty);
             try
             {
-                InitFtp();  
-                ftp.ChangeDir(DesDir);
-                // make the root dir if it doed not exist
-                //if (ftp.GetFileList(pathOnServer).Length < 1){
-                ftp.MakeDir(pathOnServer); // create folder on server
-                //}
-                ftp.ChangeDir(pathOnServer); // change dir when loop to new directory 
-                foreach (string file in Directory.GetFiles(dir, "*.*"))
+                 InitFtp();
+                 ftp.ChangeDir(DesDir);
+                 try
+                 {
+                     ftp.MakeDir(currentFolderOnServer); // create folder on server
+
+                 }
+                 catch (Exception ex)
+                 {
+                     if (!ex.Message.Contains("Cannot create a file when that file already exists"))
+                     throw ex;
+                 }
+                 ftp.ChangeDir(currentFolderOnServer);
+
+                 foreach (string file in Directory.GetFiles(dir, "*.*"))
                 {
                     ftp.Upload(file, true);
                 }
-                ftp.Close();
-                pairPath.Add(dir, DesDir + "\\" + pathOnServer);
+                 ftp.Close();
+                pairPath.Add(dir, DesDir + "\\" + currentFolderOnServer);
                 // loop to sub-folder
                 string[] subdirectoryEntries = Directory.GetDirectories(dir);
                 foreach (string subdirectory in subdirectoryEntries)
@@ -100,24 +107,7 @@ namespace DongTien.Common.Models
             }
             catch(Exception e)
             {
-                if (e.Message.Contains("Cannot create a file when that file already exists")) // if folder exist then upload files to folders
-                {
-                    InitFtp(); 
-                    ftp.ChangeDir(pathOnServer); // change dir when loop to new directory 
-                    foreach (string file in Directory.GetFiles(dir, "*.*"))
-                    {
-                        ftp.Upload(file, true);
-                    }
-                    ftp.Close();
-                    pairPath.Add(dir, DesDir + "\\" + pathOnServer);
-                    // loop to sub-folder
-                    string[] subdirectoryEntries = Directory.GetDirectories(dir);
-                    foreach (string subdirectory in subdirectoryEntries)
-                    {
-                        LoadSubDirs(subdirectory);
-                    }
-                }
-                else throw e;
+             throw e;
             }
         }
 

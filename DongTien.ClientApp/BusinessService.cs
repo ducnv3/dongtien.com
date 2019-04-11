@@ -332,7 +332,6 @@ namespace DongTien.ClientApp
                  dTProcess.SourceDir = sourceDir;
                  dTProcess.DesDir = desDir;
                  dTProcess.SyncFolderClientToServer();
-                 ftp.Close();
                  return dTProcess.pairPath;
              }
              catch (Exception ex)
