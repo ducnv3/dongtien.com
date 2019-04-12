@@ -390,13 +390,14 @@ namespace DongTien.ClientApp
 
         private void btnCreateMapFolderAuto_Click(object sender, EventArgs e)
         {
-            lblStatus.Text = "Đang thực hiện";
+            waitingStatus(true);
             DialogResult confirm = MessageBox.Show("Bạn có chắc muốn thực hiện", " Xác nhận hành động", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (confirm == System.Windows.Forms.DialogResult.No)
-            { lblStatus.Text = "Chờ thực hiện"; return; }
+            { waitingStatus(false); return; }
             
             if(string.IsNullOrEmpty(txtPathLocalToMap.Text) || string.IsNullOrEmpty(txtPathServer.Text.Trim()))
             {
+                waitingStatus(false);
                 MessageBox.Show("Dữ liệu nguồn và đích không để trống.","Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;   
             }
@@ -411,14 +412,28 @@ namespace DongTien.ClientApp
                    if (r.Length == 0) (gridviewPath.DataSource as DataTable).Rows.Add(new string[] { item.Key, item.Value });
                }
                gridviewPath.PerformLayout();
+               waitingStatus(false);
                MessageBox.Show("Thực hiện thành công.");
-               lblStatus.Text = "Chờ thực hiện";
            }
            else
            {
+               waitingStatus(false);
                MessageBox.Show("Có lỗi xảy ra\n" + service.ErrorMessage, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-               lblStatus.Text = "Chờ thực hiện";
            }
+        }
+
+        private void waitingStatus(bool isInProgress)
+        {
+            if (isInProgress)
+            {
+                lblStatus.Text = "Đang thực hiện";
+                pictureBoxWait.Visible = true;
+            }
+            else
+            {
+                lblStatus.Text = "Chờ thực hiện";
+                pictureBoxWait.Visible = false;
+            }
         }
 
         private void btnPaste_Click(object sender, EventArgs e)

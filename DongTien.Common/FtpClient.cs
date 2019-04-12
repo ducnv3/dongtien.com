@@ -614,7 +614,16 @@ namespace DongTien.Common
 			string rootDir = dirs[ dirs.Length - 1 ];
 
 			// make the root dir if it doed not exist
-			if ( this.GetFileList(rootDir).Length < 1 ) this.MakeDir(rootDir);
+			//if ( this.GetFileList(rootDir).Length < 1 ) 
+            try
+            {
+                this.MakeDir(rootDir);
+            }
+            catch (Exception ex)
+            {
+                if(!ex.Message.Contains("Cannot create a file when that file already exists"))
+                throw;
+            }
 
 			this.ChangeDir(rootDir);
 

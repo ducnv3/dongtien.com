@@ -47,68 +47,17 @@ namespace DongTien.Common.Models
         {
             try
             {
-                InitFtp(); 
+                InitFtp();
                 ftp.ChangeDir(DesDir);
-                foreach (string file in Directory.GetFiles(SourceDir, "*.*"))
-                {
-                    ftp.Upload(file, true);
-                }
-                ftp.Close();
+                ftp.UploadDirectory(SourceDir, true);
                 pairPath.Add(SourceDir, DesDir);
-                // string rootLocal = SourceDir;// @"C:\Users\ducnv3\Desktop\testdongtien\boc chi phi";
-                // string rootServer = DesDir;// "Phong thi cong\\boc chi phi";
-                // Get all subdirectories
-                string[] subdirectoryEntries = Directory.GetDirectories(SourceDir);
-                // Loop through them to see if they have any other subdirectories
-                foreach (string subdirectory in subdirectoryEntries)
-                {
-                    LoadSubDirs(subdirectory);
-                }
-                
+                ftp.Close();
             }
             catch (Exception e)
             {
                 throw e;
             }
 
-        } 
-
-        private void LoadSubDirs(string dir)
-        {
-            string currentFolderOnServer = dir.Replace(SourceDir + "\\", string.Empty);
-            try
-            {
-                 InitFtp();
-                 ftp.ChangeDir(DesDir);
-                 try
-                 {
-                     ftp.MakeDir(currentFolderOnServer); // create folder on server
-
-                 }
-                 catch (Exception ex)
-                 {
-                     if (!ex.Message.Contains("Cannot create a file when that file already exists"))
-                     throw ex;
-                 }
-                 ftp.ChangeDir(currentFolderOnServer);
-
-                 foreach (string file in Directory.GetFiles(dir, "*.*"))
-                {
-                    ftp.Upload(file, true);
-                }
-                 ftp.Close();
-                pairPath.Add(dir, DesDir + "\\" + currentFolderOnServer);
-                // loop to sub-folder
-                string[] subdirectoryEntries = Directory.GetDirectories(dir);
-                foreach (string subdirectory in subdirectoryEntries)
-                {
-                    LoadSubDirs(subdirectory);
-                }
-            }
-            catch(Exception e)
-            {
-             throw e;
-            }
         }
 
         private void ClientProcessor()

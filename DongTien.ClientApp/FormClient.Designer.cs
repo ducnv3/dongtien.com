@@ -39,6 +39,9 @@
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.gridviewPath = new System.Windows.Forms.DataGridView();
+            this.col_source = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.col_destination = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.col_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.rbtn_notsync = new System.Windows.Forms.RadioButton();
             this.btn_ASyncFiles = new System.Windows.Forms.Button();
@@ -53,6 +56,8 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.lblStatus = new System.Windows.Forms.Label();
+            this.btnPaste = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -61,11 +66,7 @@
             this.btnOpenDialogFolder = new System.Windows.Forms.Button();
             this.txtPathLocalToMap = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.btnPaste = new System.Windows.Forms.Button();
-            this.lblStatus = new System.Windows.Forms.Label();
-            this.col_source = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.col_destination = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.col_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.pictureBoxWait = new System.Windows.Forms.PictureBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridviewPath)).BeginInit();
@@ -74,6 +75,7 @@
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxWait)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -181,6 +183,24 @@
             this.gridviewPath.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.gridviewPath.Size = new System.Drawing.Size(889, 315);
             this.gridviewPath.TabIndex = 0;
+            // 
+            // col_source
+            // 
+            this.col_source.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.col_source.HeaderText = "Nguồn";
+            this.col_source.Name = "col_source";
+            // 
+            // col_destination
+            // 
+            this.col_destination.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.col_destination.HeaderText = "Đích";
+            this.col_destination.Name = "col_destination";
+            // 
+            // col_description
+            // 
+            this.col_description.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.col_description.HeaderText = "Mô tả";
+            this.col_description.Name = "col_description";
             // 
             // groupBox3
             // 
@@ -330,6 +350,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.pictureBoxWait);
             this.tabPage2.Controls.Add(this.lblStatus);
             this.tabPage2.Controls.Add(this.btnPaste);
             this.tabPage2.Controls.Add(this.label8);
@@ -347,6 +368,28 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Map bổ sung";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // lblStatus
+            // 
+            this.lblStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblStatus.AutoSize = true;
+            this.lblStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStatus.ForeColor = System.Drawing.Color.Blue;
+            this.lblStatus.Location = new System.Drawing.Point(570, 119);
+            this.lblStatus.Name = "lblStatus";
+            this.lblStatus.Size = new System.Drawing.Size(86, 13);
+            this.lblStatus.TabIndex = 18;
+            this.lblStatus.Text = "Chờ thực hiện";
+            // 
+            // btnPaste
+            // 
+            this.btnPaste.Location = new System.Drawing.Point(570, 73);
+            this.btnPaste.Name = "btnPaste";
+            this.btnPaste.Size = new System.Drawing.Size(106, 32);
+            this.btnPaste.TabIndex = 17;
+            this.btnPaste.Text = "Dán đường dẫn";
+            this.btnPaste.UseVisualStyleBackColor = true;
+            this.btnPaste.Click += new System.EventHandler(this.btnPaste_Click);
             // 
             // label8
             // 
@@ -429,45 +472,17 @@
             this.label5.TabIndex = 9;
             this.label5.Text = "Đường dẫn nguồn cần map";
             // 
-            // btnPaste
+            // pictureBoxWait
             // 
-            this.btnPaste.Location = new System.Drawing.Point(570, 73);
-            this.btnPaste.Name = "btnPaste";
-            this.btnPaste.Size = new System.Drawing.Size(106, 32);
-            this.btnPaste.TabIndex = 17;
-            this.btnPaste.Text = "Dán đường dẫn";
-            this.btnPaste.UseVisualStyleBackColor = true;
-            this.btnPaste.Click += new System.EventHandler(this.btnPaste_Click);
-            // 
-            // lblStatus
-            // 
-            this.lblStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblStatus.AutoSize = true;
-            this.lblStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblStatus.ForeColor = System.Drawing.Color.Blue;
-            this.lblStatus.Location = new System.Drawing.Point(570, 119);
-            this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(86, 13);
-            this.lblStatus.TabIndex = 18;
-            this.lblStatus.Text = "Chờ thực hiện";
-            // 
-            // col_source
-            // 
-            this.col_source.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.col_source.HeaderText = "Nguồn";
-            this.col_source.Name = "col_source";
-            // 
-            // col_destination
-            // 
-            this.col_destination.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.col_destination.HeaderText = "Đích";
-            this.col_destination.Name = "col_destination";
-            // 
-            // col_description
-            // 
-            this.col_description.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.col_description.HeaderText = "Mô tả";
-            this.col_description.Name = "col_description";
+            this.pictureBoxWait.BackgroundImage = global::DongTien.ClientApp.Properties.Resources.Spinner_1s_200px;
+            this.pictureBoxWait.Image = global::DongTien.ClientApp.Properties.Resources.Spinner_1s_200px;
+            this.pictureBoxWait.Location = new System.Drawing.Point(682, 102);
+            this.pictureBoxWait.Name = "pictureBoxWait";
+            this.pictureBoxWait.Size = new System.Drawing.Size(42, 44);
+            this.pictureBoxWait.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBoxWait.TabIndex = 19;
+            this.pictureBoxWait.TabStop = false;
+            this.pictureBoxWait.Visible = false;
             // 
             // FormClient
             // 
@@ -491,6 +506,7 @@
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxWait)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -534,6 +550,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn col_source;
         private System.Windows.Forms.DataGridViewTextBoxColumn col_destination;
         private System.Windows.Forms.DataGridViewTextBoxColumn col_description;
+        private System.Windows.Forms.PictureBox pictureBoxWait;
     }
 }
 
