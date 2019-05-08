@@ -17,7 +17,7 @@ namespace DongTien.Common
     public static class ClientConfiguration
     {
         public static int SaveConfigApp(string username, string password,
-            string ipServer, bool isSync)
+            string ipServer, bool isSync, string localToMapPath, string serverToMapPath)
         {
             try
             {
@@ -41,6 +41,14 @@ namespace DongTien.Common
 
                 userNode = xmlDoc.CreateElement("Sync");
                 userNode.InnerText = isSync.ToString();
+                rootNode.AppendChild(userNode);
+
+                userNode = xmlDoc.CreateElement("localToMapPath");
+                userNode.InnerText = localToMapPath;
+                rootNode.AppendChild(userNode);
+
+                userNode = xmlDoc.CreateElement("serverToMapPath");
+                userNode.InnerText = serverToMapPath;
                 rootNode.AppendChild(userNode);
 
                 xmlDoc.Save(filename);
@@ -73,6 +81,12 @@ namespace DongTien.Common
                 data.Add(userNodes[0].InnerText);
 
                 userNodes = xmlDoc.SelectNodes("//configurations//Sync");
+                data.Add(userNodes[0].InnerText);
+
+                userNodes = xmlDoc.SelectNodes("//configurations//localToMapPath");
+                data.Add(userNodes[0].InnerText);
+
+                userNodes = xmlDoc.SelectNodes("//configurations//serverToMapPath");
                 data.Add(userNodes[0].InnerText);
 
                 return data;

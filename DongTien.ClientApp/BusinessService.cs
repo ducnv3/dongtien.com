@@ -207,7 +207,7 @@ namespace DongTien.ClientApp
                     watcher.Filter = "*.*";
                     watcher.Created += changedE;
                     watcher.Changed += changedE;
-                    watcher.Deleted += DeleteE;
+                   // watcher.Deleted += DeleteE;
                     watcher.Renamed += RenameE;
                     watcher.EnableRaisingEvents = true;
 

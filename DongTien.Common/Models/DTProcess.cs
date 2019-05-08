@@ -50,7 +50,7 @@ namespace DongTien.Common.Models
                 InitFtp();
                 ftp.ChangeDir(DesDir);
                 ftp.UploadDirectory(SourceDir, true);
-                pairPath.Add(SourceDir, DesDir);
+                pairPath = ftp.pairPath;
                 ftp.Close();
             }
             catch (Exception e)

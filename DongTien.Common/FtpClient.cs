@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Diagnostics;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Messaging;
+using System.Collections.Generic;
 
 /*
  * FTP Client library in C#
@@ -51,7 +52,7 @@ namespace DongTien.Common
 
 		private Byte[] buffer = new Byte[BUFFER_SIZE];
 		private Socket clientSocket = null;
-
+        public Dictionary<string, string> pairPath = new Dictionary<string, string>();
 		private int timeoutSeconds = 10;
 
 		/// <summary>
@@ -612,6 +613,7 @@ namespace DongTien.Common
 		{
 			string[] dirs = path.Replace("/",@"\").Split('\\');
 			string rootDir = dirs[ dirs.Length - 1 ];
+            pairPath.Add(path, path);
 
 			// make the root dir if it doed not exist
 			//if ( this.GetFileList(rootDir).Length < 1 ) 
@@ -638,7 +640,6 @@ namespace DongTien.Common
 					this.UploadDirectory(directory,recurse,mask);
 				}
 			}
-
 			this.ChangeDir("..");
 		}
 

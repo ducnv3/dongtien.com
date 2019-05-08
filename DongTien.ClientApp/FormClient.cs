@@ -200,19 +200,31 @@ namespace DongTien.ClientApp
             string password = null;
             string ipServer = null;
             string isSync = null;
+            string localToPamPath = null;
+            string serverToMapPath = null;
 
-            if (config.Count == 4)
+            //if (config.Count == 4)
             {
+                if(config.Count >= 1 )
                 username = config[0];
+                if (config.Count >= 2)
                 password = config[1];
+                if (config.Count >= 3)
                 ipServer = config[2];
+                if (config.Count >= 4)
                 isSync = config[3];
+                if (config.Count >= 5)
+                localToPamPath = config[4];
+                if (config.Count >= 6)
+                serverToMapPath = config[5];
             }
 
             Txt_Username.Text = username == null ? "" : username;
             Txt_Password.Text = password == null ? "" : Utility.Decrypt(password, true);
             Txt_IpServer.Text = ipServer == null ? "" : ipServer;
             isSync = isSync == null ? "false" : isSync;
+            txtPathLocalToMap.Text = localToPamPath == null? "": localToPamPath;
+            txtPathServer.Text = serverToMapPath == null? "": serverToMapPath;
 
             if (isSync.ToLower() == "true")
             {
@@ -246,11 +258,13 @@ namespace DongTien.ClientApp
             string username = Txt_Username.Text.Trim();
             string password = Utility.Encrypt(Txt_Password.Text, true);
             string ipServer = Txt_IpServer.Text.Trim();
+            string localToMap = txtPathLocalToMap.Text.Trim();
+            string serverToMap = txtPathServer.Text.Trim();
 
             bool isSync = rbtn_sync.Checked;
 
             int r1 = ClientConfiguration.
-                SaveConfigApp(username, password, ipServer, isSync);
+                SaveConfigApp(username, password, ipServer, isSync, localToMap, serverToMap);
 
             int r2 = ClientConfiguration.
                 SaveMapPathToXML(gridviewPath);
@@ -408,8 +422,9 @@ namespace DongTien.ClientApp
                DataTable tblSource = gridviewPath.DataSource as DataTable;
                foreach (var item in result)
                {
-                   var r = (gridviewPath.DataSource as DataTable).Select(string.Format("col_source = '{0}' AND col_destination = '{1}'", item.Key, item.Value));
-                   if (r.Length == 0) (gridviewPath.DataSource as DataTable).Rows.Add(new string[] { item.Key, item.Value });
+                   var itemPathServer = txtPathServer.Text + item.Value.Replace(txtPathLocalToMap.Text.Substring(0, txtPathLocalToMap.Text.LastIndexOf("\\")), "");
+                   var r = (gridviewPath.DataSource as DataTable).Select(string.Format("col_source = '{0}' AND col_destination = '{1}'", item.Key, itemPathServer));
+                   if (r.Length == 0) (gridviewPath.DataSource as DataTable).Rows.Add(new string[] { item.Key, itemPathServer });
                }
                gridviewPath.PerformLayout();
                waitingStatus(false);
