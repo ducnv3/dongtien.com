@@ -142,23 +142,27 @@ namespace DongTien.Common.Models
             string ipServer = null;
             string isSync = null;
 
-            if (config.Count == 4)
-            {
-                username = config[0];
-                password = config[1] == null ? "" : Utility.Decrypt(config[1], true);
-                ipServer = config[2];
-                isSync = config[3];
-                try
-                {
-                    ftp = new FtpClient(ipServer, username, password, 5, 21);
-                    ftp.Login();
-                }
-                catch (Exception e)
-                {
-                    log.Error("Không thể truy cập được đến server");
-                }
-            }
+            if(config.Count >=1)
+            username = config[0];
 
+            if (config.Count >= 2)
+            password = config[1] == null ? "" : Utility.Decrypt(config[1], true);
+
+            if (config.Count >= 3)
+            ipServer = config[2];
+
+            if (config.Count >= 4)
+            isSync = config[3];
+            try
+            {
+                ftp = new FtpClient(ipServer, username, password, 5, 21);
+                ftp.Login();
+            }
+            catch (Exception e)
+            {
+                log.Error("Không thể truy cập được đến server");
+                throw new Exception("Không thể truy cập được đến server"); 
+            }   
         }
 
     }

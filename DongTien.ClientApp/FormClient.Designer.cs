@@ -56,6 +56,7 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.pictureBoxWait = new System.Windows.Forms.PictureBox();
             this.lblStatus = new System.Windows.Forms.Label();
             this.btnPaste = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
@@ -66,7 +67,6 @@
             this.btnOpenDialogFolder = new System.Windows.Forms.Button();
             this.txtPathLocalToMap = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.pictureBoxWait = new System.Windows.Forms.PictureBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridviewPath)).BeginInit();
@@ -369,9 +369,20 @@
             this.tabPage2.Text = "Map bổ sung";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // pictureBoxWait
+            // 
+            this.pictureBoxWait.BackgroundImage = global::DongTien.ClientApp.Properties.Resources.Spinner_1s_200px;
+            this.pictureBoxWait.Image = global::DongTien.ClientApp.Properties.Resources.Spinner_1s_200px;
+            this.pictureBoxWait.Location = new System.Drawing.Point(682, 102);
+            this.pictureBoxWait.Name = "pictureBoxWait";
+            this.pictureBoxWait.Size = new System.Drawing.Size(42, 44);
+            this.pictureBoxWait.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBoxWait.TabIndex = 19;
+            this.pictureBoxWait.TabStop = false;
+            this.pictureBoxWait.Visible = false;
+            // 
             // lblStatus
             // 
-            this.lblStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.lblStatus.AutoSize = true;
             this.lblStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStatus.ForeColor = System.Drawing.Color.Blue;
@@ -399,9 +410,10 @@
             this.label8.Location = new System.Drawing.Point(166, 51);
             this.label8.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(363, 13);
+            this.label8.Size = new System.Drawing.Size(502, 13);
             this.label8.TabIndex = 16;
-            this.label8.Text = "Ví dụ: C:\\Users\\ducnv3\\Desktop\\Phong Thi Cong\\boc chi phi";
+            this.label8.Text = "Ví dụ: C:\\Users\\ducnv3\\Desktop\\testdongtien\\So do quan ly\\Phòng thi công\\Các tỉnh" +
+    "";
             // 
             // label7
             // 
@@ -411,9 +423,9 @@
             this.label7.Location = new System.Drawing.Point(166, 102);
             this.label7.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(209, 13);
+            this.label7.Size = new System.Drawing.Size(132, 13);
             this.label7.TabIndex = 15;
-            this.label7.Text = "Ví dụ: Phong Thi Cong\\Boc Chi Phi";
+            this.label7.Text = "Ví dụ: Phòng thi công";
             // 
             // label6
             // 
@@ -472,18 +484,6 @@
             this.label5.TabIndex = 9;
             this.label5.Text = "Đường dẫn nguồn cần map";
             // 
-            // pictureBoxWait
-            // 
-            this.pictureBoxWait.BackgroundImage = global::DongTien.ClientApp.Properties.Resources.Spinner_1s_200px;
-            this.pictureBoxWait.Image = global::DongTien.ClientApp.Properties.Resources.Spinner_1s_200px;
-            this.pictureBoxWait.Location = new System.Drawing.Point(682, 102);
-            this.pictureBoxWait.Name = "pictureBoxWait";
-            this.pictureBoxWait.Size = new System.Drawing.Size(42, 44);
-            this.pictureBoxWait.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBoxWait.TabIndex = 19;
-            this.pictureBoxWait.TabStop = false;
-            this.pictureBoxWait.Visible = false;
-            // 
             // FormClient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -495,6 +495,7 @@
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "FormClient";
             this.Text = "Sync And Share";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);

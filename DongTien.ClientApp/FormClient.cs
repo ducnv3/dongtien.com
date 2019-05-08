@@ -203,21 +203,19 @@ namespace DongTien.ClientApp
             string localToPamPath = null;
             string serverToMapPath = null;
 
-            //if (config.Count == 4)
-            {
-                if(config.Count >= 1 )
-                username = config[0];
-                if (config.Count >= 2)
-                password = config[1];
-                if (config.Count >= 3)
-                ipServer = config[2];
-                if (config.Count >= 4)
-                isSync = config[3];
-                if (config.Count >= 5)
-                localToPamPath = config[4];
-                if (config.Count >= 6)
-                serverToMapPath = config[5];
-            }
+            if(config.Count >= 1 )
+            username = config[0];
+            if (config.Count >= 2)
+            password = config[1];
+            if (config.Count >= 3)
+            ipServer = config[2];
+            if (config.Count >= 4)
+            isSync = config[3];
+            if (config.Count >= 5)
+            localToPamPath = config[4];
+            if (config.Count >= 6)
+            serverToMapPath = config[5];
+            
 
             Txt_Username.Text = username == null ? "" : username;
             Txt_Password.Text = password == null ? "" : Utility.Decrypt(password, true);
@@ -300,7 +298,10 @@ namespace DongTien.ClientApp
         {
             btn_start.Visible = !isRunning;
             btn_stop.Visible = isRunning;
-            gridviewPath.Enabled = !isRunning;
+            foreach (DataGridViewRow itemRow in gridviewPath.Rows)
+            {
+                itemRow.ReadOnly = isRunning;
+            }
         }
 
         public void watcher_Renamed(object sender, RenamedEventArgs e)

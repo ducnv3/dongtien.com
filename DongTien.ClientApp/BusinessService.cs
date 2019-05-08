@@ -37,8 +37,9 @@ namespace DongTien.ClientApp
             string ipServer = null;
             string isSync = null;
 
-            if (config.Count == 4)
+            if (config.Count >= 4)
             {
+
                 username = config[0];
                 password = config[1] == null ? "" : Utility.Decrypt(config[1], true);
                 ipServer = config[2];
@@ -55,21 +56,21 @@ namespace DongTien.ClientApp
 
         }
 
-        public bool ValidateMapPaths()
-        {
-            List<ItemPath> paths = Utility.GetListMapPath(Constants.MAPPING_CLIENT_FILENAME);
-            var config = ClientConfiguration.LoadConfigApp();
-            string IpServer = config.Count == 4 ? config[2] : "";
+        //public bool ValidateMapPaths()
+        //{
+        //    List<ItemPath> paths = Utility.GetListMapPath(Constants.MAPPING_CLIENT_FILENAME);
+        //    var config = ClientConfiguration.LoadConfigApp();
+        //    string IpServer = config.Count == 4 ? config[2] : "";
 
-            log.Error("IP Server = " + IpServer);
-            foreach (var item in paths)
-            {
-                string ip = Utility.GetIpServerFromPath(item.Destination);
-                log.Error("Ip map: " + ip);
-                if (ip != IpServer) return false;
-            }
-            return true;
-        }
+        //    log.Error("IP Server = " + IpServer);
+        //    foreach (var item in paths)
+        //    {
+        //        string ip = Utility.GetIpServerFromPath(item.Destination);
+        //        log.Error("Ip map: " + ip);
+        //        if (ip != IpServer) return false;
+        //    }
+        //    return true;
+        //}
 
         public void CopyFile(FileSystemEventArgs e)
         {
@@ -207,7 +208,7 @@ namespace DongTien.ClientApp
                     watcher.Filter = "*.*";
                     watcher.Created += changedE;
                     watcher.Changed += changedE;
-                   // watcher.Deleted += DeleteE;
+                  //  watcher.Deleted += DeleteE;
                     watcher.Renamed += RenameE;
                     watcher.EnableRaisingEvents = true;
 
