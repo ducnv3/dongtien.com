@@ -17,7 +17,7 @@ namespace DongTien.Common
     public static class ClientConfiguration
     {
         public static int SaveConfigApp(string username, string password,
-            string ipServer, bool isSync, string localToMapPath, string serverToMapPath)
+            string ipServer, bool isSync, string localToMapPath, string serverToMapPath, int minuteAsync)
         {
             try
             {
@@ -49,6 +49,10 @@ namespace DongTien.Common
 
                 userNode = xmlDoc.CreateElement("serverToMapPath");
                 userNode.InnerText = serverToMapPath;
+                rootNode.AppendChild(userNode);
+
+                userNode = xmlDoc.CreateElement("minuteAsync");
+                userNode.InnerText = minuteAsync.ToString();
                 rootNode.AppendChild(userNode);
 
                 xmlDoc.Save(filename);
@@ -87,6 +91,9 @@ namespace DongTien.Common
                 data.Add(userNodes[0].InnerText);
 
                 userNodes = xmlDoc.SelectNodes("//configurations//serverToMapPath");
+                data.Add(userNodes[0].InnerText);
+
+                userNodes = xmlDoc.SelectNodes("//configurations//minuteAsync");
                 data.Add(userNodes[0].InnerText);
 
                 return data;

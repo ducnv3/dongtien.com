@@ -30,8 +30,9 @@ namespace DongTien.ClientApp
         private BusinessService service;
         private List<FileSystemSafeWatcher> watchers;
         protected BackgroundWorker wk { get; set; }
-        protected bool IsSync = false;
-
+        protected BackgroundWorker wkAutoMap { get; set; }
+        protected bool IsSync = false, IsSyncAutoMap = false, isAutoMapSuccessfully = false;
+        protected System.Collections.Generic.Dictionary<string,string> result =null;
         private Timer timer { get; set; }
 
         /// <summary>
@@ -49,7 +50,7 @@ namespace DongTien.ClientApp
         private void SetTimerAsync()
         {
             timer = new Timer();
-            timer.Interval = int.Parse(ConfigurationManager.AppSettings[Constants.TimeAsync]);
+            timer.Interval = Convert.ToDouble(numericMinuteAsync.Value*60000);
             timer.Enabled = true;
             timer.AutoReset = true;
 
@@ -84,6 +85,13 @@ namespace DongTien.ClientApp
                 wk.WorkerReportsProgress = true;
                 wk.WorkerSupportsCancellation = true;
 
+                wkAutoMap = new BackgroundWorker();
+                wkAutoMap.DoWork += wk_DoWorkAutoMap;
+                wkAutoMap.RunWorkerCompleted += wk_RunWorkerCompletedAutoMap;
+                wkAutoMap.ProgressChanged += wk_ProgressChangedAutoMap;
+                wkAutoMap.WorkerReportsProgress = true;
+                wkAutoMap.WorkerSupportsCancellation = true;
+
                 SetTimerAsync();
             }
             catch (Exception ex)
@@ -97,7 +105,7 @@ namespace DongTien.ClientApp
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected void wk_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        protected void wk_ProgressChangedAutoMap(object sender, ProgressChangedEventArgs e)
         {
             //label4.Text = e.ProgressPercentage.ToString();
         }
@@ -107,9 +115,61 @@ namespace DongTien.ClientApp
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+        protected void wk_RunWorkerCompletedAutoMap(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (result != null)
+            {
+                DataTable tblSource = gridviewPath.DataSource as DataTable;
+                foreach (var item in result)
+                {
+                    var itemPathServer = txtPathServer.Text + item.Value.Replace(txtPathLocalToMap.Text.Substring(0, txtPathLocalToMap.Text.LastIndexOf("\\")), "");
+                    var r = (gridviewPath.DataSource as DataTable).Select(string.Format("col_source = '{0}' AND col_destination = '{1}'", item.Key, itemPathServer));
+                    if (r.Length == 0) (gridviewPath.DataSource as DataTable).Rows.Add(new string[] { item.Key, itemPathServer });
+                }
+                gridviewPath.PerformLayout();
+                MessageBox.Show("Thực hiện thành công."); 
+            }
+            else
+            {
+                IsSyncAutoMap = false;
+                MessageBox.Show("Có lỗi xảy ra\n" + service.ErrorMessage, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            lblStatus.Text = string.Empty;
+            waitingStatus(false);
+        }
+
+        /// <summary>
+        /// Event start worker
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void wk_DoWorkAutoMap(object sender, DoWorkEventArgs e)
+        {
+            result = service.AutoMapFolderClientServer(txtPathLocalToMap.Text, txtPathServer.Text);      
+            e.Result = 42;
+        }
+
+        /// <summary>
+        /// Event change by worker
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void wk_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            lblAsyncAll.Invoke(new MethodInvoker(delegate { lblAsyncAll.Text = string.Format("{0} %", e.ProgressPercentage.ToString()); }));
+            progressBarAsync.Invoke(new MethodInvoker(delegate { progressBarAsync.Value = e.ProgressPercentage; }));
+        }
+
+        /// <summary>
+        /// Event worker is completed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void wk_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            label4.Text = "Chờ đồng bộ";
+            lblAsyncAll.Invoke(new MethodInvoker(delegate { lblAsyncAll.Text = string.Empty; }));
+            progressBarAsync.Invoke(new MethodInvoker(delegate { progressBarAsync.Value = 0; }));
+            lblFileAsynced.Invoke(new MethodInvoker(delegate { lblFileAsynced.Text = string.Empty; }));
         }
 
         /// <summary>
@@ -135,7 +195,8 @@ namespace DongTien.ClientApp
                     return;
                 }
                 service.CopyAll(item.Source, item.Destination);
-
+                lblFileAsynced.Invoke(new MethodInvoker(delegate { lblFileAsynced.Text = string.Format("Đang đồng bộ: {0}", item.Destination); }));
+                
             }
             e.Result = 42;
 
@@ -186,7 +247,7 @@ namespace DongTien.ClientApp
         {
             if (FormWindowState.Minimized == this.WindowState)
             {
-                ShowInTaskbar = false;
+                //ShowInTaskbar = false;
                 notifyIcon.Visible = true;
                 notifyIcon.ShowBalloonTip(1000);
             }
@@ -202,6 +263,7 @@ namespace DongTien.ClientApp
             string isSync = null;
             string localToPamPath = null;
             string serverToMapPath = null;
+            int minuteAsync = 2;
 
             if(config.Count >= 1 )
             username = config[0];
@@ -215,7 +277,8 @@ namespace DongTien.ClientApp
             localToPamPath = config[4];
             if (config.Count >= 6)
             serverToMapPath = config[5];
-            
+            if (config.Count >= 7)
+                minuteAsync = Convert.ToInt32(config[6]);            
 
             Txt_Username.Text = username == null ? "" : username;
             Txt_Password.Text = password == null ? "" : Utility.Decrypt(password, true);
@@ -223,6 +286,7 @@ namespace DongTien.ClientApp
             isSync = isSync == null ? "false" : isSync;
             txtPathLocalToMap.Text = localToPamPath == null? "": localToPamPath;
             txtPathServer.Text = serverToMapPath == null? "": serverToMapPath;
+            numericMinuteAsync.Value = minuteAsync;
 
             if (isSync.ToLower() == "true")
             {
@@ -258,11 +322,11 @@ namespace DongTien.ClientApp
             string ipServer = Txt_IpServer.Text.Trim();
             string localToMap = txtPathLocalToMap.Text.Trim();
             string serverToMap = txtPathServer.Text.Trim();
-
+            int minuteAsync = Convert.ToInt32(numericMinuteAsync.Value);
             bool isSync = rbtn_sync.Checked;
 
             int r1 = ClientConfiguration.
-                SaveConfigApp(username, password, ipServer, isSync, localToMap, serverToMap);
+                SaveConfigApp(username, password, ipServer, isSync, localToMap, serverToMap, minuteAsync);
 
             int r2 = ClientConfiguration.
                 SaveMapPathToXML(gridviewPath);
@@ -321,7 +385,7 @@ namespace DongTien.ClientApp
 
         private void notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            ShowInTaskbar = true;
+           // ShowInTaskbar = true;
             this.WindowState = FormWindowState.Normal;
             notifyIcon.Visible = false;
         }
@@ -405,56 +469,85 @@ namespace DongTien.ClientApp
 
         private void btnCreateMapFolderAuto_Click(object sender, EventArgs e)
         {
-            waitingStatus(true);
+            isAutoMapSuccessfully = false;
+            IsSyncAutoMap = false;
+            if (string.IsNullOrEmpty(txtPathLocalToMap.Text) || string.IsNullOrEmpty(txtPathServer.Text.Trim()))
+            {
+                waitingStatus(false);
+                MessageBox.Show("Dữ liệu nguồn hoặc đích không để trống.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             DialogResult confirm = MessageBox.Show("Bạn có chắc muốn thực hiện", " Xác nhận hành động", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (confirm == System.Windows.Forms.DialogResult.No)
             { waitingStatus(false); return; }
-            
-            if(string.IsNullOrEmpty(txtPathLocalToMap.Text) || string.IsNullOrEmpty(txtPathServer.Text.Trim()))
+
+            IsSyncAutoMap = !IsSyncAutoMap;
+            if (wkAutoMap.IsBusy)
             {
-                waitingStatus(false);
-                MessageBox.Show("Dữ liệu nguồn và đích không để trống.","Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;   
+                wkAutoMap.CancelAsync();
             }
+            else
+            {
+                RunSyncFileAutoMap();
+            }
+
+        }
+
+        private void RunSyncFileAutoMap()
+        {
+            try
+            {
+                if (IsSyncAutoMap)
+                {
+                    wkAutoMap.RunWorkerAsync();
+                    waitingStatus(true);
+                }
+                else
+                {
+                    waitingStatus(false);
+                    wkAutoMap.CancelAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex.Message);
+            }
+
             
-           var result = service.AutoMapFolderClientServer(txtPathLocalToMap.Text, txtPathServer.Text);
-           if (result != null)
-           {
-               DataTable tblSource = gridviewPath.DataSource as DataTable;
-               foreach (var item in result)
-               {
-                   var itemPathServer = txtPathServer.Text + item.Value.Replace(txtPathLocalToMap.Text.Substring(0, txtPathLocalToMap.Text.LastIndexOf("\\")), "");
-                   var r = (gridviewPath.DataSource as DataTable).Select(string.Format("col_source = '{0}' AND col_destination = '{1}'", item.Key, itemPathServer));
-                   if (r.Length == 0) (gridviewPath.DataSource as DataTable).Rows.Add(new string[] { item.Key, itemPathServer });
-               }
-               gridviewPath.PerformLayout();
-               waitingStatus(false);
-               MessageBox.Show("Thực hiện thành công.");
-           }
-           else
-           {
-               waitingStatus(false);
-               MessageBox.Show("Có lỗi xảy ra\n" + service.ErrorMessage, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-           }
         }
 
         private void waitingStatus(bool isInProgress)
         {
+            pictureBoxWait.Invoke(new MethodInvoker(delegate { pictureBoxWait.Visible = isInProgress; }));
+            txtPathServer.Invoke(new MethodInvoker(delegate { txtPathServer.ReadOnly = isInProgress; }));
+            btnCreateMapFolderAuto.Invoke(new MethodInvoker(delegate { btnCreateMapFolderAuto.Enabled = !isInProgress; }));
+            btnOpenDialogFolder.Invoke(new MethodInvoker(delegate { btnOpenDialogFolder.Enabled = !isInProgress; }));
+            btnPaste.Invoke(new MethodInvoker(delegate { btnPaste.Enabled = !isInProgress; }));
             if (isInProgress)
             {
-                lblStatus.Text = "Đang thực hiện";
-                pictureBoxWait.Visible = true;
+                lblStatus.Invoke(new MethodInvoker(delegate { lblStatus.Text = "Đang thực hiện vui lòng chờ ..."; }));
             }
-            else
-            {
-                lblStatus.Text = "Chờ thực hiện";
-                pictureBoxWait.Visible = false;
-            }
+            else wkAutoMap.CancelAsync();
         }
 
         private void btnPaste_Click(object sender, EventArgs e)
         {
             txtPathServer.Text = Clipboard.GetText();
+        }
+
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            ShowInTaskbar = true;
+        }
+
+        private void toolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            ShowInTaskbar = false;
+        }
+
+        private void thoátChươngTrìnhToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
 
     }

@@ -17,6 +17,7 @@ namespace DongTien.ClientApp
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private FileProcessor fileProcessor;
+        private FileProcessor fileProcessorCopyAll;
         protected FtpClient ftp = null;
         public string ErrorMessage = string.Empty;
 
@@ -24,6 +25,7 @@ namespace DongTien.ClientApp
         {
             InitFtp();
             fileProcessor = new FileProcessor();
+            fileProcessorCopyAll = new FileProcessor();
             log.Info("Init queue process.");
         }
 
@@ -56,22 +58,6 @@ namespace DongTien.ClientApp
 
         }
 
-        //public bool ValidateMapPaths()
-        //{
-        //    List<ItemPath> paths = Utility.GetListMapPath(Constants.MAPPING_CLIENT_FILENAME);
-        //    var config = ClientConfiguration.LoadConfigApp();
-        //    string IpServer = config.Count == 4 ? config[2] : "";
-
-        //    log.Error("IP Server = " + IpServer);
-        //    foreach (var item in paths)
-        //    {
-        //        string ip = Utility.GetIpServerFromPath(item.Destination);
-        //        log.Error("Ip map: " + ip);
-        //        if (ip != IpServer) return false;
-        //    }
-        //    return true;
-        //}
-
         public void CopyFile(FileSystemEventArgs e)
         {
            
@@ -99,10 +85,6 @@ namespace DongTien.ClientApp
                         fileProcessor.EnqueueProcess(dTProcess);
                         log.Info("File: " + e.FullPath + " " + filename);
                     }
-                }
-                else
-                {
-                    log.Error("Do not exist path in map: " + e.FullPath);
                 }
             }
             
@@ -137,10 +119,6 @@ namespace DongTien.ClientApp
                         log.Info("File: " + oldname + " to " + newPath);
                     }
                 }
-                else
-                {
-                    log.Error("Do not exist path in map: " + e.FullPath);
-                }
             }
         }
 
@@ -168,10 +146,6 @@ namespace DongTien.ClientApp
                         fileProcessor.EnqueueProcess(dTProcess);
                         log.Info("File : " + e.FullPath);
                     }
-                }
-                else
-                {
-                    log.Error("Do not exist path in map: " + e.FullPath);
                 }
             }
             ftp.Close();
@@ -272,17 +246,10 @@ namespace DongTien.ClientApp
             log.Info("Unsubscribe success: " + watchers.Count + " path.");
         }
 
-        public void InitQueueFile()
-        {
-            if (fileProcessor == null)
-            {
-                fileProcessor = new FileProcessor();
-            }
-        }
-
         public void CloseQueueFile()
         {
             fileProcessor.Dispose();
+            fileProcessorCopyAll.Dispose();
             log.Info("Queue File has end.");
         }
 
@@ -291,25 +258,24 @@ namespace DongTien.ClientApp
             try
             {
                 string[] fileList = Directory.GetFiles(sourceDir);
-
                 foreach (string filePath in fileList)
                 {
                     try
                     {
+                        InitFtp();
                         string filename = filePath.Substring(filePath.LastIndexOf("\\") + 1);
-
                         string sourceFile = sourceDir + "\\" + filename;
-                        string desFile = desDir + "\\" + filename;
 
                         DTProcess dTProcess = new DTProcess();
                         dTProcess.SourceDir = sourceFile;
-                        dTProcess.DesDir = desFile;
+                        dTProcess.DesDir = desDir;
                         dTProcess.Type = TypeProcess.COPY;
-
+                        dTProcess.ftp = ftp;
+                     //   dTProcess.Execute();
                         if (!fileProcessor.CheckExistProcess(dTProcess))
                         {
-                            fileProcessor.EnqueueProcess(dTProcess);
-                            log.Info("File: " + sourceFile);
+                          fileProcessor.EnqueueProcess(dTProcess);
+                          //  log.Info("File: " + sourceFile);
                         }
                     }
                     catch (Exception e)
