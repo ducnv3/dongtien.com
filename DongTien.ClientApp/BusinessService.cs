@@ -83,7 +83,7 @@ namespace DongTien.ClientApp
                     if (!fileProcessor.CheckExistProcess(dTProcess))
                     {
                         fileProcessor.EnqueueProcess(dTProcess);
-                        log.Info("File: " + e.FullPath + " " + filename);
+                        log.Info("File: " + e.FullPath);
                     }
                 }
             }
@@ -175,13 +175,13 @@ namespace DongTien.ClientApp
                     checkSourceUnique.Add(item.Source);
 
                     FileSystemSafeWatcher watcher = new FileSystemSafeWatcher();
-                    watcher.IncludeSubdirectories = true;
+                    watcher.IncludeSubdirectories = false;
                     watcher.Path = item.Source;
                     watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
                                  | NotifyFilters.FileName | NotifyFilters.DirectoryName; ;
                     watcher.Filter = "*.*";
                     watcher.Created += changedE;
-                    watcher.Changed += changedE;
+                  //  watcher.Changed += changedE;
                   //  watcher.Deleted += DeleteE;
                     watcher.Renamed += RenameE;
                     watcher.EnableRaisingEvents = true;
