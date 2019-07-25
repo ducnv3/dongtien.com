@@ -550,5 +550,16 @@ namespace DongTien.ClientApp
             this.Close();
         }
 
+        private void FormClient_Load(object sender, EventArgs e)
+        {
+            if (rbtn_sync.Checked)
+            {
+                this.WindowState = FormWindowState.Minimized;
+                this.ShowInTaskbar = false;
+                btn_ASyncFiles.PerformClick();
+                btn_start.PerformClick();
+            }
+        }
+
     }
 }

@@ -32,19 +32,20 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormClient));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.Txt_IpServer = new System.Windows.Forms.TextBox();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.menuTripToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label3 = new System.Windows.Forms.Label();
             this.Txt_Password = new System.Windows.Forms.TextBox();
             this.Txt_Username = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.menuTripToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.gridviewPath = new System.Windows.Forms.DataGridView();
             this.col_source = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.col_destination = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.col_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.numericMinuteAsync = new System.Windows.Forms.NumericUpDown();
             this.rbtn_notsync = new System.Windows.Forms.RadioButton();
             this.btn_ASyncFiles = new System.Windows.Forms.Button();
@@ -76,7 +77,6 @@
             this.label5 = new System.Windows.Forms.Label();
             this.lblFileAsynced = new System.Windows.Forms.Label();
             this.progressBarAsync = new System.Windows.Forms.ProgressBar();
-            this.label4 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -115,23 +115,6 @@
             this.Txt_IpServer.Name = "Txt_IpServer";
             this.Txt_IpServer.Size = new System.Drawing.Size(425, 20);
             this.Txt_IpServer.TabIndex = 5;
-            // 
-            // menuStrip1
-            // 
-            this.menuStrip1.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.menuStrip1.Dock = System.Windows.Forms.DockStyle.None;
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuTripToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(643, 548);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(20, 24);
-            this.menuStrip1.TabIndex = 11;
-            this.menuStrip1.Text = "menuStrip1";
-            // 
-            // menuTripToolStripMenuItem
-            // 
-            this.menuTripToolStripMenuItem.Name = "menuTripToolStripMenuItem";
-            this.menuTripToolStripMenuItem.Size = new System.Drawing.Size(12, 20);
             // 
             // label3
             // 
@@ -179,6 +162,23 @@
             this.label1.Size = new System.Drawing.Size(73, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Tên tài khoản";
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.menuStrip1.Dock = System.Windows.Forms.DockStyle.None;
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuTripToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(643, 548);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(20, 24);
+            this.menuStrip1.TabIndex = 11;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // menuTripToolStripMenuItem
+            // 
+            this.menuTripToolStripMenuItem.Name = "menuTripToolStripMenuItem";
+            this.menuTripToolStripMenuItem.Size = new System.Drawing.Size(12, 20);
             // 
             // groupBox2
             // 
@@ -248,6 +248,15 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Cấu hình đồng bộ";
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(13, 58);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(219, 13);
+            this.label4.TabIndex = 7;
+            this.label4.Text = "Thời gian sau mỗi lần đồng bộ (đơn vị phút): ";
+            // 
             // numericMinuteAsync
             // 
             this.numericMinuteAsync.Location = new System.Drawing.Point(233, 56);
@@ -273,7 +282,6 @@
             this.rbtn_notsync.Name = "rbtn_notsync";
             this.rbtn_notsync.Size = new System.Drawing.Size(99, 17);
             this.rbtn_notsync.TabIndex = 1;
-            this.rbtn_notsync.TabStop = true;
             this.rbtn_notsync.Text = "Không đồng bộ";
             this.rbtn_notsync.UseVisualStyleBackColor = true;
             this.rbtn_notsync.CheckedChanged += new System.EventHandler(this.rbtn_notsync_CheckedChanged);
@@ -582,15 +590,6 @@
             this.progressBarAsync.Step = 1;
             this.progressBarAsync.TabIndex = 9;
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(13, 58);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(219, 13);
-            this.label4.TabIndex = 7;
-            this.label4.Text = "Thời gian sau mỗi lần đồng bộ (đơn vị phút): ";
-            // 
             // FormClient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -607,6 +606,7 @@
             this.Name = "FormClient";
             this.Text = "Sync And Share";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.Load += new System.EventHandler(this.FormClient_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
