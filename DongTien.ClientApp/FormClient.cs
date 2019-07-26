@@ -385,9 +385,8 @@ namespace DongTien.ClientApp
 
         private void notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-           // ShowInTaskbar = true;
             this.WindowState = FormWindowState.Normal;
-            notifyIcon.Visible = false;
+           // notifyIcon.Visible = false;
         }
 
         private void Process_Exited(object sender, EventArgs e)
@@ -535,30 +534,35 @@ namespace DongTien.ClientApp
             txtPathServer.Text = Clipboard.GetText();
         }
 
-        private void toolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            ShowInTaskbar = true;
-        }
-
-        private void toolStripMenuItem2_Click(object sender, EventArgs e)
-        {
-            ShowInTaskbar = false;
-        }
-
-        private void thoátChươngTrìnhToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
         private void FormClient_Load(object sender, EventArgs e)
         {
             if (rbtn_sync.Checked)
             {
                 this.WindowState = FormWindowState.Minimized;
-                this.ShowInTaskbar = false;
+                //this.ShowInTaskbar = false;
                 btn_ASyncFiles.PerformClick();
                 btn_start.PerformClick();
             }
+        }
+
+        private void ToolStripMenuItemExit_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void toolStripMenuItemOpenApp_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Normal;
+        }
+
+        private void toolStripMenuItemShowInTaskBar_Click(object sender, EventArgs e)
+        {
+            ShowInTaskbar = true;
+        }
+
+        private void toolStripMenuItemHideInTaskBar_Click(object sender, EventArgs e)
+        {
+            ShowInTaskbar = false;
         }
 
     }

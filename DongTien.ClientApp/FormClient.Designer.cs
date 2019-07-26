@@ -54,6 +54,7 @@
             this.btn_start = new System.Windows.Forms.Button();
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.thoátChươngTrìnhToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -344,32 +345,40 @@
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem3,
             this.toolStripMenuItem1,
             this.toolStripMenuItem2,
             this.thoátChươngTrìnhToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(204, 70);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(204, 114);
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(203, 22);
+            this.toolStripMenuItem3.Text = "Mở chương trình";
+            this.toolStripMenuItem3.Click += new System.EventHandler(this.toolStripMenuItemOpenApp_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(203, 22);
             this.toolStripMenuItem1.Text = "Hiện trên thanh công cụ";
-            this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
+            this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItemShowInTaskBar_Click);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
             this.toolStripMenuItem2.Size = new System.Drawing.Size(203, 22);
             this.toolStripMenuItem2.Text = "Ẩn trên thanh công cụ";
-            this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
+            this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItemHideInTaskBar_Click);
             // 
             // thoátChươngTrìnhToolStripMenuItem
             // 
             this.thoátChươngTrìnhToolStripMenuItem.Name = "thoátChươngTrìnhToolStripMenuItem";
             this.thoátChươngTrìnhToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.thoátChươngTrìnhToolStripMenuItem.Text = "Thoát chương trình";
-            this.thoátChươngTrìnhToolStripMenuItem.Click += new System.EventHandler(this.thoátChươngTrìnhToolStripMenuItem_Click);
+            this.thoátChươngTrìnhToolStripMenuItem.Click += new System.EventHandler(this.ToolStripMenuItemExit_Click);
             // 
             // btn_stop
             // 
@@ -677,6 +686,7 @@
         private System.Windows.Forms.ToolStripMenuItem thoátChươngTrìnhToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem menuTripToolStripMenuItem;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
     }
 }
 
